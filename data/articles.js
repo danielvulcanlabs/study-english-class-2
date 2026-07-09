@@ -20,7 +20,7 @@ window.APP_DATA.topics.push({
     { q: "Choose the right article:\n________ moon shines at night.", img: "moon", o: ["A", "An", "The", "No article"], a: 2 },
     { q: "Choose the right articles:\nI want ________ apple and ________ mango.", img: "apple", o: ["an / a", "a / an", "the / an", "an / an"], a: 0 },
     { q: "Choose the right articles:\nThere is ________ egg and ________ sandwich in the box.", img: "sandwich", o: ["an / a", "a / an", "an / an", "a / a"], a: 0 },
-    { q: "Choose the right articles:\nTomorrow is ________ holiday. We will go for ________ movie in ________ evening.", img: "movie", o: ["the / a / an", "a / the / the", "a / a / the", "the / a / the"], a: 2, s: true },
+    { q: "Choose the right articles:\nTomorrow is ________ holiday. We will go for ________ movie in ________ evening.", img: "theater", o: ["the / a / an", "a / the / the", "a / a / the", "the / a / the"], a: 2, s: true },
     { q: "Choose the right articles:\n________ earth goes around ________ sun.", img: "earth", o: ["The / the", "A / a", "An / the", "The / an"], a: 0, s: true },
     { q: "Choose the right article:\nHe is ________ honest boy.", img: "halo", o: ["a", "an", "the", "no article"], a: 1, s: true },
     { q: "Choose the right article:\nWe waited for ________ hour.", img: "clock", o: ["a", "an", "the", "no article"], a: 1, s: true },
@@ -44,6 +44,20 @@ window.APP_DATA.topics.push({
     { q: "Choose the right article:\nMy brother is ________ engineer.", img: "worker", o: ["a", "an", "the", "no article"], a: 1, s: true },
     { q: "Choose the right article:\nWe saw ________ rainbow after the rain.", img: "rainbow", o: ["a", "an", "the", "no article"], a: 0 },
     { q: "Choose the right article:\nI need ________ eraser and a pencil.", img: "pencil", o: ["a", "an", "the", "no article"], a: 1 },
-    { q: "Choose the right article:\n________ children are playing in the park.", img: "playground", o: ["A", "An", "The", "Am"], a: 2 }
+    { q: "Choose the right article:\n________ children are playing in the park.", img: "playground", o: ["A", "An", "The", "Am"], a: 2 },
+    { q: "Which sentence uses articles correctly?", img: "check", o: ["I saw an owl and a fox.", "I saw a owl and an fox.", "I saw an owl and an fox.", "I saw a owl and a fox."], a: 0, s: true },
+    { q: "Which sentence uses articles correctly?", img: "check", o: ["She ate an apple.", "She ate a apple.", "She ate the a apple.", "She ate an the apple."], a: 0 },
+    { q: "Which sentence uses articles correctly?", img: "check", o: ["He has a car and an umbrella.", "He has an car and a umbrella.", "He has a car and a umbrella.", "He has an car and an umbrella."], a: 0, s: true },
+    { q: "Which sentence uses articles correctly?", img: "check", o: ["The sun is very hot today.", "A sun is very hot today.", "An sun is very hot today.", "Sun is very hot the today."], a: 0 },
+    { q: "Choose the right articles:\nI have ________ pen. ________ pen is blue.", img: "pen", o: ["a / The", "an / The", "the / A", "a / An"], a: 0 },
+    { q: "Choose the right articles:\nWe saw ________ elephant at ________ zoo.", img: "elephant", o: ["an / the", "a / the", "an / a", "the / an"], a: 0, s: true },
+    { q: "Choose the right article:\nCan you close ________ window, please?", img: "house", o: ["a", "an", "the", "no article"], a: 2 },
+    { q: "Choose the right article:\nA bird built ________ nest in the tree.", img: "bird", o: ["a", "an", "the", "no article"], a: 0 },
+    { q: "Choose the right articles:\nThere is ________ apple on ________ plate.", img: "plate", o: ["an / the", "a / the", "an / a", "the / a"], a: 0 },
+    { q: "Choose the right article:\nMy father reads ________ newspaper every day.", img: "book", o: ["a", "an", "the", "no article"], a: 0 },
+    { q: "Choose the right article:\nWe should protect ________ earth.", img: "earth", o: ["a", "an", "the", "no article"], a: 2, s: true },
+    { q: "Choose the right articles:\nShe bought ________ orange, ________ banana and ________ egg.", img: "basket", o: ["an / a / an", "a / an / a", "an / an / an", "a / a / a"], a: 0, s: true },
+    { q: "Choose the right article:\nThere was ________ interesting story in the book.", img: "open-book", o: ["a", "an", "the", "no article"], a: 1, s: true },
+    { q: "Which sentence uses \"the\" correctly?", img: "moon", o: ["The moon is bright tonight.", "A moon is bright tonight.", "An moon is bright tonight.", "Moon the is bright tonight."], a: 0 }
   ]
 });

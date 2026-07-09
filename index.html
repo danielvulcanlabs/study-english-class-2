@@ -324,6 +324,13 @@ function goTopics(){
       <div class="nameVi">Reading Comprehension</div>
       <div class="stat">${stC ? stC.correct+"/"+stC.done+" correct" : "Not practiced"}</div>
     </button>`;
+  const stM = store.practice[practiceKey("mixed")];
+  const mixedCard = `<button class="topic-card" onclick="startPractice(-2)">
+      ${IMG("sparkles","icon-lg")}
+      <div class="nameEn">Mixed</div>
+      <div class="nameVi">Trộn ngẫu nhiên</div>
+      <div class="stat">${stM ? stM.correct+"/"+stM.done+" correct" : "Not practiced"}</div>
+    </button>`;
   $app.innerHTML = `
     <div class="topbar">
       <button class="btn btn-ghost btn-small" onclick="goModeSelect('practice')">${IMG("back")} Mode</button>
@@ -332,21 +339,30 @@ function goTopics(){
     </div>
     <h1>Choose a topic!</h1>
     <p class="subtitle">What would you like to learn today?</p>
-    <div class="grid">${cards}${compCard}</div>`;
+    <div class="grid">${mixedCard}${cards}${compCard}</div>`;
   window.scrollTo(0,0);
 }
 
 /* ================= practice ================= */
+const ROUND_SIZE = 10;               // số câu hỏi mỗi lượt practice
 let P = null; // practice state
 function startPractice(topicIdx){
   if(topicIdx === -1){
     const passage = pick(passagePool());
     P = { mode:"comp", topicId:practiceKey("comprehension"), topicName:"Reading: "+passage.title,
-          passage, queue: passage.questions.map(prepQuestion), idx:0, correct:0, done:0, streak:0 };
+          passage, queue: shuffle(passage.questions).slice(0, ROUND_SIZE).map(prepQuestion),
+          idx:0, correct:0, done:0, streak:0 };
+  }else if(topicIdx === -2){
+    // Mixed: trộn 10 câu ngẫu nhiên từ mọi topic
+    const all = TOPICS.flatMap(t => topicPool(t));
+    P = { mode:"mixed", topicId:practiceKey("mixed"), topicName:"Mixed",
+          queue: shuffle(all).slice(0, ROUND_SIZE).map(prepQuestion),
+          idx:0, correct:0, done:0, streak:0 };
   }else{
     const t = TOPICS[topicIdx];
     P = { mode:"topic", topicId:practiceKey(t.id), topicName:t.nameEn, topicIdx,
-          queue: shuffle(topicPool(t)).map(prepQuestion), idx:0, correct:0, done:0, streak:0 };
+          queue: shuffle(topicPool(t)).slice(0, ROUND_SIZE).map(prepQuestion),
+          idx:0, correct:0, done:0, streak:0 };
   }
   renderPracticeQ();
 }

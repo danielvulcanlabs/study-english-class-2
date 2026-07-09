@@ -45,6 +45,20 @@ window.APP_DATA.topics.push({
     { q: "Look at the picture:\nThe king wears a ________ on his head.", img: "crown", o: ["clown", "crown", "brown", "gown"], a: 1 },
     { q: "Choose the right letter to complete the word:\nT__RTOISE", img: "turtle", o: ["O", "U", "A", "E"], a: 0 },
     { q: "Choose the right letter to complete the word:\nB__LLOON", img: "balloon", o: ["A", "E", "O", "U"], a: 0 },
-    { q: "Look at the picture:\nThis animal has black and white stripes.", img: "zebra", o: ["zebra", "giraffe", "deer", "camel"], a: 0 }
+    { q: "Look at the picture:\nThis animal has black and white stripes.", img: "zebra", o: ["zebra", "giraffe", "deer", "camel"], a: 0 },
+    { q: "Look at the picture:\nWhat is the girl doing?", img: "swimmer", o: ["She is reading.", "She is swimming.", "She is singing.", "She is cooking."], a: 1 },
+    { q: "Look at the picture:\nWhat is the boy doing?", img: "runner", o: ["He is running.", "He is sleeping.", "He is eating.", "He is jumping."], a: 0 },
+    { q: "Look at the picture:\nWhich sentence describes the picture?", img: "dancer", o: ["The girl is dancing.", "The girl is writing.", "The girl is drinking.", "The girl is flying."], a: 0, s: true },
+    { q: "Look at the picture:\nWhich sentence describes the picture?", img: "sun", o: ["It is snowing.", "The sun is shining.", "It is a rainy day.", "The moon is out."], a: 1 },
+    { q: "Look at the picture and match the word to its meaning:\nWhat is a \"nurse\"?", img: "nurse", o: ["A person who helps sick people.", "A person who flies planes.", "A person who cooks food.", "A person who drives buses."], a: 0, s: true },
+    { q: "Look at the picture and match the word to its meaning:\nWhat is a \"snail\"?", img: "snail", o: ["A fast bird.", "A small animal that moves slowly.", "A big fish.", "A tall tree."], a: 1 },
+    { q: "Look at the picture:\nWhich word begins with the letter B?", img: "butterfly", o: ["apple", "butterfly", "orange", "cat"], a: 1 },
+    { q: "Look at the picture:\nWhich word begins with the letter S?", img: "sun", o: ["moon", "star", "cloud", "kite"], a: 1 },
+    { q: "Look at the picture:\nWhich word begins with the letter D?", img: "duck", o: ["cat", "hen", "duck", "owl"], a: 2 },
+    { q: "Look at the picture:\nWhich word begins with the same sound as \"cat\"?", img: "cow", o: ["dog", "cow", "pig", "bee"], a: 1, s: true },
+    { q: "Look at the picture:\nWhat is the elephant doing?", img: "elephant", o: ["It is flying.", "It is drinking water.", "It is reading a book.", "It is riding a bike."], a: 1 },
+    { q: "Look at the picture:\nWhich sentence is TRUE about the fish?", img: "fish", o: ["The fish can walk.", "The fish lives in water.", "The fish can fly.", "The fish sleeps in a bed."], a: 1 },
+    { q: "Look at the picture and match the word to its meaning:\nWhat is a \"clock\"?", img: "clock", o: ["A thing that tells the time.", "A thing you eat.", "A thing that flies.", "A thing you wear."], a: 0 },
+    { q: "Look at the picture:\nWhich word begins with the letter T?", img: "tree", o: ["book", "tree", "star", "fish"], a: 1 }
   ]
 });

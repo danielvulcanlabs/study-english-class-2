@@ -44,6 +44,19 @@ window.APP_DATA.topics.push({
     { q: "In the sentence \"Ducks swim in the lake\", which two words are nouns?", img: "duck", o: ["ducks and lake", "swim and lake", "ducks and swim", "in and the"], a: 0 },
     { q: "A word that names a person, place or thing is called ________.", img: "label", o: ["a noun", "a verb", "a letter", "a sound"], a: 0 },
     { q: "A doing word is called ________.", img: "runner", o: ["a noun", "a verb", "a name", "a sound"], a: 1 },
-    { q: "In the sentence \"Sara writes a letter\", which word is a noun?", img: "letter", o: ["writes", "letter", "a", "the"], a: 1 }
+    { q: "In the sentence \"The dog runs fast\", which word is the verb?", img: "dog", o: ["dog", "runs", "fast", "the"], a: 1 },
+    { q: "In the sentence \"The dog runs fast\", which word is the noun?", img: "dog", o: ["dog", "runs", "fast", "the"], a: 0 },
+    { q: "Which word is an action word?", img: "swimmer", o: ["jump", "apple", "chair", "tree"], a: 0 },
+    { q: "Which word is an action word?", img: "runner", o: ["sing", "book", "table", "house"], a: 0 },
+    { q: "In the sentence \"The girl eats an apple\", which word is a verb?", img: "apple", o: ["girl", "eats", "apple", "an"], a: 1 },
+    { q: "In the sentence \"The girl eats an apple\", which two words are nouns?", img: "apple", o: ["girl and apple", "eats and apple", "girl and eats", "the and an"], a: 0, s: true },
+    { q: "In the sentence \"Cows eat green grass\", which word is a verb?", img: "cow", o: ["cows", "eat", "grass", "green"], a: 1 },
+    { q: "In the sentence \"A frog jumps high\", which word is the naming word?", img: "frog", o: ["frog", "jumps", "high", "a"], a: 0 },
+    { q: "Which word is a naming word (noun)?", img: "house", o: ["house", "climb", "jump", "walk"], a: 0 },
+    { q: "Which sentence has the action word underlined correctly? (action word in CAPITALS)", img: "check", o: ["The bird SINGS a song.", "The BIRD sings a song.", "The bird sings a SONG.", "THE bird sings a song."], a: 0, s: true },
+    { q: "In the sentence \"Monkeys climb trees\", which two words are nouns?", img: "monkey", o: ["monkeys and trees", "climb and trees", "monkeys and climb", "climb and monkeys"], a: 0 },
+    { q: "Which word is NOT an action word?", img: "book", o: ["book", "run", "jump", "eat"], a: 0 },
+    { q: "In the sentence \"The bee flies to the flower\", which word is a verb?", img: "bee", o: ["bee", "flies", "flower", "the"], a: 1 },
+    { q: "In the sentence \"Mother bakes a cake\", which word is a verb?", img: "cake-slice", o: ["mother", "bakes", "cake", "a"], a: 1 }
   ]
 });

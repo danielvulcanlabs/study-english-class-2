@@ -44,6 +44,19 @@ window.APP_DATA.topics.push({
     { q: "Which of these is NOT an animal? (Unjumble each option first!)", img: "apple", o: ["OGD", "NEH", "ELPPA", "WOC"], a: 2, s: true },
     { q: "Which of these is a colour? (Unjumble each option first!)", img: "palette", o: ["NEERG", "KOBO", "TAC", "NUS"], a: 0, s: true },
     { q: "Unjumble the letters:\nN U S — It shines in the day.", img: "sun", o: ["sun", "son", "nus", "us"], a: 0 },
-    { q: "Unjumble the letters:\nN O O M — It shines at night.", img: "moon", o: ["moon", "mono", "noon", "mood"], a: 0 }
+    { q: "Unjumble the letters:\nN O O M — It shines at night.", img: "moon", o: ["moon", "mono", "noon", "mood"], a: 0 },
+    { q: "Unjumble the letters to find an animal:\nG I P", img: "pig", o: ["pig", "pin", "dig", "big"], a: 0 },
+    { q: "Unjumble the letters:\nE K A C — You blow candles on it.", img: "cake-slice", o: ["cake", "lake", "rake", "cane"], a: 0 },
+    { q: "Unjumble the letters to find a flower:\nS O R E", img: "rose", o: ["rose", "sore", "ores", "eros"], a: 0, s: true },
+    { q: "Unjumble the letters to find something a king wears:\nN W O R C", img: "crown", o: ["crown", "clown", "brown", "drown"], a: 0, s: true },
+    { q: "Unjumble the letters to find a slow animal:\nL A N S I", img: "snail", o: ["snail", "nails", "slain", "lanes"], a: 0, s: true },
+    { q: "Unjumble the letters:\nR E T E — It is tall and green.", img: "tree", o: ["tree", "teer", "reet", "rete"], a: 0 },
+    { q: "Which word can you make from these letters: g, g, e?", img: "egg", o: ["egg", "get", "bee", "gag"], a: 0 },
+    { q: "Which word can you make from these letters: b, a, t?", img: "bat", o: ["bat", "cat", "bad", "bag"], a: 0 },
+    { q: "How many letters are in the word \"apple\"?", img: "apple", o: ["4", "5", "6", "3"], a: 1 },
+    { q: "How many letters are in the word \"cat\"?", img: "cat", o: ["2", "3", "4", "5"], a: 1 },
+    { q: "Which letter does the word \"banana\" begin with?", img: "banana", o: ["A", "B", "N", "D"], a: 1 },
+    { q: "Which letter does the word \"dog\" end with?", img: "dog", o: ["D", "O", "G", "T"], a: 2 },
+    { q: "Unjumble the letters to find a bird:\nE S O G O", img: "goose", o: ["goose", "geese", "moose", "loose"], a: 0, s: true }
   ]
 });

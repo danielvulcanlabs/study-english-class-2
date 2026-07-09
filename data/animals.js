@@ -44,6 +44,20 @@ window.APP_DATA.topics.push({
     { q: "Which animal is called \"the ship of the desert\"?", img: "camel", o: ["camel", "horse", "elephant", "donkey"], a: 0, s: true },
     { q: "Which animal hops on two strong legs?", img: "kangaroo", o: ["kangaroo", "elephant", "cow", "tortoise"], a: 0 },
     { q: "Which animal moves very, very slowly?", img: "turtle", o: ["tortoise", "horse", "cheetah", "rabbit"], a: 0 },
-    { q: "Which animal can fly?", img: "bat", o: ["bat", "dog", "fish", "cow"], a: 0, s: true }
+    { q: "Which animal can fly?", img: "bat", o: ["bat", "dog", "fish", "cow"], a: 0, s: true },
+    { q: "Which sentence is TRUE?", img: "elephant", o: ["An elephant has a long trunk.", "An elephant can fly high.", "An elephant lives in the sea.", "An elephant is smaller than a mouse."], a: 0, s: true },
+    { q: "Which sentence is TRUE?", img: "fish", o: ["A fish breathes under water.", "A fish has four legs.", "A fish lives in a tree.", "A fish can bark loudly."], a: 0 },
+    { q: "Which animal does NOT belong with the others?", img: "lion", o: ["cow", "lion", "tiger", "bear"], a: 0, s: true },
+    { q: "Which animal does NOT belong with the others?", img: "tropical-fish", o: ["dog", "fish", "duck", "frog"], a: 0, s: true },
+    { q: "Tom saw a big grey animal with a long trunk and big ears at the zoo.\nWhat was it?", img: "elephant", o: ["an elephant", "a rabbit", "a mouse", "a duck"], a: 0 },
+    { q: "Anna heard a loud \"Roar!\" from the big cat with a golden mane.\nWhat animal was it?", img: "lion", o: ["a lion", "a sheep", "a hen", "a fish"], a: 0 },
+    { q: "Which animal runs the fastest?", img: "tiger", o: ["tiger", "turtle", "snail", "cow"], a: 0 },
+    { q: "Which animal is the slowest?", img: "snail", o: ["snail", "horse", "tiger", "rabbit"], a: 0 },
+    { q: "How many legs does a spider have?", img: "spider", o: ["eight", "four", "two", "six"], a: 0, s: true },
+    { q: "How many legs does a dog have?", img: "dog", o: ["four", "two", "six", "eight"], a: 0 },
+    { q: "A ________ gives us wool to make warm clothes.", img: "sheep", o: ["sheep", "cow", "hen", "bee"], a: 0 },
+    { q: "Which animal likes to eat honey?", img: "bear", o: ["bear", "fish", "duck", "snake"], a: 0, s: true },
+    { q: "Which group are all farm animals?", img: "cow", o: ["cow, hen, sheep", "lion, tiger, bear", "shark, fish, whale", "bat, owl, spider"], a: 0, s: true },
+    { q: "A ________ has black and white stripes.", img: "zebra", o: ["zebra", "lion", "camel", "monkey"], a: 0 }
   ]
 });

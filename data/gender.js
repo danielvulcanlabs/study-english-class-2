@@ -44,6 +44,20 @@ window.APP_DATA.topics.push({
     { q: "Choose the feminine of \"god\":", img: "sparkles", o: ["goddess", "queen", "lady", "princess"], a: 0, s: true },
     { q: "Choose the masculine of \"niece\":", img: "boy", o: ["nephew", "uncle", "son", "brother"], a: 0, s: true },
     { q: "Identify the type of gender for the highlighted words:\n\"My MOTHER is a TEACHER.\"", img: "teacher", o: ["mother - feminine, teacher - common", "mother - common, teacher - feminine", "mother - feminine, teacher - neuter", "mother - masculine, teacher - common"], a: 0, s: true },
-    { q: "Which list has ONLY feminine words?", img: "woman", o: ["queen, aunt, sister", "king, aunt, sister", "queen, uncle, sister", "queen, aunt, brother"], a: 0 }
+    { q: "Which list has ONLY feminine words?", img: "woman", o: ["queen, aunt, sister", "king, aunt, sister", "queen, uncle, sister", "queen, aunt, brother"], a: 0 },
+    { q: "Complete the pair:\nking : queen :: prince : ________", img: "princess", o: ["princess", "lady", "girl", "woman"], a: 0 },
+    { q: "Complete the pair:\nboy : girl :: brother : ________", img: "girl", o: ["sister", "mother", "aunt", "niece"], a: 0 },
+    { q: "Complete the pair:\nlion : lioness :: tiger : ________", img: "tiger", o: ["tigress", "lioness", "cub", "cat"], a: 0, s: true },
+    { q: "Complete the pair:\nfather : mother :: uncle : ________", img: "woman", o: ["aunt", "sister", "niece", "grandmother"], a: 0 },
+    { q: "Choose the correct option:\nThe ________ rode his horse into battle.", img: "prince", o: ["prince", "princess", "queen", "lady"], a: 0 },
+    { q: "Choose the correct option:\nThe ________ waved her hand from the balcony.", img: "princess", o: ["queen", "king", "prince", "uncle"], a: 0 },
+    { q: "Choose the correct option:\nMy ________ cooked dinner for her children.", img: "woman", o: ["mother", "father", "uncle", "brother"], a: 0 },
+    { q: "Choose the feminine of \"waiter\":", img: "plate", o: ["waitress", "server", "cook", "lady"], a: 0 },
+    { q: "Choose the masculine of \"actress\":", img: "theater", o: ["actor", "singer", "dancer", "artist"], a: 0 },
+    { q: "Choose the masculine of \"prince\":", img: "prince", o: ["prince", "king", "man", "boy"], a: 1, s: true },
+    { q: "Choose the masculine of \"lioness\":", img: "lion", o: ["lion", "tiger", "cub", "cat"], a: 0 },
+    { q: "Choose the masculine of \"sister\":", img: "boy", o: ["brother", "father", "uncle", "nephew"], a: 0 },
+    { q: "Choose the correct option:\nThe ________ served us our food with a smile.", img: "plate", o: ["waiter", "actress", "queen", "aunt"], a: 0 },
+    { q: "Which word is the masculine of \"grandmother\"?", img: "old-man", o: ["grandfather", "father", "uncle", "brother"], a: 0 }
   ]
 });

@@ -44,6 +44,20 @@ window.APP_DATA.topics.push({
     { q: "Choose the plural of \"potato\":", img: "potato", o: ["potatoes", "potatos", "potaties", "potatoss"], a: 0, s: true },
     { q: "Choose the plural of \"mango\":", img: "mango", o: ["mangoes", "mangos", "mangies", "mangoss"], a: 0, s: true },
     { q: "Look at the picture of three sheep:\nI can see three ________.", img: "sheep", o: ["sheeps", "sheep", "sheepes", "shep"], a: 1, s: true },
-    { q: "Which option is correct?", img: "check", o: ["one man, two men", "one man, two mans", "one men, two man", "one man, two mens"], a: 0 }
+    { q: "Which option is correct?", img: "check", o: ["one man, two men", "one man, two mans", "one men, two man", "one man, two mens"], a: 0 },
+    { q: "Choose the correct option:\nI see three ________ running in the field.", img: "mouse", o: ["mice", "mouses", "mouse", "mices"], a: 0, s: true },
+    { q: "Choose the correct option:\nThere are five ________ in the classroom.", img: "child", o: ["children", "childs", "childrens", "childes"], a: 0 },
+    { q: "Choose the correct option:\nA baby has two small ________.", img: "foot", o: ["feet", "foots", "feet's", "footes"], a: 0 },
+    { q: "Choose the correct option:\nThe shark has many sharp ________.", img: "tooth", o: ["teeth", "tooths", "teeths", "toothes"], a: 0 },
+    { q: "Choose the correct option:\nFour white ________ swam on the lake.", img: "goose", o: ["geese", "gooses", "geeses", "goose"], a: 0, s: true },
+    { q: "Which is the correct plural?", img: "check", o: ["mouse - mice", "mouse - mouses", "mouse - mices", "mouse - mouse"], a: 0, s: true },
+    { q: "Which is the correct plural?", img: "check", o: ["child - children", "child - childs", "child - childrens", "child - childes"], a: 0 },
+    { q: "Which is the correct plural?", img: "check", o: ["foot - feet", "foot - foots", "foot - feets", "foot - footes"], a: 0 },
+    { q: "Which is the correct plural?", img: "check", o: ["tooth - teeth", "tooth - tooths", "tooth - teeths", "tooth - toothes"], a: 0 },
+    { q: "Which is the correct plural?", img: "check", o: ["goose - geese", "goose - gooses", "goose - geeses", "goose - goose"], a: 0, s: true },
+    { q: "Choose the singular of \"geese\":", img: "goose", o: ["goose", "geese", "gooses", "goos"], a: 0, s: true },
+    { q: "Which sentence is correct?", img: "check", o: ["I have two feet.", "I have two foots.", "I have two feets.", "I have two footes."], a: 0 },
+    { q: "Which sentence is correct?", img: "check", o: ["The cat caught three mice.", "The cat caught three mouses.", "The cat caught three mices.", "The cat caught three mouse."], a: 0, s: true },
+    { q: "Choose the correct option:\nThe old man lost all his ________.", img: "tooth", o: ["teeth", "tooths", "teeths", "toothes"], a: 0 }
   ]
 });

@@ -45,6 +45,20 @@ window.APP_DATA.topics.push({
     { q: "Choose the correct reply:\nChildren: Good morning, teacher!\nTeacher: ______________", img: "sun-face", o: ["Good night, children!", "Good morning, children!", "Goodbye, children!", "Well done, children!"], a: 1 },
     { q: "Choose the correct option:\nWhich word is the opposite of \"big\"?", img: "mouse", o: ["tall", "small", "long", "wide"], a: 1 },
     { q: "Choose the correct option:\nWhich word means the same as \"happy\"?", img: "happy", o: ["sad", "glad", "angry", "tired"], a: 1 },
-    { q: "Choose the correct option:\nYou can stitch a ________.", img: "dress", o: ["lock", "rock", "frock", "clock"], a: 2 }
+    { q: "Choose the correct option:\nYou can stitch a ________.", img: "dress", o: ["lock", "rock", "frock", "clock"], a: 2 },
+    { q: "Choose the correct option:\nWhich word is the opposite of \"hot\"?", img: "ice-cream", o: ["warm", "cold", "wet", "dry"], a: 1 },
+    { q: "Choose the correct option:\nWhich word is the opposite of \"day\"?", img: "moon", o: ["sun", "night", "morning", "noon"], a: 1 },
+    { q: "Choose the correct option:\nWhich word means the same as \"fast\"?", img: "runner", o: ["slow", "quick", "late", "still"], a: 1 },
+    { q: "Choose the correct option:\nWhich word is the opposite of \"open\"?", img: "door", o: ["shut", "wide", "push", "pull"], a: 0, s: true },
+    { q: "Choose the correct option:\nWhich word is a colour?", img: "palette", o: ["apple", "yellow", "chair", "spoon"], a: 1 },
+    { q: "Choose the correct option:\nWhich word is a fruit?", img: "apple", o: ["carrot", "banana", "onion", "pumpkin"], a: 1 },
+    { q: "Choose the correct option:\nWhich word is an animal?", img: "tiger", o: ["table", "tiger", "book", "kite"], a: 1 },
+    { q: "Choose the correct option:\nWhich word does NOT belong with the others?", img: "carrot", o: ["apple", "banana", "carrot", "mango"], a: 2, s: true },
+    { q: "Choose the correct option:\nThe sky is blue and the grass is ________.", img: "green", o: ["red", "green", "black", "pink"], a: 1 },
+    { q: "Choose the correct option:\nA baby dog is called a ________.", img: "dog", o: ["kitten", "puppy", "calf", "chick"], a: 1, s: true },
+    { q: "Read and choose the correct option:\nTom is very tired. His eyes are closing.\nWhat does Tom want to do?", img: "bed", o: ["eat", "sleep", "run", "sing"], a: 1 },
+    { q: "Read and choose the correct option:\nIt is raining hard outside.\nWhat should Mai take with her?", img: "umbrella", o: ["a hat", "an umbrella", "a fan", "sunglasses"], a: 1 },
+    { q: "Read and choose the correct option:\nLan hears her tummy rumble at lunchtime.\nHow does Lan feel?", img: "sandwich", o: ["sleepy", "hungry", "angry", "cold"], a: 1, s: true },
+    { q: "Choose the option with the correct spelling:\nWe see many animals at the ________.", img: "elephant", o: ["zoo", "zoe", "zooo", "zuo"], a: 0 }
   ]
 });

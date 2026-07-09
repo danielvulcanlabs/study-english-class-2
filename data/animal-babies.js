@@ -44,6 +44,20 @@ window.APP_DATA.topics.push({
     { q: "Which animal's baby is called a \"calf\"?", img: "cow", o: ["cow", "cat", "hen", "pig"], a: 0 },
     { q: "Which animal's baby is called a \"kid\"?", img: "goat", o: ["goat", "sheep", "cow", "horse"], a: 0 },
     { q: "A \"cub\" is the baby of a ________.", img: "lion", o: ["lion", "hen", "duck", "frog"], a: 0 },
-    { q: "A \"chick\" is the baby of a ________.", img: "chicken", o: ["hen", "duck", "goose", "owl"], a: 0 }
+    { q: "A \"chick\" is the baby of a ________.", img: "chicken", o: ["hen", "duck", "goose", "owl"], a: 0 },
+    { q: "A baby dog is called a puppy.\nWhat is a baby cat called?", img: "cat", o: ["a kitten", "a puppy", "a calf", "a chick"], a: 0 },
+    { q: "A baby sheep is called a lamb.\nWhat is a baby goat called?", img: "goat", o: ["a kid", "a lamb", "a foal", "a cub"], a: 0, s: true },
+    { q: "A baby cow is called a calf.\nWhat is a baby horse called?", img: "horse", o: ["a foal", "a calf", "a puppy", "a kid"], a: 0 },
+    { q: "Which sentence is TRUE?", img: "frog", o: ["A baby frog is called a tadpole.", "A baby frog is called a chick.", "A baby frog is called a puppy.", "A baby frog is called a foal."], a: 0, s: true },
+    { q: "Which sentence is TRUE?", img: "kangaroo", o: ["A baby kangaroo is called a joey.", "A baby kangaroo is called a cub.", "A baby kangaroo is called a calf.", "A baby kangaroo is called a chick."], a: 0, s: true },
+    { q: "Which word does NOT belong with the others?", img: "cat", o: ["cat", "kitten", "puppy", "cub"], a: 0, s: true },
+    { q: "Which word does NOT belong with the others?", img: "hatching-chick", o: ["chick", "duckling", "gosling", "calf"], a: 3, s: true },
+    { q: "Mia saw a baby cat playing with a ball of wool.\nWhat is the baby called?", img: "cat", o: ["a kitten", "a foal", "a lamb", "a chick"], a: 0 },
+    { q: "Ben saw a mother duck with her babies on the pond.\nWhat are the babies called?", img: "duck", o: ["ducklings", "chicks", "cubs", "kittens"], a: 0 },
+    { q: "Which pair is correct?", img: "check", o: ["horse : foal", "cow : puppy", "cat : chick", "hen : calf"], a: 0 },
+    { q: "Which pair is correct?", img: "check", o: ["kangaroo : joey", "lion : lamb", "dog : kitten", "deer : cub"], a: 0, s: true },
+    { q: "Which pair is WRONG?", img: "cross", o: ["cat : kitten", "dog : puppy", "cow : cub", "sheep : lamb"], a: 2, s: true },
+    { q: "A tadpole grows into a frog.\nA caterpillar grows into a ________.", img: "butterfly", o: ["butterfly", "bee", "frog", "bird"], a: 0 },
+    { q: "How many baby animals are named here: kitten, puppy, foal?", img: "numbers", o: ["three", "two", "one", "four"], a: 0 }
   ]
 });
