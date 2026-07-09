@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>English Fun - Grade 2</title>
+<style>
+  :root{
+    --pink:#ff8fb8; --pink-light:#ffe3ee; --purple:#a78bfa; --purple-light:#f0e9ff;
+    --yellow:#ffd166; --yellow-light:#fff5d6; --green:#4ade80; --green-dark:#16a34a;
+    --red:#fb7185; --text:#4c3a63; --text-light:#8b7ba5; --white:#ffffff;
+    --shadow:0 6px 20px rgba(167,139,250,.25);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:linear-gradient(160deg,#ffe3ee 0%,#f0e9ff 55%,#fff5d6 100%);
+    background-attachment:fixed;
+    color:var(--text); min-height:100vh; min-height:100dvh;
+    font-size:clamp(17px,2.2vw,20px); line-height:1.45;
+    touch-action:manipulation; overscroll-behavior:none;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  #app{max-width:760px;margin:0 auto;padding:16px 16px 40px;}
+  .icon{width:1.35em;height:1.35em;vertical-align:-0.3em;}
+  .icon-lg{width:56px;height:56px;}
+  .icon-xl{width:88px;height:88px;}
+  h1{font-size:clamp(26px,5vw,38px);margin:8px 0 4px;text-align:center;}
+  .subtitle{text-align:center;color:var(--text-light);margin:0 0 20px;font-size:.95em;}
+  .card{background:var(--white);border-radius:24px;box-shadow:var(--shadow);padding:20px;margin-bottom:16px;}
+  button{font-family:inherit;color:inherit;}
+  .btn{
+    display:flex;align-items:center;justify-content:center;gap:12px;width:100%;
+    min-height:64px;padding:14px 20px;border:none;border-radius:20px;
+    font-size:clamp(18px,2.6vw,22px);font-weight:700;cursor:pointer;
+    box-shadow:var(--shadow);transition:transform .08s ease;
+    -webkit-user-select:none;user-select:none;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn-pink{background:linear-gradient(135deg,#ff8fb8,#ff6fa5);color:#fff;}
+  .btn-purple{background:linear-gradient(135deg,#b79bff,#9b7df7);color:#fff;}
+  .btn-yellow{background:linear-gradient(135deg,#ffd97a,#ffc93c);color:#6b4e00;}
+  .btn-ghost{background:#fff;color:var(--text);box-shadow:0 3px 10px rgba(167,139,250,.18);}
+  .btn-small{min-height:48px;font-size:16px;width:auto;padding:8px 18px;border-radius:14px;}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;}
+  .topbar .title{font-weight:800;font-size:1.05em;display:flex;align-items:center;gap:8px;min-width:0;}
+  .topbar .title span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;}
+  .topic-card{
+    background:#fff;border:none;border-radius:22px;box-shadow:var(--shadow);
+    padding:18px 10px 14px;text-align:center;cursor:pointer;transition:transform .08s;
+  }
+  .topic-card:active{transform:scale(.96);}
+  .topic-card .nameEn{font-weight:800;font-size:.95em;margin-top:8px;}
+  .topic-card .nameVi{color:var(--text-light);font-size:.8em;margin-top:2px;}
+  .topic-card .stat{font-size:.75em;color:var(--purple);margin-top:6px;font-weight:700;}
+  .qimg{display:block;margin:10px auto;width:clamp(96px,22vw,150px);height:auto;}
+  .qtext{font-size:clamp(19px,2.8vw,24px);font-weight:700;white-space:pre-line;margin:6px 0 14px;}
+  .passage{
+    background:var(--purple-light);border-radius:18px;padding:16px;margin-bottom:14px;
+    white-space:pre-line;font-size:clamp(17px,2.4vw,21px);max-height:38vh;overflow-y:auto;
+  }
+  .passage b{color:var(--purple);}
+  .opts{display:grid;gap:12px;grid-template-columns:1fr;}
+  @media(min-width:600px){.opts.short{grid-template-columns:1fr 1fr;}}
+  .opt{
+    display:flex;align-items:center;gap:12px;text-align:left;
+    min-height:62px;padding:12px 16px;border-radius:18px;border:3px solid var(--purple-light);
+    background:#fff;font-size:clamp(18px,2.6vw,22px);font-weight:600;cursor:pointer;
+    transition:transform .08s;word-break:break-word;
+  }
+  .opt:active{transform:scale(.98);}
+  .opt .letter{
+    flex:0 0 38px;height:38px;border-radius:50%;background:var(--purple-light);color:var(--purple);
+    display:flex;align-items:center;justify-content:center;font-weight:800;
+  }
+  .opt.correct{background:#e9fbef;border-color:var(--green);}
+  .opt.correct .letter{background:var(--green);color:#fff;}
+  .opt.wrong{background:#fff1f2;border-color:var(--red);}
+  .opt.wrong .letter{background:var(--red);color:#fff;}
+  .opt.picked{border-color:var(--purple);background:var(--purple-light);}
+  .opt:disabled{cursor:default;opacity:1;color:inherit;}
+  .feedback{
+    text-align:center;font-size:clamp(20px,3vw,26px);font-weight:800;border-radius:18px;
+    padding:14px;margin-top:14px;animation:pop .3s ease;
+  }
+  .feedback.good{background:#e9fbef;color:var(--green-dark);}
+  .feedback.bad{background:#fff1f2;color:#be123c;}
+  .feedback .sub{font-size:.7em;font-weight:600;margin-top:4px;color:var(--text-light);}
+  @keyframes pop{0%{transform:scale(.7);opacity:0;}100%{transform:scale(1);opacity:1;}}
+  .progressbar{height:12px;background:#fff;border-radius:8px;overflow:hidden;box-shadow:inset 0 1px 4px rgba(0,0,0,.08);flex:1;}
+  .progressbar>div{height:100%;background:linear-gradient(90deg,var(--pink),var(--purple));border-radius:8px;transition:width .3s;}
+  .statrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+  .pill{
+    background:#fff;border-radius:999px;padding:6px 14px;font-weight:800;font-size:.9em;
+    box-shadow:0 3px 10px rgba(167,139,250,.18);display:flex;align-items:center;gap:6px;white-space:nowrap;
+  }
+  .pill.timer-low{background:#fff1f2;color:#be123c;}
+  .home-stars{display:flex;justify-content:center;gap:18px;margin:14px 0;flex-wrap:wrap;}
+  .bigmenu{display:grid;gap:16px;margin-top:18px;}
+  .bigmenu .btn{min-height:84px;font-size:clamp(20px,3vw,26px);}
+  table{width:100%;border-collapse:collapse;font-size:.85em;}
+  th,td{padding:9px 6px;text-align:left;border-bottom:1px solid var(--purple-light);}
+  th{color:var(--text-light);font-size:.8em;text-transform:uppercase;letter-spacing:.04em;}
+  .score-big{font-size:clamp(44px,9vw,64px);font-weight:900;text-align:center;color:var(--purple);margin:6px 0;}
+  .center{text-align:center;}
+  .muted{color:var(--text-light);font-size:.85em;}
+  .review-item{border-left:5px solid var(--red);background:#fff7f8;border-radius:12px;padding:10px 14px;margin-bottom:10px;font-size:.9em;}
+  .review-item.ok{border-left-color:var(--green);background:#f2fcf5;}
+  .review-item .rq{font-weight:700;white-space:pre-line;}
+  .confetti{position:fixed;top:-60px;pointer-events:none;z-index:99;animation:fall linear forwards;}
+  @keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:.9;}}
+  .navrow{display:flex;gap:12px;margin-top:16px;}
+  .navrow .btn{flex:1;}
+  .testnums{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+  .testnums button{
+    width:44px;height:44px;border-radius:12px;border:2px solid var(--purple-light);
+    background:#fff;font-weight:800;font-size:15px;cursor:pointer;
+  }
+  .testnums button.done{background:var(--purple);border-color:var(--purple);color:#fff;}
+  .testnums button.cur{border-color:var(--pink);box-shadow:0 0 0 3px var(--pink-light);}
+  .mark2{display:inline-block;background:var(--yellow-light);color:#8a6400;border-radius:8px;font-size:.65em;padding:2px 8px;font-weight:800;vertical-align:middle;}
+  /* ===== difficulty mode cards ===== */
+  .mode-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:18px;}
+  @media(min-width:520px){.mode-grid{grid-template-columns:1fr 1fr;}}
+  .mode-card{
+    position:relative;border:4px solid transparent;border-radius:24px;overflow:hidden;
+    box-shadow:var(--shadow);cursor:pointer;padding:0;background:#fff;text-align:left;
+    transition:transform .08s;
+  }
+  .mode-card:active{transform:scale(.97);}
+  .mode-card img.photo{width:100%;height:180px;object-fit:cover;display:block;}
+  .mode-card .mbody{padding:12px 16px 14px;}
+  .mode-card .mname{font-weight:900;font-size:1.15em;}
+  .mode-card .mdesc{color:var(--text-light);font-size:.82em;margin-top:3px;}
+  .mode-card.chill{border-color:#7dd3a8;}
+  .mode-card.master{border-color:#b79bff;}
+  .mode-badge{
+    display:inline-block;border-radius:999px;padding:2px 10px;font-size:.72em;font-weight:800;
+    vertical-align:middle;white-space:nowrap;
+  }
+  .mode-badge.chill{background:#e9fbef;color:var(--green-dark);}
+  .mode-badge.master{background:var(--purple-light);color:#7c5cd6;}
+  .mode-pill-img{width:26px;height:26px;border-radius:50%;object-fit:cover;vertical-align:-0.45em;margin-right:6px;}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>window.APP_DATA = { topics: [], passages: [] };</script>
+<script src="data/words.js"></script>
+<script src="data/picture-words.js"></script>
+<script src="data/jumbled.js"></script>
+<script src="data/gender.js"></script>
+<script src="data/one-many.js"></script>
+<script src="data/pairs-odd.js"></script>
+<script src="data/animal-babies.js"></script>
+<script src="data/animals.js"></script>
+<script src="data/nouns-verbs.js"></script>
+<script src="data/articles.js"></script>
+<script src="data/comprehension.js"></script>
+<script src="data/hard-questions.js"></script>
+
+<script>
+"use strict";
+/* ================= data & utilities ================= */
+const TOPICS = window.APP_DATA.topics;
+const PASSAGES = window.APP_DATA.passages;
+const HARD = window.APP_DATA.hard || { topics:{}, passages:[] };
+
+/* ===== difficulty modes ===== */
+const MODES = {
+  chill:  { id:"chill",  name:"Nhím Chill Chill", img:"mode-chill.svg",
+            desc:"Cozy questions to warm up and have fun." },
+  master: { id:"master", name:"Nhím Cao Thủ",     img:"mode-master.svg",
+            desc:"Tougher questions for true champions!" }
+};
+let MODE = "chill";
+const modeBadge = m => `<span class="mode-badge ${m}">${esc(MODES[m].name)}</span>`;
+function topicPool(t){ return MODE==="master" ? (HARD.topics[t.id] || t.questions) : t.questions; }
+function passagePool(){ return MODE==="master" && HARD.passages.length ? HARD.passages : PASSAGES; }
+function practiceKey(topicId){ return MODE==="master" ? topicId+"#master" : topicId; }
+const $app = document.getElementById("app");
+const IMG = (name, cls) => name ? `<img class="${cls||'icon'}" src="images/${name}.svg" alt="" onerror="this.style.display='none'">` : "";
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const shuffle = arr => { const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+
+/* ================= save progress (localStorage) ================= */
+const STORE_KEY = "englishFun.v1";
+function loadStore(){
+  try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }catch(e){ return {}; }
+}
+function saveStore(s){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(s)); }catch(e){} }
+let store = loadStore();
+store.practice = store.practice || {};   // {topicId:{done,correct}}
+store.tests = store.tests || [];         // [{date,score,totalMarks,correct,total,timeUsed}]
+store.stars = store.stars || 0;
+function bumpPractice(topicId, correct){
+  const p = store.practice[topicId] = store.practice[topicId] || {done:0,correct:0};
+  p.done++; if(correct){ p.correct++; store.stars++; }
+  saveStore(store);
+}
+
+/* ================= sound ================= */
+let audioCtx = null;
+function playSound(good){
+  try{
+    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state === "suspended") audioCtx.resume();
+    const notes = good ? [523.25, 659.25, 783.99] : [330, 262];
+    notes.forEach((f,i)=>{
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = "sine"; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, audioCtx.currentTime + i*0.12);
+      g.gain.exponentialRampToValueAtTime(0.25, audioCtx.currentTime + i*0.12 + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + i*0.12 + 0.28);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(audioCtx.currentTime + i*0.12); o.stop(audioCtx.currentTime + i*0.12 + 0.3);
+    });
+  }catch(e){}
+}
+
+/* ================= confetti effect ================= */
+function confetti(){
+  const imgs = ["glowing-star","star","heart","party","sparkles"];
+  for(let i=0;i<14;i++){
+    const el = document.createElement("img");
+    el.src = "images/"+pick(imgs)+".svg";
+    el.className = "confetti";
+    el.style.left = Math.random()*100+"vw";
+    el.style.width = (22+Math.random()*26)+"px";
+    el.style.animationDuration = (1.2+Math.random()*1.4)+"s";
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 2800);
+  }
+}
+
+/* ================= praise / encouragement ================= */
+const PRAISE = ["Correct! You're so smart!","That's right! Awesome!","Correct! Excellent!","That's right! You're brilliant!","Correct! Well done!","Wow, that's right!"];
+const CHEER  = ["Not quite, but that's okay!","Almost! Keep it up!","Just a little off, you'll get it next time!","No worries, we learn to get better!"];
+
+/* ================= question display (shuffle options) ================= */
+function prepQuestion(q){
+  const order = shuffle([0,1,2,3]);
+  return { ...q, order, correctPos: order.indexOf(q.a) };
+}
+function renderOptions(q, handler){
+  const short = q.o.every(x=>String(x).length<=14);
+  return `<div class="opts ${short?'short':''}">` + q.order.map((oi,pos)=>
+    `<button class="opt" data-pos="${pos}" onclick="${handler}(${pos})">
+       <span class="letter">${"abcd"[pos]}</span><span>${esc(q.o[oi])}</span>
+     </button>`).join("") + `</div>`;
+}
+function lockOptions(pickedPos, correctPos){
+  document.querySelectorAll(".opt").forEach(b=>{
+    b.disabled = true;
+    const p = +b.dataset.pos;
+    if(p === correctPos) b.classList.add("correct");
+    else if(p === pickedPos) b.classList.add("wrong");
+  });
+}
+
+/* ================= home screen ================= */
+function goHome(){
+  const tests = store.tests.length;
+  const best = tests ? Math.max(...store.tests.map(t=>t.score)) : null;
+  $app.innerHTML = `
+    <h1>${IMG("grad","icon")} English Fun!</h1>
+    <p class="subtitle">Grade 2 English - fun and smart!</p>
+    <div class="home-stars">
+      <span class="pill">${IMG("glowing-star")} ${store.stars} stars</span>
+      <span class="pill">${IMG("trophy")} ${tests? "Best score: "+best+"/40" : "No tests yet"}</span>
+    </div>
+    <div class="bigmenu">
+      <button class="btn btn-pink" onclick="goModeSelect('practice')">${IMG("target")} Practice</button>
+      <button class="btn btn-purple" onclick="goModeSelect('test')">${IMG("timer")} Take a test</button>
+      <button class="btn btn-yellow" onclick="goHistory()">${IMG("chart")} My progress</button>
+    </div>`;
+  window.scrollTo(0,0);
+}
+
+/* ================= mode selection ================= */
+function goModeSelect(next){
+  const cards = Object.values(MODES).map(m=>`
+    <button class="mode-card ${m.id}" onclick="pickMode('${m.id}','${next}')">
+      <img class="photo" src="images/${m.img}" alt="${esc(m.name)}">
+      <div class="mbody">
+        <div class="mname">${esc(m.name)}</div>
+        <div class="mdesc">${esc(m.desc)}</div>
+      </div>
+    </button>`).join("");
+  $app.innerHTML = `
+    <div class="topbar"><button class="btn btn-ghost btn-small" onclick="goHome()">${IMG("back")} Home</button></div>
+    <h1>Pick your hedgehog!</h1>
+    <p class="subtitle">${next==='test' ? "Which mode do you want to be tested in?" : "Which mode do you want to practice in?"}</p>
+    <div class="mode-grid">${cards}</div>`;
+  window.scrollTo(0,0);
+}
+function pickMode(mode, next){
+  MODE = mode;
+  if(next === 'test') goTestIntro(); else goTopics();
+}
+
+/* ================= choose practice topic ================= */
+function goTopics(){
+  const cards = TOPICS.map((t,i)=>{
+    const st = store.practice[practiceKey(t.id)];
+    const stat = st ? `${st.correct}/${st.done} correct` : "Not practiced";
+    return `<button class="topic-card" onclick="startPractice(${i})">
+      ${IMG(t.icon,"icon-lg")}
+      <div class="nameEn">${esc(t.nameEn)}</div>
+      <div class="nameVi">${esc(t.nameVi)}</div>
+      <div class="stat">${stat}</div>
+    </button>`;
+  }).join("");
+  const stC = store.practice[practiceKey("comprehension")];
+  const compCard = `<button class="topic-card" onclick="startPractice(-1)">
+      ${IMG("books","icon-lg")}
+      <div class="nameEn">Reading</div>
+      <div class="nameVi">Reading Comprehension</div>
+      <div class="stat">${stC ? stC.correct+"/"+stC.done+" correct" : "Not practiced"}</div>
+    </button>`;
+  $app.innerHTML = `
+    <div class="topbar">
+      <button class="btn btn-ghost btn-small" onclick="goModeSelect('practice')">${IMG("back")} Mode</button>
+      <span class="pill"><img class="mode-pill-img" src="images/${MODES[MODE].img}" alt="">${esc(MODES[MODE].name)}</span>
+      <span class="pill">${IMG("glowing-star")} ${store.stars}</span>
+    </div>
+    <h1>Choose a topic!</h1>
+    <p class="subtitle">What would you like to learn today?</p>
+    <div class="grid">${cards}${compCard}</div>`;
+  window.scrollTo(0,0);
+}
+
+/* ================= practice ================= */
+let P = null; // practice state
+function startPractice(topicIdx){
+  if(topicIdx === -1){
+    const passage = pick(passagePool());
+    P = { mode:"comp", topicId:practiceKey("comprehension"), topicName:"Reading: "+passage.title,
+          passage, queue: passage.questions.map(prepQuestion), idx:0, correct:0, done:0, streak:0 };
+  }else{
+    const t = TOPICS[topicIdx];
+    P = { mode:"topic", topicId:practiceKey(t.id), topicName:t.nameEn, topicIdx,
+          queue: shuffle(topicPool(t)).map(prepQuestion), idx:0, correct:0, done:0, streak:0 };
+  }
+  renderPracticeQ();
+}
+function renderPracticeQ(){
+  if(P.idx >= P.queue.length){ return practiceSummary(); }
+  const q = P.queue[P.idx];
+  const passageHtml = P.mode==="comp" ? `<div class="passage"><b>${esc(P.passage.title)}</b>\n${esc(P.passage.text)}</div>` : "";
+  $app.innerHTML = `
+    <div class="topbar">
+      <button class="btn btn-ghost btn-small" onclick="practiceSummary()">${IMG("back")} Stop</button>
+      <div class="title">${IMG("target")}<span>${esc(P.topicName)}</span></div>
+      <span class="pill">${IMG("glowing-star")} ${P.correct}</span>
+    </div>
+    <div class="statrow">
+      <div class="progressbar"><div style="width:${(P.idx)/P.queue.length*100}%"></div></div>
+      <span class="pill">Question ${P.done+1}</span>
+    </div>
+    <div class="card">
+      ${passageHtml}
+      ${q.img && P.mode!=="comp" ? IMG(q.img,"qimg") : ""}
+      <div class="qtext">${esc(q.q)}</div>
+      ${renderOptions(q,"answerPractice")}
+      <div id="fb"></div>
+    </div>`;
+  window.scrollTo(0,0);
+}
+function answerPractice(pos){
+  const q = P.queue[P.idx];
+  const good = pos === q.correctPos;
+  lockOptions(pos, q.correctPos);
+  P.done++;
+  bumpPractice(P.topicId, good);
+  const fb = document.getElementById("fb");
+  if(good){
+    P.correct++; P.streak++;
+    playSound(true); confetti();
+    const extra = P.streak>=3 ? `<div class="sub">${P.streak} correct in a row! Amazing!</div>` : "";
+    fb.innerHTML = `<div class="feedback good">${IMG("party")} ${pick(PRAISE)}${extra}</div>
+      <div class="navrow"><button class="btn btn-pink" onclick="nextPractice()">Next question ${IMG("glowing-star")}</button></div>`;
+  }else{
+    P.streak = 0;
+    playSound(false);
+    fb.innerHTML = `<div class="feedback bad">${IMG("muscle")} ${pick(CHEER)}
+        <div class="sub">The correct answer is: <b>${esc(q.o[q.a])}</b></div></div>
+      <div class="navrow"><button class="btn btn-purple" onclick="nextPractice()">Next question</button></div>`;
+  }
+  fb.scrollIntoView({behavior:"smooth", block:"end"});
+}
+function nextPractice(){ P.idx++; renderPracticeQ(); }
+function practiceSummary(){
+  const pct = P.done ? Math.round(P.correct/P.done*100) : 0;
+  const msg = P.done===0 ? "You didn't answer any questions. Try again!" :
+    pct>=80 ? "Wonderful! You did great!" : pct>=50 ? "Nice work! Just a bit more!" : "No worries, keep practicing and you'll get there!";
+  $app.innerHTML = `
+    <div class="card center" style="margin-top:30px">
+      ${IMG(pct>=80?"trophy":(pct>=50?"glowing-star":"muscle"),"icon-xl")}
+      <div class="score-big">${P.correct}/${P.done}</div>
+      <p style="font-weight:700">${msg}</p>
+      <p class="muted">Topic: ${esc(P.topicName)} &middot; ${modeBadge(MODE)}</p>
+      <div class="navrow">
+        <button class="btn btn-pink" onclick="startPractice(${P.mode==="comp" ? -1 : P.topicIdx})">Play again</button>
+        <button class="btn btn-ghost" onclick="goTopics()">Other topics</button>
+      </div>
+      <div class="navrow"><button class="btn btn-yellow" onclick="goHome()">${IMG("house")} Back home</button></div>
+    </div>`;
+  window.scrollTo(0,0);
+}
+
+/* ================= test ================= */
+const TEST_MINUTES = 60;
+let T = null;
+function goTestIntro(){
+  $app.innerHTML = `
+    <div class="topbar">
+      <button class="btn btn-ghost btn-small" onclick="goModeSelect('test')">${IMG("back")} Mode</button>
+      <span class="pill"><img class="mode-pill-img" src="images/${MODES[MODE].img}" alt="">${esc(MODES[MODE].name)}</span>
+    </div>
+    <div class="card center">
+      <img src="images/${MODES[MODE].img}" alt="" style="width:min(100%,420px);border-radius:18px;box-shadow:var(--shadow);">
+      <h1 style="margin-top:12px">Practice Test</h1>
+      <p style="margin-top:0">${modeBadge(MODE)}</p>
+      <p><b>35 questions</b> just like the real Olympiad exam:<br>
+      30 Classic questions (1 mark) + 5 Scholar questions (2 marks)<br>Total: <b>40 marks</b></p>
+      <p class="muted">Time: ${TEST_MINUTES} minutes - countdown timer.<br>When you're done, tap "Submit" to see your score!</p>
+      <button class="btn btn-purple" onclick="startTest()">Start the test ${IMG("glowing-star")}</button>
+    </div>`;
+  window.scrollTo(0,0);
+}
+function buildTest(){
+  // 24 classic questions from 10 topics (evenly split), 6 reading questions (1 passage), 5 scholar questions (2 marks)
+  const pools = shuffle(TOPICS).map(t => shuffle(topicPool(t).filter(q=>!q.s)).map(q=>({...q, topicName:t.nameEn})));
+  const classic = [];
+  let i = 0, guard = 0;
+  while(classic.length < 24 && guard++ < 2000){
+    const pool = pools[i % pools.length]; i++;
+    if(pool.length) classic.push(pool.pop());
+  }
+  const passage = pick(passagePool());
+  const comp = passage.questions.map(q=>({...q, topicName:"Reading", passage}));
+  const scholar = shuffle(TOPICS.flatMap(t=>topicPool(t).filter(q=>q.s).map(q=>({...q, topicName:t.nameEn})))).slice(0,5);
+  const qs = [
+    ...shuffle(classic).map(q=>({...q, marks:1})),
+    ...comp.map(q=>({...q, marks:1})),
+    ...scholar.map(q=>({...q, marks:2}))
+  ].map(prepQuestion);
+  return qs;
+}
+function startTest(){
+  T = { qs: buildTest(), mode: MODE, idx:0, answers:{}, secondsLeft: TEST_MINUTES*60, timer:null, startedAt: Date.now() };
+  T.timer = setInterval(()=>{
+    T.secondsLeft--;
+    const el = document.getElementById("timer");
+    if(el){
+      el.textContent = fmtTime(T.secondsLeft);
+      el.parentElement.classList.toggle("timer-low", T.secondsLeft < 300);
+    }
+    if(T.secondsLeft <= 0){ submitTest(true); }
+  }, 1000);
+  renderTestQ();
+}
+const fmtTime = s => { s=Math.max(0,s); return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); };
+function renderTestQ(){
+  const q = T.qs[T.idx];
+  const answered = Object.keys(T.answers).length;
+  const passageHtml = q.passage ? `<div class="passage"><b>${esc(q.passage.title)}</b>\n${esc(q.passage.text)}</div>` : "";
+  const nums = T.qs.map((_,i)=>
+    `<button class="${T.answers[i]!=null?'done':''} ${i===T.idx?'cur':''}" onclick="jumpTest(${i})">${i+1}</button>`).join("");
+  $app.innerHTML = `
+    <div class="topbar">
+      <button class="btn btn-ghost btn-small" onclick="confirmQuitTest()">${IMG("back")} Exit</button>
+      <span class="pill ${T.secondsLeft<300?'timer-low':''}">${IMG("timer")} <span id="timer">${fmtTime(T.secondsLeft)}</span></span>
+      <span class="pill">${answered}/${T.qs.length}</span>
+    </div>
+    <div class="statrow">
+      <div class="progressbar"><div style="width:${answered/T.qs.length*100}%"></div></div>
+    </div>
+    <div class="card">
+      <p class="muted" style="margin:0 0 4px">${modeBadge(T.mode)} Question ${T.idx+1} / ${T.qs.length} - ${esc(q.topicName)} ${q.marks===2?'<span class="mark2">Scholar - 2 marks</span>':''}</p>
+      ${passageHtml}
+      ${q.img && !q.passage ? IMG(q.img,"qimg") : ""}
+      <div class="qtext">${esc(q.q)}</div>
+      ${renderOptions(q,"answerTest")}
+    </div>
+    <div class="navrow">
+      <button class="btn btn-ghost" ${T.idx===0?"disabled style='opacity:.4'":""} onclick="navTest(-1)">Previous</button>
+      <button class="btn btn-purple" ${T.idx===T.qs.length-1?"disabled style='opacity:.4'":""} onclick="navTest(1)">Next</button>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <p class="muted" style="margin:0 0 6px">Tap a number to jump to a question:</p>
+      <div class="testnums">${nums}</div>
+      <div class="navrow"><button class="btn btn-pink" onclick="confirmSubmit()">Submit ${IMG("check")}</button></div>
+    </div>`;
+  const picked = T.answers[T.idx];
+  if(picked != null){
+    document.querySelectorAll(".opt").forEach(b=>{ if(+b.dataset.pos === picked) b.classList.add("picked"); });
+  }
+  window.scrollTo(0,0);
+}
+function answerTest(pos){
+  T.answers[T.idx] = pos;
+  if(T.idx < T.qs.length-1){ T.idx++; }
+  renderTestQ();
+}
+function navTest(d){ T.idx = Math.min(T.qs.length-1, Math.max(0, T.idx+d)); renderTestQ(); }
+function jumpTest(i){ T.idx = i; renderTestQ(); }
+function confirmQuitTest(){
+  if(confirm("Exiting will lose this attempt. Are you sure?")){ clearInterval(T.timer); T=null; goHome(); }
+}
+function confirmSubmit(){
+  const left = T.qs.length - Object.keys(T.answers).length;
+  const msg = left>0 ? `You still have ${left} unanswered question(s). Submit anyway?` : "Submit and see your score?";
+  if(confirm(msg)) submitTest(false);
+}
+function submitTest(timeout){
+  clearInterval(T.timer);
+  let score=0, correct=0, totalMarks=0;
+  const review = T.qs.map((q,i)=>{
+    totalMarks += q.marks;
+    const picked = T.answers[i];
+    const ok = picked === q.correctPos;
+    if(ok){ correct++; score += q.marks; }
+    return { q, picked, ok };
+  });
+  const timeUsed = Math.min(TEST_MINUTES*60, Math.round((Date.now()-T.startedAt)/1000));
+  store.tests.push({ date: new Date().toISOString(), mode: T.mode, score, totalMarks, correct, total: T.qs.length, timeUsed });
+  store.stars += correct;
+  saveStore(store);
+  renderTestResult({score,totalMarks,correct,total:T.qs.length,timeUsed,review,timeout,mode:T.mode});
+  T = null;
+}
+function renderTestResult(r){
+  const pct = r.score / r.totalMarks;
+  if(pct >= 0.6){ playSound(true); confetti(); }
+  const msg = pct>=0.85 ? "Excellent! You're a superstar!" : pct>=0.6 ? "Great job! Keep it up!" : "Keep practicing and you'll score higher next time!";
+  const reviewHtml = r.review.map((it,i)=>{
+    const yourAns = it.picked==null ? "(not answered)" : it.q.o[it.q.order[it.picked]];
+    return `<div class="review-item ${it.ok?'ok':''}">
+      <div class="rq">Question ${i+1}: ${esc(it.q.q)}</div>
+      ${it.ok ? `<div>You chose correctly: <b>${esc(it.q.o[it.q.a])}</b></div>`
+              : `<div>You chose: <b>${esc(yourAns)}</b> - Correct answer: <b>${esc(it.q.o[it.q.a])}</b></div>`}
+    </div>`;
+  }).join("");
+  $app.innerHTML = `
+    <div class="card center">
+      ${IMG(pct>=0.6?"trophy":"muscle","icon-xl")}
+      ${r.timeout?'<p class="muted">Time is up! Your test was submitted automatically.</p>':''}
+      <div class="score-big">${r.score}/${r.totalMarks} marks</div>
+      <p style="font-weight:700">${msg}</p>
+      <p class="muted">${modeBadge(r.mode)} &middot; ${r.correct}/${r.total} correct - Time: ${fmtTime(r.timeUsed)}</p>
+      <div class="navrow">
+        <button class="btn btn-purple" onclick="goTestIntro()">Try another test</button>
+        <button class="btn btn-yellow" onclick="goHome()">${IMG("house")} Home</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">${IMG("open-book")} Review your answers</h3>
+      ${reviewHtml}
+    </div>`;
+  window.scrollTo(0,0);
+}
+
+/* ================= history / progress ================= */
+function goHistory(){
+  const rows = store.tests.slice().reverse().map(t=>{
+    const d = new Date(t.date);
+    const ds = d.toLocaleDateString("en-US") + " " + d.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit"});
+    const mb = MODES[t.mode] ? modeBadge(t.mode) : modeBadge("chill");
+    return `<tr><td>${ds}</td><td>${mb}</td><td><b>${t.score}/${t.totalMarks}</b></td><td>${t.correct}/${t.total}</td><td>${fmtTime(t.timeUsed)}</td></tr>`;
+  }).join("");
+  const pracRows = TOPICS.concat([{id:"comprehension",nameEn:"Reading",nameVi:"Reading Comprehension"}]).flatMap(t=>
+    [["chill", t.id], ["master", t.id+"#master"]].map(([m, key])=>{
+      const p = store.practice[key];
+      if(!p || !p.done) return "";
+      const pct = Math.round(p.correct/p.done*100);
+      return `<tr><td>${esc(t.nameEn)}</td><td>${modeBadge(m)}</td><td>${p.correct}/${p.done}</td><td><b>${pct}%</b></td></tr>`;
+    })
+  ).join("");
+  $app.innerHTML = `
+    <div class="topbar"><button class="btn btn-ghost btn-small" onclick="goHome()">${IMG("back")} Home</button>
+      <span class="pill">${IMG("glowing-star")} ${store.stars} stars</span></div>
+    <h1>${IMG("chart")} My progress</h1>
+    <div class="card">
+      <h3 style="margin-top:0">${IMG("timer")} Test attempts</h3>
+      ${rows ? `<table><tr><th>Date</th><th>Mode</th><th>Score</th><th>Correct</th><th>Time</th></tr>${rows}</table>`
+             : `<p class="muted">No tests yet. Tap "Take a test" to begin!</p>`}
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">${IMG("target")} Practice by topic</h3>
+      ${pracRows ? `<table><tr><th>Topic</th><th>Mode</th><th>Correct/Total</th><th>Rate</th></tr>${pracRows}</table>`
+                 : `<p class="muted">No topics practiced yet.</p>`}
+    </div>
+    <div class="card center">
+      <button class="btn btn-ghost" onclick="resetProgress()">${IMG("reset")} Clear all progress</button>
+    </div>`;
+  window.scrollTo(0,0);
+}
+function resetProgress(){
+  if(confirm("Clear all scores, stars and test history? This cannot be undone!")){
+    store = { practice:{}, tests:[], stars:0 };
+    saveStore(store);
+    goHistory();
+  }
+}
+
+/* ================= startup ================= */
+goHome();
+</script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 675">
+  <defs>
+    <linearGradient id="nightsky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3b3266"/><stop offset="1" stop-color="#6f5fb0"/>
+    </linearGradient>
+    <radialGradient id="lampGlow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#ffe9a3" stop-opacity=".95"/><stop offset="1" stop-color="#ffe9a3" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- cozy study room at night -->
+  <rect width="900" height="675" fill="url(#nightsky)"/>
+  <!-- window with moon -->
+  <rect x="70" y="70" width="230" height="190" rx="18" fill="#241f45"/>
+  <rect x="70" y="70" width="230" height="190" rx="18" fill="none" stroke="#9c8ce0" stroke-width="10"/>
+  <line x1="185" y1="76" x2="185" y2="254" stroke="#9c8ce0" stroke-width="8"/>
+  <line x1="76" y1="165" x2="294" y2="165" stroke="#9c8ce0" stroke-width="8"/>
+  <circle cx="135" cy="125" r="26" fill="#fff3c4"/>
+  <circle cx="146" cy="118" r="22" fill="#241f45"/>
+  <circle cx="235" cy="115" r="4" fill="#fff3c4"/><circle cx="260" cy="145" r="3" fill="#fff3c4"/>
+  <circle cx="215" cy="210" r="3" fill="#fff3c4"/><circle cx="270" cy="220" r="4" fill="#fff3c4"/>
+
+  <!-- floating stars in room -->
+  <g fill="#ffd23f">
+    <path d="M760 90 l 7 -18 l 7 18 l 19 2 l -14 12 l 5 19 l -17 -11 l -17 11 l 5 -19 l -14 -12 Z"/>
+    <circle cx="690" cy="150" r="5"/><circle cx="820" cy="180" r="4"/>
+  </g>
+
+  <!-- desk -->
+  <rect x="60" y="470" width="780" height="34" rx="14" fill="#8c5a3a"/>
+  <rect x="60" y="470" width="780" height="12" rx="6" fill="#a9744f"/>
+  <rect x="110" y="504" width="30" height="140" fill="#7a4c30"/>
+  <rect x="760" y="504" width="30" height="140" fill="#7a4c30"/>
+
+  <!-- desk lamp -->
+  <g>
+    <ellipse cx="745" cy="466" rx="42" ry="10" fill="#2e2e3e"/>
+    <path d="M745 462 C 758 400 750 370 722 342" fill="none" stroke="#2e2e3e" stroke-width="14" stroke-linecap="round"/>
+    <path d="M730 350 L 672 388 L 718 412 Z" fill="#2e2e3e"/>
+    <ellipse cx="668" cy="430" rx="85" ry="70" fill="url(#lampGlow)"/>
+  </g>
+
+  <!-- book stack left -->
+  <g>
+    <rect x="120" y="428" width="150" height="26" rx="8" fill="#ff6f61"/>
+    <rect x="130" y="404" width="130" height="26" rx="8" fill="#3fbf6f"/>
+    <rect x="126" y="380" width="140" height="26" rx="8" fill="#4d9de0"/>
+    <rect x="150" y="356" width="96" height="26" rx="8" fill="#ffd23f"/>
+    <text x="196" y="376" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#6b4e00" text-anchor="middle">ABC</text>
+  </g>
+  <!-- mug -->
+  <g>
+    <rect x="305" y="420" width="52" height="48" rx="10" fill="#ff8fb8"/>
+    <path d="M357 430 a 16 14 0 1 1 0 28" fill="none" stroke="#ff8fb8" stroke-width="9"/>
+    <path d="M318 408 q 6 -12 0 -22 M 340 408 q 6 -12 0 -22" stroke="#d9d3f2" stroke-width="6" fill="none" stroke-linecap="round" opacity=".8"/>
+  </g>
+
+  <!-- hedgehog scholar -->
+  <g>
+    <!-- spikes -->
+    <g fill="#8a5a3b">
+      <path d="M420 258 L 405 165 L 470 225 Z"/><path d="M480 240 L 480 148 L 545 220 Z"/>
+      <path d="M545 238 L 565 150 L 605 232 Z"/><path d="M600 258 L 648 185 L 655 262 Z"/>
+      <path d="M375 292 L 322 235 L 400 258 Z"/><path d="M638 300 L 700 255 L 690 322 Z"/>
+    </g>
+    <g fill="#a06e47">
+      <path d="M448 248 L 440 158 L 505 222 Z"/><path d="M512 236 L 522 150 L 572 226 Z"/>
+      <path d="M572 246 L 605 165 L 630 248 Z"/><path d="M400 272 L 358 205 L 432 245 Z"/>
+    </g>
+    <!-- body -->
+    <circle cx="510" cy="345" r="130" fill="#c58a5a"/>
+    <!-- face -->
+    <ellipse cx="510" cy="368" rx="98" ry="88" fill="#f7e2c2"/>
+    <!-- ears -->
+    <circle cx="422" cy="268" r="16" fill="#f7e2c2" stroke="#d9b98c" stroke-width="4"/>
+    <circle cx="598" cy="268" r="16" fill="#f7e2c2" stroke="#d9b98c" stroke-width="4"/>
+    <!-- determined eyebrows -->
+    <path d="M448 316 L 492 328" stroke="#5a3d28" stroke-width="9" stroke-linecap="round"/>
+    <path d="M572 316 L 528 328" stroke="#5a3d28" stroke-width="9" stroke-linecap="round"/>
+    <!-- round glasses -->
+    <g fill="none" stroke="#2e2e3e" stroke-width="7">
+      <circle cx="470" cy="352" r="26" fill="#ffffff" fill-opacity=".25"/>
+      <circle cx="550" cy="352" r="26" fill="#ffffff" fill-opacity=".25"/>
+      <path d="M496 352 L 524 352"/>
+    </g>
+    <circle cx="470" cy="352" r="7" fill="#333"/>
+    <circle cx="550" cy="352" r="7" fill="#333"/>
+    <!-- snout & mouth -->
+    <ellipse cx="510" cy="398" rx="26" ry="18" fill="#eccfa4"/>
+    <circle cx="510" cy="390" r="11" fill="#5a3d28"/>
+    <path d="M488 420 Q 510 434 532 420" fill="none" stroke="#5a3d28" stroke-width="6" stroke-linecap="round"/>
+    <!-- headband (cao thủ!) -->
+    <path d="M412 300 C 450 282 570 282 608 300 L 604 322 C 565 305 455 305 416 322 Z" fill="#e63946"/>
+    <path d="M604 306 l 42 -18 l -8 34 l -20 12 Z" fill="#e63946"/>
+    <!-- arms on book -->
+    <ellipse cx="418" cy="452" rx="30" ry="20" fill="#c58a5a"/>
+    <ellipse cx="602" cy="452" rx="30" ry="20" fill="#c58a5a"/>
+  </g>
+
+  <!-- big open book -->
+  <g>
+    <path d="M330 470 C 400 440 500 440 510 452 C 520 440 620 440 690 470 L 690 486 C 620 458 522 458 510 470 C 498 458 400 458 330 486 Z" fill="#f4f0ff"/>
+    <path d="M330 470 C 400 440 500 440 510 452 C 520 440 620 440 690 470" fill="none" stroke="#7c5cd6" stroke-width="7"/>
+    <line x1="510" y1="452" x2="510" y2="470" stroke="#7c5cd6" stroke-width="6"/>
+    <g stroke="#b9aee0" stroke-width="5" stroke-linecap="round">
+      <path d="M362 462 C 405 448 460 447 490 452" fill="none"/>
+      <path d="M368 472 C 408 458 462 456 492 461" fill="none"/>
+      <path d="M658 462 C 615 448 560 447 530 452" fill="none"/>
+      <path d="M652 472 C 612 458 558 456 528 461" fill="none"/>
+    </g>
+  </g>
+
+  <!-- pencil -->
+  <g transform="rotate(-10 350 455)">
+    <rect x="292" y="447" width="84" height="15" rx="4" fill="#ffd23f"/>
+    <path d="M376 447 L 396 454 L 376 462 Z" fill="#f7e2c2"/>
+    <path d="M389 451 L 396 454 L 389 458 Z" fill="#5a3d28"/>
+    <rect x="284" y="447" width="11" height="15" fill="#ff8fb8"/>
+  </g>
+
+  <!-- idea sparkles above head -->
+  <g fill="#ffd23f">
+    <path d="M500 96 l 9 -24 l 9 24 l 25 2 l -19 16 l 6 25 l -21 -14 l -21 14 l 6 -25 l -19 -16 Z"/>
+    <circle cx="435" cy="120" r="6"/><circle cx="585" cy="112" r="5"/>
+  </g>
+</svg>
