@@ -28,7 +28,7 @@ JSDOM.fromURL(file, {
 
       // ---- Practice flow ----
       w.goTopics();
-      assert(d.querySelectorAll(".topic-card").length === 11, "topic screen has 11 cards (10 topics + reading)");
+      assert(d.querySelectorAll(".topic-card").length === 12, "topic screen has 12 cards (10 topics + reading + mixed)");
       w.startPractice(0);
       assert(d.querySelectorAll(".opt").length === 4, "practice question has 4 options");
       // correct answer

@@ -126,6 +126,14 @@
   /* ===== difficulty mode cards ===== */
   .mode-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:18px;}
   @media(min-width:520px){.mode-grid{grid-template-columns:1fr 1fr;}}
+  /* Wide screens: show all three hedgehogs on one row, a bit smaller. */
+  @media(min-width:760px){
+    .mode-grid{grid-template-columns:repeat(3,1fr);gap:14px;}
+    .mode-grid .mode-card img.photo{height:150px;}
+    .mode-grid .mode-card .mname{font-size:1.02em;}
+    .mode-grid .mode-card .mdesc{font-size:.78em;}
+    .mode-grid .mode-card .mbody{padding:10px 14px 12px;}
+  }
   .mode-card{
     position:relative;border:4px solid transparent;border-radius:24px;overflow:hidden;
     box-shadow:var(--shadow);cursor:pointer;padding:0;background:#fff;text-align:left;
@@ -138,13 +146,25 @@
   .mode-card .mdesc{color:var(--text-light);font-size:.82em;margin-top:3px;}
   .mode-card.chill{border-color:#7dd3a8;}
   .mode-card.master{border-color:#b79bff;}
+  .mode-card.elite{border-color:#f0b429;}
   .mode-badge{
     display:inline-block;border-radius:999px;padding:2px 10px;font-size:.72em;font-weight:800;
     vertical-align:middle;white-space:nowrap;
   }
   .mode-badge.chill{background:#e9fbef;color:var(--green-dark);}
   .mode-badge.master{background:var(--purple-light);color:#7c5cd6;}
+  .mode-badge.elite{background:#fff4d6;color:#b3730a;}
   .mode-pill-img{width:26px;height:26px;border-radius:50%;object-fit:cover;vertical-align:-0.45em;margin-right:6px;}
+  /* floating sound on/off button (kept outside #app so it stays on every screen) */
+  .sound-toggle{
+    position:fixed;top:12px;right:12px;z-index:50;
+    width:48px;height:48px;border-radius:50%;border:none;cursor:pointer;
+    background:#fff;box-shadow:var(--shadow);font-size:22px;line-height:1;
+    display:flex;align-items:center;justify-content:center;transition:transform .08s;
+  }
+  .sound-toggle:active{transform:scale(.9);}
+  .sound-toggle.off{background:#f2f2f2;opacity:.75;}
+  @media(min-width:760px){.sound-toggle{top:16px;right:16px;}}
 </style>
 </head>
 <body>
@@ -163,6 +183,7 @@
 <script src="data/articles.js"></script>
 <script src="data/comprehension.js"></script>
 <script src="data/hard-questions.js"></script>
+<script src="data/elite-questions.js"></script>
 
 <script>
 "use strict";
@@ -170,19 +191,24 @@
 const TOPICS = window.APP_DATA.topics;
 const PASSAGES = window.APP_DATA.passages;
 const HARD = window.APP_DATA.hard || { topics:{}, passages:[] };
+const ELITE = window.APP_DATA.elite || { topics:{}, passages:[] };
 
 /* ===== difficulty modes ===== */
 const MODES = {
   chill:  { id:"chill",  name:"Nhím Chill Chill", img:"mode-chill.png",
             desc:"Cozy questions to warm up and have fun." },
   master: { id:"master", name:"Nhím Cao Thủ",     img:"mode-master.png",
-            desc:"Tougher questions for true champions!" }
+            desc:"Tougher questions for true champions!" },
+  elite:  { id:"elite",  name:"Nhím Tinh Hoa",    img:"mode-elite.png",
+            desc:"The hardest questions — for the true elite!" }
 };
+// Harder question banks keyed by mode id (chill uses the base topic questions).
+const BANKS = { master: HARD, elite: ELITE };
 let MODE = "chill";
-const modeBadge = m => `<span class="mode-badge ${m}">${esc(MODES[m].name)}</span>`;
-function topicPool(t){ return MODE==="master" ? (HARD.topics[t.id] || t.questions) : t.questions; }
-function passagePool(){ return MODE==="master" && HARD.passages.length ? HARD.passages : PASSAGES; }
-function practiceKey(topicId){ return MODE==="master" ? topicId+"#master" : topicId; }
+const modeBadge = m => `<span class="mode-badge ${m}">${esc((MODES[m]||MODES.chill).name)}</span>`;
+function topicPool(t){ const b = BANKS[MODE]; return b ? (b.topics[t.id] || t.questions) : t.questions; }
+function passagePool(){ const b = BANKS[MODE]; return b && b.passages.length ? b.passages : PASSAGES; }
+function practiceKey(topicId){ return MODE==="chill" ? topicId : topicId+"#"+MODE; }
 const $app = document.getElementById("app");
 const IMG = (name, cls) => name ? `<img class="${cls||'icon'}" src="images/${name}.svg" alt="" onerror="this.style.display='none'">` : "";
 const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
@@ -199,30 +225,273 @@ let store = loadStore();
 store.practice = store.practice || {};   // {topicId:{done,correct}}
 store.tests = store.tests || [];         // [{date,score,totalMarks,correct,total,timeUsed}]
 store.stars = store.stars || 0;
+if(store.soundOn === undefined) store.soundOn = true;   // sound ON by default (has mute button)
 function bumpPractice(topicId, correct){
   const p = store.practice[topicId] = store.practice[topicId] || {done:0,correct:0};
   p.done++; if(correct){ p.correct++; store.stars++; }
   saveStore(store);
 }
 
-/* ================= sound ================= */
-let audioCtx = null;
-function playSound(good){
+/* ================= sound engine (Web Audio, no external files) =================
+   Diverse, non-repeating sound effects + a gentle procedural background melody.
+   Everything is generated live so it never sounds exactly the same twice.
+   All Web Audio calls are guarded so the app still works where audio is
+   unavailable (e.g. headless test runners without AudioContext).           */
+let audioCtx = null, masterGain = null, sfxGain = null, musicGain = null;
+let musicTimer = null, musicOn = false;
+
+function audioAvailable(){ return typeof (window.AudioContext||window.webkitAudioContext) === "function"; }
+
+// Create the context on a user gesture (browsers block autoplay otherwise).
+function initAudio(){
+  if(audioCtx || !audioAvailable()) { if(audioCtx && audioCtx.state==="suspended") audioCtx.resume(); return !!audioCtx; }
   try{
-    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
-    if(audioCtx.state === "suspended") audioCtx.resume();
-    const notes = good ? [523.25, 659.25, 783.99] : [330, 262];
-    notes.forEach((f,i)=>{
-      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-      o.type = "sine"; o.frequency.value = f;
-      g.gain.setValueAtTime(0.0001, audioCtx.currentTime + i*0.12);
-      g.gain.exponentialRampToValueAtTime(0.25, audioCtx.currentTime + i*0.12 + 0.02);
-      g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + i*0.12 + 0.28);
-      o.connect(g); g.connect(audioCtx.destination);
-      o.start(audioCtx.currentTime + i*0.12); o.stop(audioCtx.currentTime + i*0.12 + 0.3);
-    });
+    audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    masterGain = audioCtx.createGain(); masterGain.gain.value = 1; masterGain.connect(audioCtx.destination);
+    sfxGain = audioCtx.createGain();    sfxGain.gain.value = 0.9;  sfxGain.connect(masterGain);
+    musicGain = audioCtx.createGain();  musicGain.gain.value = 0.0; musicGain.connect(masterGain); // fade in later
+  }catch(e){ audioCtx = null; }
+  return !!audioCtx;
+}
+function soundEnabled(){ return !!store.soundOn; }
+
+// Play one note. wave: sine/triangle/square; t0 offset seconds; dur seconds.
+function tone(freq, t0, dur, wave, peak, dest){
+  if(!audioCtx) return;
+  try{
+    const now = audioCtx.currentTime + t0;
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = wave || "sine"; o.frequency.setValueAtTime(freq, now);
+    g.gain.setValueAtTime(0.0001, now);
+    g.gain.exponentialRampToValueAtTime(peak || 0.22, now + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+    o.connect(g); g.connect(dest || sfxGain);
+    o.start(now); o.stop(now + dur + 0.02);
   }catch(e){}
 }
+// A short glide (used for "boing"/"whoosh").
+function glide(f1, f2, t0, dur, wave, peak){
+  if(!audioCtx) return;
+  try{
+    const now = audioCtx.currentTime + t0;
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = wave || "sine";
+    o.frequency.setValueAtTime(f1, now);
+    o.frequency.exponentialRampToValueAtTime(Math.max(1,f2), now + dur);
+    g.gain.setValueAtTime(0.0001, now);
+    g.gain.exponentialRampToValueAtTime(peak || 0.2, now + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+    o.connect(g); g.connect(sfxGain);
+    o.start(now); o.stop(now + dur + 0.02);
+  }catch(e){}
+}
+// A bright "bell/pluck": a note plus its octave+fifth harmonics with a shimmer tail.
+function bell(freq, t0, dur, peak, dest){
+  if(!audioCtx) return;
+  tone(freq, t0, dur, "triangle", (peak||0.2), dest);
+  tone(freq*2, t0, dur*0.7, "sine", (peak||0.2)*0.45, dest);
+  tone(freq*3, t0, dur*0.45, "sine", (peak||0.2)*0.2, dest);
+}
+// Soft filtered-noise percussion (light hat / shaker) — very quiet, adds groove.
+let _noiseBuf = null;
+function perc(t0, dur, peak, cutoff, dest){
+  if(!audioCtx) return;
+  try{
+    if(!_noiseBuf){
+      _noiseBuf = audioCtx.createBuffer(1, audioCtx.sampleRate*0.3, audioCtx.sampleRate);
+      const d = _noiseBuf.getChannelData(0);
+      for(let i=0;i<d.length;i++) d[i] = Math.random()*2-1;
+    }
+    const now = audioCtx.currentTime + t0;
+    const src = audioCtx.createBufferSource(); src.buffer = _noiseBuf;
+    const g = audioCtx.createGain();
+    let node = src;
+    if(audioCtx.createBiquadFilter){
+      const f = audioCtx.createBiquadFilter(); f.type = "highpass"; f.frequency.value = cutoff || 6000;
+      src.connect(f); node = f;
+    }
+    g.gain.setValueAtTime(peak || 0.04, now);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + (dur||0.06));
+    node.connect(g); g.connect(dest || sfxGain);
+    src.start(now); src.stop(now + (dur||0.06) + 0.02);
+  }catch(e){}
+}
+
+// Shuffle-bag: returns items in random order without repeating until exhausted,
+// so consecutive sounds are always different.
+function makeBag(n){
+  let order=[], last=-1;
+  return ()=>{
+    if(!order.length){
+      order = shuffle([...Array(n).keys()]);
+      // avoid repeating the previous draw across a reshuffle (pop() takes the last item)
+      if(n>1 && order[order.length-1]===last) order.unshift(order.pop());
+    }
+    return (last = order.pop());
+  };
+}
+const _correctBag = makeBag(6), _wrongBag = makeBag(4), _fanfareBag = makeBag(3);
+const J = () => 0.97 + Math.random()*0.06;              // tiny pitch jitter per play
+const S = { C:261.63,D:293.66,E:329.63,F:349.23,G:392,A:440,B:493.88,
+            C5:523.25,D5:587.33,E5:659.25,F5:698.46,G5:783.99,A5:880,C6:1046.5 };
+
+// Happy "correct" — bright bell arpeggios (6 patterns), escalates on a hot streak.
+function sfxCorrect(streak){
+  if(!soundEnabled() || !initAudio()) return;
+  duckMusic();
+  perc(0, 0.05, 0.05, 8000);                              // tiny sparkle transient
+  if(streak && streak>=5){ // big, joyful celebration for hot streaks
+    [S.C5,S.E5,S.G5,S.C6,S.E5,S.G5,S.C6].forEach((f,i)=> bell(f*J(), i*0.075, 0.34, 0.2));
+    bell(S.G5*J(), 0.6, 0.5, 0.14); bell(S.C6*J(), 0.66, 0.7, 0.15);
+    return;
+  }
+  const patterns = [
+    ["C5","E5","G5"],
+    ["G","C5","E5","G5"],
+    ["E5","G5","C6"],
+    ["C5","D5","E5","G5"],
+    ["G5","E5","C6"],
+    ["C5","G5","C6"],
+  ];
+  const p = patterns[_correctBag()];
+  p.forEach((n,i)=> bell(S[n]*J(), i*0.085, 0.3, 0.2));
+  bell(p.map(x=>S[x]).reduce((a,b)=>Math.max(a,b))*J()*1.0, p.length*0.085+0.02, 0.5, 0.12); // shimmer tail
+}
+
+// Gentle "not quite" — soft, cute & friendly (never harsh), 4 variants.
+function sfxWrong(){
+  if(!soundEnabled() || !initAudio()) return;
+  duckMusic();
+  switch(_wrongBag()){
+    case 0: tone(S.E*J(),0,0.16,"triangle",0.17); tone(S.C*J(),0.13,0.26,"triangle",0.17); break; // soft two-step down
+    case 1: glide(360, 200, 0, 0.30, "triangle", 0.16); tone(S.C*J(),0.24,0.2,"sine",0.1); break; // cute "bloop"
+    case 2: tone(S.D*J(),0,0.15,"sine",0.16); tone(S.A/2*J(),0.14,0.28,"triangle",0.15); break;
+    case 3: glide(300, 240, 0, 0.16, "sine", 0.15); glide(240, 300, 0.16, 0.18, "sine", 0.13); break; // playful wobble
+  }
+}
+
+// Whoosh + pop for the "Next" button — light and satisfying, 3 variants.
+const _nextBag = makeBag(3);
+function sfxNext(){
+  if(!soundEnabled() || !initAudio()) return;
+  duckMusic(0.6);
+  perc(0, 0.05, 0.05, 7000);
+  switch(_nextBag()){
+    case 0: glide(440, 900, 0, 0.13, "sine", 0.14); break;             // upward whoosh
+    case 1: bell(S.G5*J(), 0, 0.18, 0.15); bell(S.C6*J(), 0.05, 0.2, 0.12); break; // twinkle up
+    case 2: glide(520, 780, 0, 0.10, "triangle", 0.13); tone(S.C6*J(),0.09,0.16,"sine",0.1); break;
+  }
+}
+
+// Little sparkle when a star is earned (kept subtle, layered under correct).
+function sfxStar(){
+  if(!soundEnabled() || !audioCtx) return;
+  bell(S.C6*J(), 0, 0.16, 0.09); tone(S.G5*J(), 0.06, 0.18, "sine", 0.07);
+}
+
+// End of round / test — celebratory (win) or warm & encouraging (else).
+function sfxFanfare(win){
+  if(!soundEnabled() || !initAudio()) return;
+  duckMusic(1.2);
+  if(win){
+    const tunes = [
+      ["C5","E5","G5","C6","E5","G5","C6"],
+      ["G","C5","E5","G5","C6","G5","C6"],
+      ["E5","G5","C6","D5","E5","G5","C6"],
+    ];
+    const t = tunes[_fanfareBag()];
+    t.forEach((n,i)=>{ bell(S[n]*J(), i*0.13, 0.46, 0.2); if(i%2===0) perc(i*0.13, 0.05, 0.05, 7000); });
+    bell(S.C6*J(), t.length*0.13+0.05, 0.7, 0.14);
+  }else{
+    ["C5","D5","E5","D5","E5","G5"].forEach((n,i)=> tone(S[n]*J(), i*0.16, 0.4, "sine", 0.18));
+  }
+}
+// Soft "pop" for taps / navigation.
+function sfxTap(){ if(!soundEnabled() || !audioCtx) return; glide(520, 660, 0, 0.09, "sine", 0.10); }
+
+// Briefly lower the music so effects stand out, then restore.
+function duckMusic(mult){
+  if(!audioCtx || !musicGain || !musicOn) return;
+  try{
+    const now = audioCtx.currentTime, base = MUSIC_VOL;
+    musicGain.gain.cancelScheduledValues(now);
+    musicGain.gain.setValueAtTime(base*0.35, now);
+    musicGain.gain.linearRampToValueAtTime(base, now + 0.6*(mult||1));
+  }catch(e){}
+}
+
+/* ---- Background music: bouncy, upbeat tune that keeps re-inventing itself ----
+   A happy I–V–vi–IV loop in C with a plucky bass, light shaker groove and a
+   playful pentatonic melody generated live, so it stays cheerful but never
+   repeats the same bar twice. Still mixed low so it sits under the effects.  */
+const MUSIC_VOL = 0.085;
+const PENTA = [S.C,S.D,S.E,S.G,S.A,S.C5,S.D5,S.E5,S.G5,S.A5]; // always sounds pleasant
+// One entry per bar: [bass root, two soft pad notes]
+const PROG = [
+  { bass: 65.41,  pad:[S.C, S.G]  },   // C
+  { bass: 98.00,  pad:[S.G, S.D5] },   // G
+  { bass: 110.00, pad:[S.A, S.E5] },   // Am
+  { bass: 87.31,  pad:[S.F, S.C5] },   // F
+];
+let _mStep = 0, _mBar = 0;
+
+function startMusic(){
+  if(!soundEnabled() || !initAudio() || musicOn) return;
+  musicOn = true;
+  try{
+    musicGain.gain.cancelScheduledValues(audioCtx.currentTime);
+    musicGain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+    musicGain.gain.linearRampToValueAtTime(MUSIC_VOL, audioCtx.currentTime + 0.9);
+  }catch(e){}
+  const EIGHTH = 0.205;                 // ~146 bpm feel — bouncy but not frantic
+  const STEPS = 8;                      // 8 eighth-notes per bar
+  const step = ()=>{
+    if(!musicOn || !audioCtx) return;
+    const pos = _mStep % STEPS;
+    const bar = PROG[_mBar % PROG.length];
+    if(pos === 0){                                   // new bar
+      bar.pad.forEach(f=> tone(f/2, 0, EIGHTH*7.5, "sine", 0.045, musicGain));   // soft pad
+    }
+    // plucky bass: strong on 1 & the "and-of-2", a bounce on 3
+    if(pos===0) bell(bar.bass, 0, EIGHTH*1.4, 0.11, musicGain);
+    else if(pos===3) bell(bar.bass*1.5, 0, EIGHTH*0.9, 0.07, musicGain);
+    else if(pos===4) bell(bar.bass, 0, EIGHTH*1.2, 0.09, musicGain);
+    // light shaker groove on off-beats
+    if(pos%2===1) perc(0, 0.045, 0.028, 9000, musicGain);
+    // playful melody — random pentatonic, syncopated, with rests (never repeats)
+    if(Math.random() > 0.34){
+      const f = PENTA[Math.floor(Math.random()*PENTA.length)];
+      const long = Math.random()>0.75;
+      tone(f, 0, EIGHTH*(long?1.7:0.85), Math.random()>0.5?"triangle":"sine", 0.055, musicGain);
+      if(Math.random()>0.82) tone(f*1.5, EIGHTH*0.5, EIGHTH*0.7, "sine", 0.03, musicGain); // echo
+    }
+    _mStep++;
+    if(pos === STEPS-1) _mBar++;
+  };
+  step();
+  musicTimer = setInterval(step, EIGHTH*1000);
+}
+function stopMusic(){
+  musicOn = false;
+  if(musicTimer){ clearInterval(musicTimer); musicTimer = null; }
+  if(audioCtx && musicGain){ try{
+    const now = audioCtx.currentTime;
+    musicGain.gain.cancelScheduledValues(now);
+    musicGain.gain.setValueAtTime(musicGain.gain.value, now);
+    musicGain.gain.linearRampToValueAtTime(0.0001, now + 0.4);
+  }catch(e){} }
+}
+// Make sure music is playing when sound is on (called on user gestures).
+function ensureMusic(){ if(soundEnabled()){ initAudio(); startMusic(); } }
+// Save battery / be polite: pause music when the tab is hidden.
+if(typeof document !== "undefined"){
+  document.addEventListener("visibilitychange", ()=>{
+    if(document.hidden) stopMusic(); else ensureMusic();
+  });
+}
+
+// Back-compat wrapper (older call sites / tests).
+function playSound(good){ good ? sfxCorrect() : sfxWrong(); }
 
 /* ================= confetti effect ================= */
 function confetti(){
@@ -302,6 +571,7 @@ function goModeSelect(next){
 }
 function pickMode(mode, next){
   MODE = mode;
+  ensureMusic();   // first real tap into a mode — kick off audio + background music
   if(next === 'test') goTestIntro(); else goTopics();
 }
 
@@ -347,6 +617,7 @@ function goTopics(){
 const ROUND_SIZE = 10;               // số câu hỏi mỗi lượt practice
 let P = null; // practice state
 function startPractice(topicIdx){
+  ensureMusic();
   if(topicIdx === -1){
     const passage = pick(passagePool());
     P = { mode:"comp", topicId:practiceKey("comprehension"), topicName:"Reading: "+passage.title,
@@ -398,22 +669,23 @@ function answerPractice(pos){
   const fb = document.getElementById("fb");
   if(good){
     P.correct++; P.streak++;
-    playSound(true); confetti();
+    sfxCorrect(P.streak); sfxStar(); confetti();
     const extra = P.streak>=3 ? `<div class="sub">${P.streak} correct in a row! Amazing!</div>` : "";
     fb.innerHTML = `<div class="feedback good">${IMG("party")} ${pick(PRAISE)}${extra}</div>
       <div class="navrow"><button class="btn btn-pink" onclick="nextPractice()">Next question ${IMG("glowing-star")}</button></div>`;
   }else{
     P.streak = 0;
-    playSound(false);
+    sfxWrong();
     fb.innerHTML = `<div class="feedback bad">${IMG("muscle")} ${pick(CHEER)}
         <div class="sub">The correct answer is: <b>${esc(q.o[q.a])}</b></div></div>
       <div class="navrow"><button class="btn btn-purple" onclick="nextPractice()">Next question</button></div>`;
   }
   fb.scrollIntoView({behavior:"smooth", block:"end"});
 }
-function nextPractice(){ P.idx++; renderPracticeQ(); }
+function nextPractice(){ sfxNext(); P.idx++; renderPracticeQ(); }
 function practiceSummary(){
   const pct = P.done ? Math.round(P.correct/P.done*100) : 0;
+  if(P.done) sfxFanfare(pct >= 50);
   const msg = P.done===0 ? "You didn't answer any questions. Try again!" :
     pct>=80 ? "Wonderful! You did great!" : pct>=50 ? "Nice work! Just a bit more!" : "No worries, keep practicing and you'll get there!";
   $app.innerHTML = `
@@ -471,6 +743,7 @@ function buildTest(){
   return qs;
 }
 function startTest(){
+  ensureMusic();
   T = { qs: buildTest(), mode: MODE, idx:0, answers:{}, secondsLeft: TEST_MINUTES*60, timer:null, startedAt: Date.now() };
   T.timer = setInterval(()=>{
     T.secondsLeft--;
@@ -526,7 +799,7 @@ function answerTest(pos){
   if(T.idx < T.qs.length-1){ T.idx++; }
   renderTestQ();
 }
-function navTest(d){ T.idx = Math.min(T.qs.length-1, Math.max(0, T.idx+d)); renderTestQ(); }
+function navTest(d){ if(d>0) sfxNext(); else sfxTap(); T.idx = Math.min(T.qs.length-1, Math.max(0, T.idx+d)); renderTestQ(); }
 function jumpTest(i){ T.idx = i; renderTestQ(); }
 function confirmQuitTest(){
   if(confirm("Exiting will lose this attempt. Are you sure?")){ clearInterval(T.timer); T=null; goHome(); }
@@ -555,7 +828,8 @@ function submitTest(timeout){
 }
 function renderTestResult(r){
   const pct = r.score / r.totalMarks;
-  if(pct >= 0.6){ playSound(true); confetti(); }
+  sfxFanfare(pct >= 0.6);
+  if(pct >= 0.6){ confetti(); }
   const msg = pct>=0.85 ? "Excellent! You're a superstar!" : pct>=0.6 ? "Great job! Keep it up!" : "Keep practicing and you'll score higher next time!";
   const reviewHtml = r.review.map((it,i)=>{
     const yourAns = it.picked==null ? "(not answered)" : it.q.o[it.q.order[it.picked]];
@@ -593,7 +867,7 @@ function goHistory(){
     return `<tr><td>${ds}</td><td>${mb}</td><td><b>${t.score}/${t.totalMarks}</b></td><td>${t.correct}/${t.total}</td><td>${fmtTime(t.timeUsed)}</td></tr>`;
   }).join("");
   const pracRows = TOPICS.concat([{id:"comprehension",nameEn:"Reading",nameVi:"Reading Comprehension"}]).flatMap(t=>
-    [["chill", t.id], ["master", t.id+"#master"]].map(([m, key])=>{
+    [["chill", t.id], ["master", t.id+"#master"], ["elite", t.id+"#elite"]].map(([m, key])=>{
       const p = store.practice[key];
       if(!p || !p.done) return "";
       const pct = Math.round(p.correct/p.done*100);
@@ -621,13 +895,40 @@ function goHistory(){
 }
 function resetProgress(){
   if(confirm("Clear all scores, stars and test history? This cannot be undone!")){
-    store = { practice:{}, tests:[], stars:0 };
+    store = { practice:{}, tests:[], stars:0, soundOn: store.soundOn };
     saveStore(store);
     goHistory();
   }
 }
 
+/* ================= sound on/off button ================= */
+let soundBtn = null;
+function refreshSoundBtn(){
+  if(!soundBtn) return;
+  const on = soundEnabled();
+  soundBtn.textContent = on ? "🔊" : "🔇";
+  soundBtn.className = "sound-toggle" + (on ? "" : " off");
+  soundBtn.setAttribute("aria-label", on ? "Sound on — tap to mute" : "Sound off — tap to turn on");
+  soundBtn.title = soundBtn.getAttribute("aria-label");
+}
+function toggleSound(){
+  store.soundOn = !store.soundOn;
+  saveStore(store);
+  refreshSoundBtn();
+  if(store.soundOn){ initAudio(); ensureMusic(); sfxTap(); }
+  else { stopMusic(); }
+}
+function mountSoundBtn(){
+  if(typeof document === "undefined" || soundBtn) return;
+  soundBtn = document.createElement("button");
+  soundBtn.type = "button";
+  soundBtn.addEventListener("click", toggleSound);
+  document.body.appendChild(soundBtn);
+  refreshSoundBtn();
+}
+
 /* ================= startup ================= */
+mountSoundBtn();
 goHome();
 </script>
 </body>
