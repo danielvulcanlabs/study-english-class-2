@@ -14,6 +14,7 @@
     --shadow:0 6px 20px rgba(167,139,250,.25);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html{-webkit-text-size-adjust:100%; text-size-adjust:100%;}  /* no surprise zoom on rotate */
   html,body{margin:0;padding:0;}
   body{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
@@ -62,6 +63,7 @@
   .passage{
     background:var(--purple-light);border-radius:18px;padding:16px;margin-bottom:14px;
     white-space:pre-line;font-size:clamp(17px,2.4vw,21px);max-height:38vh;overflow-y:auto;
+    -webkit-overflow-scrolling:touch;   /* smooth momentum scroll on iOS */
   }
   .passage b{color:var(--purple);}
   .opts{display:grid;gap:12px;grid-template-columns:1fr;}
@@ -165,6 +167,131 @@
   .sound-toggle:active{transform:scale(.9);}
   .sound-toggle.off{background:#f2f2f2;opacity:.75;}
   @media(min-width:760px){.sound-toggle{top:16px;right:16px;}}
+
+  /* ===================== iPad / tablet tuning ===================== */
+  /* iPad portrait & up: give the layout a touch more room and breathing space,
+     and make tap targets comfortably large for little fingers. */
+  @media(min-width:768px){
+    #app{max-width:840px; padding:22px 22px 48px;}
+    .card{padding:24px;}
+    .btn{min-height:70px;}
+    .opt{min-height:68px; padding:14px 18px;}
+    .qtext{margin:8px 0 18px;}
+    .grid{grid-template-columns:repeat(auto-fill,minmax(168px,1fr)); gap:18px;}
+    .testnums button{width:48px;height:48px;font-size:16px;}   /* easier to tap */
+    .sound-toggle{width:54px;height:54px;font-size:25px;}
+    /* Reading passage can be taller in portrait (plenty of vertical room). */
+    .passage{max-height:46vh; padding:18px 20px;}
+  }
+  /* Landscape tablets (short height, wide screen): keep the passage from eating
+     the screen, and lay options out in two columns whenever they're short. */
+  @media(min-width:768px) and (orientation:landscape){
+    #app{max-width:900px;}
+    .passage{max-height:34vh;}
+  }
+  /* Big iPad Pro portrait: allow three roomy topic columns. */
+  @media(min-width:1000px){
+    #app{max-width:920px;}
+  }
+
+  /* ===================== animations & polish ===================== */
+  /* Softly drifting background so the whole page feels alive. */
+  body{
+    background-size:180% 180%;
+    animation:bgDrift 26s ease-in-out infinite;
+  }
+  @keyframes bgDrift{
+    0%{background-position:0% 30%;} 50%{background-position:100% 70%;} 100%{background-position:0% 30%;}
+  }
+
+  /* Every screen fades + rises in when it renders. */
+  #app{animation:screenIn .42s cubic-bezier(.22,1,.36,1);}
+  @keyframes screenIn{
+    from{opacity:0; transform:translateY(14px) scale(.99);}
+    to{opacity:1; transform:none;}
+  }
+
+  /* Headings gently pop. */
+  h1{animation:titlePop .5s cubic-bezier(.34,1.56,.64,1);}
+  @keyframes titlePop{ from{opacity:0; transform:scale(.9) translateY(-6px);} to{opacity:1; transform:none;} }
+
+  /* Staggered entrance for grids of cards / buttons. */
+  @keyframes riseIn{ from{opacity:0; transform:translateY(18px) scale(.96);} to{opacity:1; transform:none;} }
+  .bigmenu .btn, .grid .topic-card, .mode-grid .mode-card, .opts .opt{
+    animation:riseIn .45s both cubic-bezier(.22,1,.36,1);
+  }
+  .bigmenu .btn:nth-child(1){animation-delay:.04s;} .bigmenu .btn:nth-child(2){animation-delay:.12s;} .bigmenu .btn:nth-child(3){animation-delay:.20s;}
+  .mode-grid .mode-card:nth-child(1){animation-delay:.05s;} .mode-grid .mode-card:nth-child(2){animation-delay:.16s;} .mode-grid .mode-card:nth-child(3){animation-delay:.27s;}
+  .grid .topic-card:nth-child(1){animation-delay:.02s;} .grid .topic-card:nth-child(2){animation-delay:.06s;}
+  .grid .topic-card:nth-child(3){animation-delay:.10s;} .grid .topic-card:nth-child(4){animation-delay:.14s;}
+  .grid .topic-card:nth-child(5){animation-delay:.18s;} .grid .topic-card:nth-child(6){animation-delay:.22s;}
+  .grid .topic-card:nth-child(7){animation-delay:.26s;} .grid .topic-card:nth-child(8){animation-delay:.30s;}
+  .grid .topic-card:nth-child(9){animation-delay:.34s;} .grid .topic-card:nth-child(10){animation-delay:.38s;}
+  .grid .topic-card:nth-child(11){animation-delay:.42s;} .grid .topic-card:nth-child(12){animation-delay:.46s;}
+  .opts .opt:nth-child(1){animation-delay:.03s;} .opts .opt:nth-child(2){animation-delay:.09s;}
+  .opts .opt:nth-child(3){animation-delay:.15s;} .opts .opt:nth-child(4){animation-delay:.21s;}
+
+  /* Cards lift on hover (desktop) and press in on tap (touch). */
+  .topic-card, .mode-card, .btn, .opt{ will-change:transform; }
+  @media(hover:hover){
+    .topic-card:hover{transform:translateY(-5px) scale(1.02); box-shadow:0 12px 28px rgba(167,139,250,.32);}
+    .mode-card:hover{transform:translateY(-6px) scale(1.02); box-shadow:0 16px 34px rgba(167,139,250,.34);}
+    .btn:hover{transform:translateY(-2px); filter:brightness(1.04);}
+    .opt:hover{border-color:var(--purple); transform:translateY(-2px);}
+    .topic-card, .mode-card, .btn, .opt{transition:transform .18s cubic-bezier(.22,1,.36,1), box-shadow .18s, border-color .18s, filter .18s;}
+  }
+
+  /* The hedgehog photo breathes a little so the cards feel playful. */
+  .mode-card img.photo{transition:transform .4s ease;}
+  @media(hover:hover){ .mode-card:hover img.photo{transform:scale(1.06);} }
+
+  /* Big menu buttons get a slow sheen sweeping across. */
+  .bigmenu .btn{position:relative; overflow:hidden;}
+  .bigmenu .btn::after{
+    content:""; position:absolute; top:0; left:-60%; width:40%; height:100%;
+    background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);
+    transform:skewX(-18deg); animation:sheen 4.5s ease-in-out infinite;
+  }
+  @keyframes sheen{ 0%,60%{left:-60%;} 85%,100%{left:130%;} }
+
+  /* Question image floats gently. */
+  .qimg{animation:floaty 3.2s ease-in-out infinite;}
+  @keyframes floaty{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(-7px);} }
+
+  /* Correct / wrong answer feedback on the option itself. */
+  .opt.correct{animation:correctPulse .5s ease;}
+  @keyframes correctPulse{ 0%{transform:scale(1);} 35%{transform:scale(1.05);} 100%{transform:scale(1);} }
+  .opt.wrong{animation:wrongShake .4s ease;}
+  @keyframes wrongShake{ 0%,100%{transform:translateX(0);} 20%{transform:translateX(-7px);} 40%{transform:translateX(6px);} 60%{transform:translateX(-4px);} 80%{transform:translateX(3px);} }
+
+  /* Feedback banner: springy pop (upgraded from the old plain pop). */
+  .feedback{animation:fbPop .45s cubic-bezier(.34,1.56,.64,1);}
+  @keyframes fbPop{ 0%{transform:scale(.6) translateY(8px); opacity:0;} 60%{transform:scale(1.04);} 100%{transform:scale(1) translateY(0); opacity:1;} }
+
+  /* Star pill gets a little sparkle wiggle when the screen loads. */
+  .home-stars .pill:first-child img{animation:starSpin 3.5s ease-in-out infinite;}
+  @keyframes starSpin{ 0%,80%,100%{transform:rotate(0);} 88%{transform:rotate(18deg) scale(1.15);} 94%{transform:rotate(-12deg) scale(1.1);} }
+
+  /* Progress bar gets a moving shimmer so it looks lively as it fills. */
+  .progressbar>div{
+    background:linear-gradient(90deg,var(--pink),var(--purple),var(--pink));
+    background-size:200% 100%; animation:barShimmer 2.2s linear infinite;
+  }
+  @keyframes barShimmer{ from{background-position:0% 0;} to{background-position:200% 0;} }
+
+  /* Score number on the result screen counts in with a bounce. */
+  .score-big{animation:scoreIn .6s cubic-bezier(.34,1.56,.64,1);}
+  @keyframes scoreIn{ from{opacity:0; transform:scale(.5);} to{opacity:1; transform:scale(1);} }
+
+  /* Confetti: fall + gentle sideways sway + spin (set per-piece in JS). */
+  .confetti{animation:fall linear forwards, sway ease-in-out infinite alternate;}
+  @keyframes sway{ from{margin-left:-16px;} to{margin-left:16px;} }
+
+  /* Respect users who prefer less motion. */
+  @media(prefers-reduced-motion:reduce){
+    *{animation-duration:.001s !important; animation-iteration-count:1 !important;}
+    body{animation:none;}
+  }
 </style>
 </head>
 <body>
@@ -182,6 +309,7 @@
 <script src="data/nouns-verbs.js"></script>
 <script src="data/articles.js"></script>
 <script src="data/comprehension.js"></script>
+<script src="data/chill-bank.js"></script>
 <script src="data/hard-questions.js"></script>
 <script src="data/elite-questions.js"></script>
 
@@ -190,26 +318,44 @@
 /* ================= data & utilities ================= */
 const TOPICS = window.APP_DATA.topics;
 const PASSAGES = window.APP_DATA.passages;
+const CHILL = window.APP_DATA.chill || { topics:{}, passages:[] };
 const HARD = window.APP_DATA.hard || { topics:{}, passages:[] };
 const ELITE = window.APP_DATA.elite || { topics:{}, passages:[] };
 
 /* ===== difficulty modes ===== */
 const MODES = {
   chill:  { id:"chill",  name:"Nhím Chill Chill", img:"mode-chill.png",
-            desc:"Cozy questions to warm up and have fun." },
+            desc:"Fun thinking questions to warm up your brain." },
   master: { id:"master", name:"Nhím Cao Thủ",     img:"mode-master.png",
-            desc:"Tougher questions for true champions!" },
+            desc:"Trickier puzzles for clever champions!" },
   elite:  { id:"elite",  name:"Nhím Tinh Hoa",    img:"mode-elite.png",
-            desc:"The hardest questions — for the true elite!" }
+            desc:"The very hardest challenges — for true masterminds!" }
 };
-// Harder question banks keyed by mode id (chill uses the base topic questions).
-const BANKS = { master: HARD, elite: ELITE };
+// Question banks keyed by mode id. Every mode now has its own bank; the old
+// easy "base topic" questions are no longer used for gameplay (Chill = the
+// promoted former-Elite content, Master and Elite are brand-new harder banks).
+const BANKS = { chill: CHILL, master: HARD, elite: ELITE };
 let MODE = "chill";
 const modeBadge = m => `<span class="mode-badge ${m}">${esc((MODES[m]||MODES.chill).name)}</span>`;
 function topicPool(t){ const b = BANKS[MODE]; return b ? (b.topics[t.id] || t.questions) : t.questions; }
 function passagePool(){ const b = BANKS[MODE]; return b && b.passages.length ? b.passages : PASSAGES; }
 function practiceKey(topicId){ return MODE==="chill" ? topicId : topicId+"#"+MODE; }
 const $app = document.getElementById("app");
+// Re-play the "screen in" entrance animation every time the screen content
+// changes (innerHTML swaps don't restart a CSS animation on their own).
+if(typeof MutationObserver !== "undefined" && $app){
+  let _animRaf = null;
+  const _replayScreenIn = ()=>{
+    $app.style.animation = "none";
+    // force reflow, then let the stylesheet animation take over again
+    void $app.offsetWidth;
+    $app.style.animation = "";
+  };
+  new MutationObserver(()=>{
+    if(_animRaf) cancelAnimationFrame(_animRaf);
+    _animRaf = requestAnimationFrame(_replayScreenIn);
+  }).observe($app, { childList:true });
+}
 const IMG = (name, cls) => name ? `<img class="${cls||'icon'}" src="images/${name}.svg" alt="" onerror="this.style.display='none'">` : "";
 const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 const shuffle = arr => { const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
@@ -248,10 +394,24 @@ function initAudio(){
   try{
     audioCtx = new (window.AudioContext||window.webkitAudioContext)();
     masterGain = audioCtx.createGain(); masterGain.gain.value = 1; masterGain.connect(audioCtx.destination);
-    sfxGain = audioCtx.createGain();    sfxGain.gain.value = 0.9;  sfxGain.connect(masterGain);
+    sfxGain = audioCtx.createGain();    sfxGain.gain.value = 1.0;  sfxGain.connect(masterGain);
     musicGain = audioCtx.createGain();  musicGain.gain.value = 0.0; musicGain.connect(masterGain); // fade in later
+    unlockAudio();   // must happen INSIDE the user gesture that first created the context
   }catch(e){ audioCtx = null; }
   return !!audioCtx;
+}
+// iOS/Safari (and Chrome autoplay) keep a new AudioContext "suspended" and only
+// truly unlock it if we (a) call resume() AND (b) actually start a sound source,
+// all SYNCHRONOUSLY within the tap that created the context. Playing one silent
+// buffer here is the standard trick that flips the context to "running" for real.
+function unlockAudio(){
+  if(!audioCtx) return;
+  try{
+    if(audioCtx.resume) audioCtx.resume();
+    const buf = audioCtx.createBuffer(1, 1, audioCtx.sampleRate);
+    const src = audioCtx.createBufferSource();
+    src.buffer = buf; src.connect(audioCtx.destination); src.start(0);
+  }catch(e){}
 }
 function soundEnabled(){ return !!store.soundOn; }
 
@@ -420,56 +580,98 @@ function duckMusic(mult){
   }catch(e){}
 }
 
-/* ---- Background music: bouncy, upbeat tune that keeps re-inventing itself ----
-   A happy I–V–vi–IV loop in C with a plucky bass, light shaker groove and a
-   playful pentatonic melody generated live, so it stays cheerful but never
-   repeats the same bar twice. Still mixed low so it sits under the effects.  */
-const MUSIC_VOL = 0.085;
-const PENTA = [S.C,S.D,S.E,S.G,S.A,S.C5,S.D5,S.E5,S.G5,S.A5]; // always sounds pleasant
-// One entry per bar: [bass root, two soft pad notes]
-const PROG = [
-  { bass: 65.41,  pad:[S.C, S.G]  },   // C
-  { bass: 98.00,  pad:[S.G, S.D5] },   // G
-  { bass: 110.00, pad:[S.A, S.E5] },   // Am
-  { bass: 87.31,  pad:[S.F, S.C5] },   // F
+/* ---- Background music: a little "jukebox" of cheerful tunes ------------------
+   Several different songs (each its own chord loop, tempo, mood & melody scale).
+   A tune plays for a while, then the app smoothly switches to a DIFFERENT one —
+   and switchTune() is also called whenever the child moves to a new screen, so
+   every screen tends to feel musically fresh. Everything is generated live so
+   no bar ever repeats exactly. Mixed a good deal LOUDER than before, but still
+   ducks under the sound-effects so answers always cut through.                 */
+const MUSIC_VOL = 0.17;                 // was 0.085 — noticeably louder now
+// Scales used for the melodies (all pleasant, no wrong notes possible).
+const SCALE_MAJOR = [S.C,S.D,S.E,S.G,S.A,S.C5,S.D5,S.E5,S.G5,S.A5];          // bright & happy
+const SCALE_MAJ7  = [S.C,S.E,S.G,S.B,S.D5,S.E5,S.G5,S.A5,S.C6];               // dreamy / floaty
+const SCALE_MIXO  = [S.C,S.D,S.E,S.G,S.A,S.C5,S.D5,S.E5,S.G5];                // playful bounce
+// A "song" = chord progression + tempo + which scale the melody draws from +
+// how busy/long the notes are + which wave gives its melody its character.
+const SONGS = [
+  { name:"sunny",   eighth:0.205, scale:SCALE_MAJOR, wave:"triangle", density:0.66, swing:0.55,
+    prog:[ {bass:65.41,pad:[S.C,S.G]}, {bass:98.00,pad:[S.G,S.D5]}, {bass:110.00,pad:[S.A,S.E5]}, {bass:87.31,pad:[S.F,S.C5]} ] }, // C G Am F
+  { name:"skip",    eighth:0.185, scale:SCALE_MIXO,  wave:"square",   density:0.72, swing:0.62,
+    prog:[ {bass:87.31,pad:[S.F,S.A]}, {bass:65.41,pad:[S.C,S.E5]}, {bass:98.00,pad:[S.G,S.D5]}, {bass:98.00,pad:[S.G,S.B]} ] },   // F C G G
+  { name:"dreamy",  eighth:0.235, scale:SCALE_MAJ7,  wave:"sine",     density:0.55, swing:0.50,
+    prog:[ {bass:65.41,pad:[S.E,S.G]}, {bass:110.00,pad:[S.A,S.C5]}, {bass:87.31,pad:[S.F,S.A]}, {bass:98.00,pad:[S.G,S.D5]} ] },  // C Am F G
+  { name:"bounce",  eighth:0.170, scale:SCALE_MAJOR, wave:"triangle", density:0.74, swing:0.60,
+    prog:[ {bass:73.42,pad:[S.D,S.A]}, {bass:98.00,pad:[S.G,S.B]}, {bass:65.41,pad:[S.C,S.E5]}, {bass:98.00,pad:[S.G,S.D5]} ] },   // D G C G
 ];
-let _mStep = 0, _mBar = 0;
+let _mStep = 0, _mBar = 0, _songIdx = 0, _barsThisSong = 0, _lastMel = -1;
+const _songBag = makeBag(SONGS.length);
+const MUSIC_EIGHTH = 0.2;               // fixed step clock (200ms) — one interval for all songs
+// Switch to a fresh, different tune. Does NOT touch the interval or gain, so it
+// can be called any time (including mid-song) without ever stopping the music.
+function switchTune(){
+  _songIdx = _songBag();
+  _mBar = 0;                            // start the new tune's chord loop cleanly
+}
+
+// The core sequencer step — runs on a plain setInterval (rock-solid) at a fixed
+// clock; each song just picks different notes/feel, not a different clock.
+function musicStep(){
+  if(!musicOn || !audioCtx) return;
+  const song = SONGS[_songIdx];
+  const EIGHTH = MUSIC_EIGHTH;
+  const STEPS = 8;
+  const pos = _mStep % STEPS;
+  const bar = song.prog[_mBar % song.prog.length];
+  const swingOff = (pos%2===1) ? EIGHTH*(song.swing-0.5)*0.5 : 0;
+  if(pos === 0){                                    // new bar → soft pad chord
+    bar.pad.forEach(f=> tone(f/2, 0, EIGHTH*7.5, "sine", 0.05, musicGain));
+    tone(bar.pad[0], 0, EIGHTH*7.5, "sine", 0.03, musicGain);
+  }
+  // plucky bass line
+  if(pos===0) bell(bar.bass, 0, EIGHTH*1.4, 0.13, musicGain);
+  else if(pos===3) bell(bar.bass*1.5, swingOff, EIGHTH*0.9, 0.08, musicGain);
+  else if(pos===4) bell(bar.bass, 0, EIGHTH*1.2, 0.11, musicGain);
+  else if(pos===6 && Math.random()>0.5) bell(bar.bass*2, swingOff, EIGHTH*0.7, 0.06, musicGain);
+  // groove: shaker on off-beats + soft "kick" on the down-beat
+  if(pos%2===1) perc(swingOff, 0.05, 0.032, 9000, musicGain);
+  if(pos===0 || pos===4) perc(0, 0.06, 0.04, 2600, musicGain);
+  // playful melody from this song's scale
+  if(Math.random() < song.density){
+    const scale = song.scale;
+    let mi = Math.floor(Math.random()*scale.length);
+    if(mi === _lastMel) mi = (mi+1)%scale.length;
+    _lastMel = mi;
+    const f = scale[mi];
+    const long = Math.random()>0.72;
+    tone(f, swingOff, EIGHTH*(long?1.7:0.85), song.wave, 0.07, musicGain);
+    if(Math.random()>0.8) tone(f*2, swingOff+EIGHTH*0.5, EIGHTH*0.6, "sine", 0.035, musicGain);
+  }
+  _mStep++;
+  if(pos === STEPS-1){
+    _mBar++; _barsThisSong++;
+    if(_barsThisSong >= 8){ _barsThisSong = 0; switchTune(); }   // freshen tune every 8 bars
+  }
+}
 
 function startMusic(){
   if(!soundEnabled() || !initAudio() || musicOn) return;
   musicOn = true;
+  _songIdx = _songBag();                 // pick a starting tune
+  _mStep = 0; _mBar = 0; _barsThisSong = 0;
+  // initAudio() already called unlockAudio() (resume + a silent source) inside the
+  // tap, so the context is unlocking now. Start the sequencer straight away — notes
+  // are scheduled on the context clock and will sound as soon as it flips to running
+  // (a few ms). We also re-resume defensively in case the browser is slow.
+  if(audioCtx.state === "suspended" && audioCtx.resume){ try{ audioCtx.resume(); }catch(e){} }
   try{
     musicGain.gain.cancelScheduledValues(audioCtx.currentTime);
     musicGain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
     musicGain.gain.linearRampToValueAtTime(MUSIC_VOL, audioCtx.currentTime + 0.9);
   }catch(e){}
-  const EIGHTH = 0.205;                 // ~146 bpm feel — bouncy but not frantic
-  const STEPS = 8;                      // 8 eighth-notes per bar
-  const step = ()=>{
-    if(!musicOn || !audioCtx) return;
-    const pos = _mStep % STEPS;
-    const bar = PROG[_mBar % PROG.length];
-    if(pos === 0){                                   // new bar
-      bar.pad.forEach(f=> tone(f/2, 0, EIGHTH*7.5, "sine", 0.045, musicGain));   // soft pad
-    }
-    // plucky bass: strong on 1 & the "and-of-2", a bounce on 3
-    if(pos===0) bell(bar.bass, 0, EIGHTH*1.4, 0.11, musicGain);
-    else if(pos===3) bell(bar.bass*1.5, 0, EIGHTH*0.9, 0.07, musicGain);
-    else if(pos===4) bell(bar.bass, 0, EIGHTH*1.2, 0.09, musicGain);
-    // light shaker groove on off-beats
-    if(pos%2===1) perc(0, 0.045, 0.028, 9000, musicGain);
-    // playful melody — random pentatonic, syncopated, with rests (never repeats)
-    if(Math.random() > 0.34){
-      const f = PENTA[Math.floor(Math.random()*PENTA.length)];
-      const long = Math.random()>0.75;
-      tone(f, 0, EIGHTH*(long?1.7:0.85), Math.random()>0.5?"triangle":"sine", 0.055, musicGain);
-      if(Math.random()>0.82) tone(f*1.5, EIGHTH*0.5, EIGHTH*0.7, "sine", 0.03, musicGain); // echo
-    }
-    _mStep++;
-    if(pos === STEPS-1) _mBar++;
-  };
-  step();
-  musicTimer = setInterval(step, EIGHTH*1000);
+  if(musicTimer){ clearInterval(musicTimer); musicTimer = null; }
+  musicStep();
+  musicTimer = setInterval(musicStep, MUSIC_EIGHTH*1000);
 }
 function stopMusic(){
   musicOn = false;
@@ -477,12 +679,24 @@ function stopMusic(){
   if(audioCtx && musicGain){ try{
     const now = audioCtx.currentTime;
     musicGain.gain.cancelScheduledValues(now);
-    musicGain.gain.setValueAtTime(musicGain.gain.value, now);
     musicGain.gain.linearRampToValueAtTime(0.0001, now + 0.4);
   }catch(e){} }
 }
 // Make sure music is playing when sound is on (called on user gestures).
-function ensureMusic(){ if(soundEnabled()){ initAudio(); startMusic(); } }
+// If it's already playing, just freshen the tune — never restart the engine.
+function ensureMusic(){
+  if(!soundEnabled()) return;
+  initAudio();
+  // If we think music is on but the sequencer isn't actually running (e.g. it was
+  // paused when the tab was hidden), treat it as stopped so startMusic can revive it.
+  if(musicOn && !musicTimer) musicOn = false;
+  if(musicOn){
+    if(audioCtx && audioCtx.state === "suspended" && audioCtx.resume){ try{ audioCtx.resume(); }catch(e){} }
+    switchTune();                        // already playing → change song, keep it running
+  }else{
+    startMusic();                        // startMusic handles resume-then-begin itself
+  }
+}
 // Save battery / be polite: pause music when the tab is hidden.
 if(typeof document !== "undefined"){
   document.addEventListener("visibilitychange", ()=>{
@@ -494,17 +708,25 @@ if(typeof document !== "undefined"){
 function playSound(good){ good ? sfxCorrect() : sfxWrong(); }
 
 /* ================= confetti effect ================= */
-function confetti(){
-  const imgs = ["glowing-star","star","heart","party","sparkles"];
-  for(let i=0;i<14;i++){
+// A richer burst: more pieces, varied sizes, each falls at its own speed while
+// gently swaying side-to-side and spinning (fall+sway are CSS keyframes).
+function confetti(big){
+  const imgs = ["glowing-star","star","heart","party","sparkles","confetti","trophy","blossom"];
+  const n = big ? 30 : 18;
+  for(let i=0;i<n;i++){
     const el = document.createElement("img");
     el.src = "images/"+pick(imgs)+".svg";
     el.className = "confetti";
-    el.style.left = Math.random()*100+"vw";
-    el.style.width = (22+Math.random()*26)+"px";
-    el.style.animationDuration = (1.2+Math.random()*1.4)+"s";
+    const fall = 1.2 + Math.random()*1.6;
+    el.style.left = Math.random()*100 + "vw";
+    el.style.top = (-40 - Math.random()*80) + "px";
+    el.style.width = (18 + Math.random()*30) + "px";
+    // fall duration + a separate sway speed so pieces drift independently
+    el.style.animationDuration = fall + "s, " + (0.6 + Math.random()*0.9) + "s";
+    el.style.animationDelay = (Math.random()*0.5) + "s, 0s";
+    el.style.opacity = (0.75 + Math.random()*0.25).toFixed(2);
     document.body.appendChild(el);
-    setTimeout(()=>el.remove(), 2800);
+    setTimeout(()=>el.remove(), (fall+1.2)*1000);
   }
 }
 
@@ -829,7 +1051,8 @@ function submitTest(timeout){
 function renderTestResult(r){
   const pct = r.score / r.totalMarks;
   sfxFanfare(pct >= 0.6);
-  if(pct >= 0.6){ confetti(); }
+  if(pct >= 0.85){ confetti(true); setTimeout(()=>confetti(true), 550); }   // double burst for a top score
+  else if(pct >= 0.6){ confetti(); }
   const msg = pct>=0.85 ? "Excellent! You're a superstar!" : pct>=0.6 ? "Great job! Keep it up!" : "Keep practicing and you'll score higher next time!";
   const reviewHtml = r.review.map((it,i)=>{
     const yourAns = it.picked==null ? "(not answered)" : it.q.o[it.q.order[it.picked]];

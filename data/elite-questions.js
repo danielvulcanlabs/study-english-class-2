@@ -1,18 +1,17 @@
-// Elite mode ("Nhím Tinh Hoa") — the hardest question bank.
-// DIFFICULTY TARGET: a BIG jump above Master ("Nhím Cao Thủ"). This is the top
-// rung, for the strongest students. But everything STILL stays inside Grade-2
-// knowledge and vocabulary — we raise difficulty purely by REASONING, never by
-// rare words.
-//   How Elite is harder than Master:
-//     - 2-3 step reasoning ("if A then B, so C") instead of 1-2 steps.
-//     - Two-blank prompts where BOTH blanks depend on a rule.
-//     - Multi-layer analogies (A:B :: C:? where the link is a rule, not a category).
-//     - "Which sentence is correct" with EVERY option grammatically plausible.
-//     - Odd-one-out where the obvious grouping is a decoy (a real twist).
-//     - Counting / applying a rule, not just recognising a word.
-//     - Almost NO picture hints (the child must reason from language alone).
-// No Grade 4-5 content (vixen, gander, drake, collective nouns, "an hour", etc.).
-// IMPORTANT: no item, distractor set, or "trick" here is reused in the Master bank.
+// Elite mode ("Nhím Tinh Hoa") — the HARDEST tier, the top of the app.
+// NOTE: this content is the former "Master" bank, PROMOTED to be the top rung so
+// the overall difficulty range now spans only Chill → (new middle Master) → this.
+//   Chill  = 2-3 step reasoning, everyday vocabulary (the EASY tier).
+//   Master = the NEW middle rung, sitting between Chill and this (see hard-questions.js).
+//   Elite  = THIS bank: longer stems, richer vocabulary (enormous, furious, ancient,
+//            transparent, stubborn, generous, exhausted, curious...), 3-step reasoning
+//            chains, two- and three-blank fills, negation + comparison combined,
+//            "all four plausible" grammar picks, decoy odd-one-out, multi-layer
+//            analogies, counting in longer sentences, past tense & comparatives.
+//            Words a bright 8-9 year old can learn — challenging but not obscure.
+// IMPORTANT: NO item, distractor set, or "trick" here is reused from chill-bank.js
+// or the Master bank.
+// Mostly NO picture hints — the child reasons from language. Rare img only.
 // Keyed by topic id. Same question format as the regular topics.
 // s:true = Scholar question (2 marks in tests). Correct answer is written first
 // (a:0) for authoring convenience; options are shuffled when shown.
@@ -20,233 +19,234 @@ window.APP_DATA.elite = {
   topics: {
 
     "words": [
-      { q: "'Hot' is the opposite of 'cold', and 'up' is the opposite of 'down'.\nSo 'wet' is the opposite of ________.", o: ["dry", "cold", "clean", "soft"], a: 0 },
-      { q: "Read carefully.\nLan is NOT older than Nam, and she is NOT the same age.\nSo Lan is ________ than Nam.", o: ["younger", "older", "taller", "faster"], a: 0, s: true },
-      { q: "Only ONE sentence is correct. Read every word.", o: ["She is taller than her brother.", "She is more tall than her brother.", "She is tallest than her brother.", "She is more taller than her brother."], a: 0, s: true },
-      { q: "Three words tell HOW you feel. One tells WHAT you do.\nWhich is the DOING word?", o: ["cry", "glad", "afraid", "proud"], a: 0 },
-      { q: "'Begin' means 'start'. 'End' means 'finish'.\nSo which pair means the SAME as each other?", o: ["start - begin", "start - end", "begin - finish", "end - open"], a: 0 },
-      { q: "The word 'unlucky' is made from 'un' + 'lucky'.\n'Un' turns a word into its opposite. So 'unlucky' means ________.", o: ["not lucky", "very lucky", "lucky again", "always lucky"], a: 0, s: true },
-      { q: "Only ONE spelling is correct.", o: ["surprise", "suprise", "surprize", "surprice"], a: 0, s: true },
-      { q: "Fill BOTH blanks so each person does the RIGHT job.\nA baker ________ bread. A pilot ________ a plane.", o: ["bakes - flies", "flies - bakes", "bakes - drives", "cooks - flies"], a: 0 },
-      { q: "'Quick' means 'fast', and its opposite is 'slow'.\nWhich word is the OPPOSITE of 'quiet'?", o: ["noisy", "fast", "small", "soft"], a: 0 },
-      { q: "Which word means 'more than one time, again and again'?", o: ["often", "never", "once", "soon"], a: 0, s: true },
-      { q: "Nam's soup is TOO hot to eat right now.\nThe SENSIBLE thing to do is ________.", o: ["wait for it to cool", "eat it fast", "add more heat", "throw it away"], a: 0 },
-      { q: "Only ONE spelling is correct.", o: ["Wednesday", "Wensday", "Wednseday", "Wedensday"], a: 0, s: true },
-      { q: "'Same' and 'alike' mean the same thing.\nWhich word means the OPPOSITE of them?", o: ["different", "equal", "similar", "matching"], a: 0 },
-      { q: "It is raining AND Mai has no umbrella.\nWhat will most likely happen if she walks outside?", o: ["She will get wet", "She will get dry", "She will fly", "She will feel hot"], a: 0 },
-      { q: "Only ONE sentence uses the naming word correctly.", o: ["There are two children.", "There are two childs.", "There is two children.", "There are two childrens."], a: 0 },
-      { q: "'Empty' is to 'full' as 'open' is to ________.\n(Both pairs are opposites.)", o: ["closed", "wide", "big", "clean"], a: 0, s: true },
-      { q: "Read: 'The heavy box was too big for one person.'\nSo they most likely needed ________.", o: ["help from someone", "a smaller room", "a bigger box", "more boxes"], a: 0 }
+      { q: "A synonym is a word that means the SAME.\n'Enormous' and 'gigantic' both mean very big.\nSo the OPPOSITE of both is ________.", o: ["tiny", "heavy", "wide", "loud"], a: 0, s: true },
+      { q: "Read all three steps.\nA whisper is very quiet. A shout is very loud.\nSo if the room got LESS noisy, people began to ________.", o: ["whisper", "shout", "run", "sing"], a: 0, s: true },
+      { q: "'Furious' means very angry. 'Delighted' means very happy.\nHung dropped his ice cream, so he most likely felt ________.", o: ["furious", "delighted", "curious", "brave"], a: 0 },
+      { q: "The prefix 'in-' can mean 'not'.\nSo 'invisible' means something you ________.", o: ["cannot see", "can hear", "can hold", "can taste"], a: 0, s: true },
+      { q: "Only ONE spelling is correct.", o: ["beautiful", "beutiful", "beautifull", "beatiful"], a: 0, s: true },
+      { q: "Match each word to its BEST meaning, in order.\n'Ancient' and 'exhausted' mean ________ and ________.", o: ["very old - very tired", "very new - very tired", "very old - very fast", "very tired - very old"], a: 0, s: true },
+      { q: "'Gentle' is the opposite of 'rough'.\nSo a person who pats a kitten softly is being ________.", o: ["gentle", "rough", "stubborn", "greedy"], a: 0 },
+      { q: "Read carefully.\nMai is NOT the tallest and NOT the shortest of three girls.\nSo Mai must be the ________ one.", o: ["middle", "tallest", "shortest", "oldest"], a: 0, s: true },
+      { q: "A 'generous' person likes to share and give.\nWho below is being generous?", o: ["Nga gave half her lunch to a friend", "Nga hid all her sweets", "Nga took two toys", "Nga ate everything"], a: 0 },
+      { q: "'Transparent' means you can see right through it.\nWhich thing below is transparent?", o: ["a clean glass window", "a brick wall", "a wooden door", "a thick book"], a: 0, s: true },
+      { q: "Only ONE sentence is correct. All four look almost right.", o: ["This box is heavier than that one.", "This box is more heavy than that one.", "This box is heaviest than that one.", "This box is more heavier than that one."], a: 0, s: true },
+      { q: "'Brave' means not afraid. Its opposite is ________.", o: ["scared", "kind", "strong", "quick"], a: 0 },
+      { q: "A 'stubborn' person will not change their mind.\nWhich sentence shows someone stubborn?", o: ["Tom refused to try any new food.", "Tom tried every new food.", "Tom shared his food.", "Tom cooked new food."], a: 0 },
+      { q: "Fill BOTH blanks with the right past-tense words.\nYesterday I ________ to school and ________ my lunch.", o: ["went - ate", "go - eat", "went - eat", "go - ate"], a: 0, s: true },
+      { q: "The idiom 'a piece of cake' means something is very ________.", o: ["easy", "sweet", "hard", "small"], a: 0 },
+      { q: "'Curious' means wanting to learn and find out.\nWhich child is being curious?", o: ["Lan kept asking why the sky is blue", "Lan ignored the whole lesson", "Lan fell asleep", "Lan copied a friend"], a: 0, s: true },
+      { q: "Only ONE spelling is correct.", o: ["favourite", "favorit", "faverite", "favourit"], a: 0 },
+      { q: "'Damp' means a little wet. 'Soaked' means very wet.\nAfter a heavy rainstorm, Nam's shirt was most likely ________.", o: ["soaked", "damp", "dry", "warm"], a: 0 }
     ],
 
     "picture-words": [
-      { q: "Every choice looks almost right. Only ONE is spelled correctly.", img: "chicken", o: ["chicken", "chiken", "chickan", "checken"], a: 0, s: true },
-      { q: "Which spelling is correct? (Watch the middle letters.)", img: "giraffe", o: ["giraffe", "girraffe", "girafffe", "gieraffe"], a: 0, s: true },
-      { q: "Three are wrong. Which double letters are right?", img: "strawberry", o: ["strawberry", "strawberrry", "strawbery", "strawbberry"], a: 0 },
-      { q: "Pick the correct spelling. (One letter is different in each wrong word.)", img: "elephant", o: ["elephant", "elephunt", "elaphant", "elifant"], a: 0, s: true },
-      { q: "Which is spelled correctly? (The 'gu' is the tricky part.)", img: "penguin", o: ["penguin", "penquin", "pengwin", "penguine"], a: 0 },
-      { q: "Careful — every wrong word swaps just one sound.", img: "kangaroo", o: ["kangaroo", "kangeroo", "kangaru", "kanggaroo"], a: 0 },
-      { q: "Which spelling has the right number of each letter?", img: "umbrella", o: ["umbrella", "umbrrella", "umbrela", "umberlla"], a: 0 },
-      { q: "Only one is correct. (The 'wich' ending is a trap.)", img: "sandwich", o: ["sandwich", "sandwhich", "sandwitch", "samwich"], a: 0, s: true },
-      { q: "Pick the correct spelling. (Look at the vowels.)", img: "bicycle", o: ["bicycle", "bicicle", "bycycle", "bicecle"], a: 0 },
-      { q: "Which spelling is right for this bird?", img: "peacock", o: ["peacock", "peackock", "peocock", "peacokk"], a: 0 },
-      { q: "Three choices are wrong by ONE letter each. Which is right?", img: "butterfly", o: ["butterfly", "buterfly", "butterfy", "butterflly"], a: 0 },
-      { q: "Which is correct? (The double 'oo' matters.)", img: "toothbrush", o: ["toothbrush", "toothbursh", "tooethbrush", "toothbrsh"], a: 0 },
-      { q: "Pick the correct spelling. (The 'ai' is easy to get wrong.)", img: "rainbow", o: ["rainbow", "rianbow", "raenbow", "rainbouw"], a: 0 },
-      { q: "Which spelling matches this vegetable? (Count the letters.)", img: "carrot", o: ["carrot", "carott", "carrott", "carrat"], a: 0, s: true },
-      { q: "Only one word is fully correct.", img: "turtle", o: ["turtle", "turttle", "turtel", "tuttle"], a: 0 },
-      { q: "Which spelling is right for this insect?", img: "spider", o: ["spider", "spidder", "spiter", "spyder"], a: 0 }
+      { q: "Every choice looks close. Which spelling of this insect is correct?", img: "cricket", o: ["cricket", "crickett", "criket", "crikket"], a: 0, s: true },
+      { q: "Which spelling is right? (The 'ph' makes an 'f' sound.)", img: "elephant", o: ["elephant", "elefant", "eliphant", "ellephant"], a: 0 },
+      { q: "Pick the correct spelling. (Watch the double letter.)", img: "balloon", o: ["balloon", "baloon", "ballon", "balloun"], a: 0, s: true },
+      { q: "Which is spelled correctly for this bird?", img: "peacock", o: ["peacock", "peekock", "peacok", "peocock"], a: 0 },
+      { q: "Three are wrong by one letter. Which is right?", img: "microphone", o: ["microphone", "micraphone", "microfone", "mikrophone"], a: 0, s: true },
+      { q: "Which spelling matches this musical thing?", img: "stethoscope", o: ["stethoscope", "stethascope", "stethoscop", "stethescope"], a: 0, s: true },
+      { q: "Pick the correct spelling. (The silent letters are tricky.)", img: "knife", o: ["knife", "nife", "knifee", "knive"], a: 0 },
+      { q: "Which spelling is right for this animal?", img: "kangaroo", o: ["kangaroo", "kangarooe", "kangeroo", "kangaru"], a: 0, s: true },
+      { q: "Only one is correct. (Count the letters carefully.)", img: "strawberry", o: ["strawberry", "strawbery", "strawberrie", "strawberi"], a: 0 },
+      { q: "Which spelling matches this shape you draw with?", img: "palette", o: ["palette", "pallete", "palett", "pallett"], a: 0, s: true },
+      { q: "Pick the correct spelling for this yummy food.", img: "sandwich", o: ["sandwich", "sanwich", "sandwhich", "sandwidge"], a: 0 },
+      { q: "Which is correct? (This place shows movies and plays.)", img: "theater", o: ["theater", "theeter", "theatr", "theeater"], a: 0 },
+      { q: "Which spelling of this tall animal is right?", img: "giraffe", o: ["giraffe", "girafe", "jiraffe", "giraff"], a: 0, s: true },
+      { q: "Pick the correct spelling for this vehicle.", img: "bicycle", o: ["bicycle", "bycicle", "bicicle", "bicyckle"], a: 0 },
+      { q: "Which spelling is right for this cold treat?", img: "ice-cream", o: ["ice cream", "ise cream", "ice creem", "icecreem"], a: 0 },
+      { q: "Only one word is fully correct.", img: "butterfly", o: ["butterfly", "buterfly", "butterflie", "buttrefly"], a: 0, s: true }
     ],
 
     "jumbled": [
-      { q: "Unscramble the letters. WARNING: some jumbles spell OTHER real words — pick the person at school.\nR - A - C - H - E - T - E", o: ["teacher", "cheater", "reacher", "hectare"], a: 0, s: true },
-      { q: "Unscramble to find something you open in the rain.\nB - R - E - L - L - A - U - M", o: ["umbrella", "umberall", "bumrella", "rumbella"], a: 0 },
-      { q: "Unscramble. One jumble spells 'reflow' — don't be tricked. Pick the thing that grows in a garden.\nR - E - F - L - O - W", o: ["flower", "reflow", "fowler", "flowre"], a: 0, s: true },
-      { q: "Unscramble the letters to find a big animal:\nE - L - E - H - P - N - A - T", o: ["elephant", "elephent", "eelphant", "elepanth"], a: 0 },
-      { q: "Unscramble. WARNING: one jumble spells 'great' — pick the striped animal instead.\nT - I - G - E - R", o: ["tiger", "great", "gitre", "reigt"], a: 0, s: true },
-      { q: "Unscramble to find a fruit:\nG - E - O - R - A - N", o: ["orange", "ognare", "rangeo", "orenga"], a: 0 },
-      { q: "Unscramble. WARNING: these letters also spell 'listen' — pick the word that means very quiet.\nS - I - L - E - N - T", o: ["silent", "listen", "tinsel", "enlist"], a: 0, s: true },
-      { q: "Unscramble to find a farm bird:\nC - H - I - K - N - E - C", o: ["chicken", "kitchen", "checkin", "chicnek"], a: 0, s: true },
-      { q: "Unscramble the letters:\nW - N - I - D - O - W", o: ["window", "widnow", "windwo", "winodw"], a: 0 },
-      { q: "Unscramble to find a day of the week:\nD - N - S - U - A - Y", o: ["sunday", "sundya", "sudnay", "sanduy"], a: 0 },
-      { q: "Unscramble. WARNING: these letters also spell 'below' and 'elbow' — pick the part of your arm that bends.\nB - O - E - L - W", o: ["elbow", "below", "bowel", "bewol"], a: 0, s: true },
-      { q: "Unscramble to find a fruit:\nP - A - L - E - P", o: ["apple", "appel", "pleap", "papel"], a: 0 },
-      { q: "Unscramble the letters:\nB - R - A - I - N - W - O", o: ["rainbow", "brainow", "rainwob", "brownai"], a: 0 },
-      { q: "Unscramble to find a colour:\nL - L - E - W - O - Y", o: ["yellow", "yelow", "yollew", "wellyo"], a: 0 },
-      { q: "Unscramble. WARNING: these letters also spell 'act' — pick the animal that says 'meow'.\nT - A - C", o: ["cat", "act", "tac", "cta"], a: 0 },
-      { q: "Unscramble to find something in the sky at night. One jumble spells 'rats'!\nR - S - A - T", o: ["star", "rats", "tars", "arts"], a: 0, s: true }
+      { q: "Unscramble to find a huge grey animal.\nWARNING: watch the double letters.\nP - H - A - N - T - E - L - E", o: ["elephant", "elephent", "elphante", "elephnat"], a: 0, s: true },
+      { q: "Unscramble. These letters also spell 'listen' and 'tinsel' — pick the word meaning very quiet.\nS - L - I - E - N - T", o: ["silent", "listen", "tinsel", "enlist"], a: 0, s: true },
+      { q: "Unscramble to find the season after summer.\nA - U - M - T - U - N", o: ["autumn", "atumn", "autum", "autunm"], a: 0 },
+      { q: "Unscramble. One jumble spells 'danger' — do not be tricked. Pick the flat plate you dine from.\nG - A - R - D - E - N", o: ["garden", "danger", "gander", "ranged"], a: 0, s: true },
+      { q: "Unscramble to find a word meaning 'very big'.\nWARNING: read every letter.\nE - N - O - R - M - O - U - S", o: ["enormous", "enormuos", "enromous", "enomrous"], a: 0, s: true },
+      { q: "Unscramble to find a bright bird with a fancy tail.\nP - E - A - C - O - C - K", o: ["peacock", "peackoc", "poacock", "pecacok"], a: 0 },
+      { q: "Unscramble. These letters also spell 'stared' — pick the word for the beginning.\nS - T - A - R - T - E - D", o: ["started", "stared", "traders", "restart"], a: 0, s: true },
+      { q: "Unscramble to find a word meaning 'not afraid'.\nB - R - A - V - E", o: ["brave", "braev", "rbave", "vabre"], a: 0 },
+      { q: "Unscramble to find a see-through window sound.\nWARNING: one jumble spells 'below'.\nE - L - B - O - W", o: ["elbow", "below", "bowel", "bewol"], a: 0 },
+      { q: "Unscramble to find a word meaning 'very old'.\nA - N - C - I - E - N - T", o: ["ancient", "anceint", "antcien", "ancinet"], a: 0, s: true },
+      { q: "Unscramble to find the animal with a long neck.\nG - I - R - A - F - F - E", o: ["giraffe", "girraffe", "gireffa", "giraffee"], a: 0 },
+      { q: "Unscramble. These letters also spell 'reader' — pick the word for someone in a race.\nR - E - A - D - E - R", o: ["reader", "reread", "dearer", "reared"], a: 0 },
+      { q: "Unscramble to find a word meaning 'very tired'.\nT - I - R - E - D", o: ["tired", "tride", "rited", "diret"], a: 0, s: true },
+      { q: "Unscramble to find a word that means 'find out about'.\nWARNING: watch the 'ov' in the middle.\nD - I - S - C - O - V - E - R", o: ["discover", "discovar", "dicsover", "discovre"], a: 0, s: true },
+      { q: "Unscramble to find a word meaning 'like to share'.\nG - E - N - E - R - O - U - S", o: ["generous", "genrous", "generuos", "generois"], a: 0 },
+      { q: "Unscramble to find a word meaning 'wanting to learn'.\nC - U - R - I - O - U - S", o: ["curious", "curiuos", "cruious", "curous"], a: 0 }
     ],
 
     "gender": [
-      { q: "'Boy' is to 'girl' as 'king' is to 'queen'.\nUsing the same idea, 'nephew' is to ________.", o: ["niece", "aunt", "uncle", "cousin"], a: 0, s: true },
-      { q: "A hen's chicks have TWO parents. The mother is the hen.\nSo the FATHER of the chicks is the ________.", img: "rooster", o: ["rooster", "duck", "chick", "hen"], a: 0 },
-      { q: "Read: Mai's mother has one brother and one sister.\nMai calls her mother's SISTER her ________.", o: ["aunt", "uncle", "niece", "cousin"], a: 0, s: true },
-      { q: "Which pair is in MALE — FEMALE order AND both words name grown-ups (not children)?", o: ["gentleman - lady", "boy - girl", "son - daughter", "prince - princess"], a: 0, s: true },
-      { q: "A man who acts is an 'actor'. Add the ending to make it female.\nA woman who acts is an ________.", o: ["actress", "actered", "actoress", "acting"], a: 0 },
-      { q: "'Waiter' becomes 'waitress' for a woman.\nUsing the SAME change, 'host' becomes ________ for a woman.", o: ["hostess", "hostress", "hoster", "hostee"], a: 0, s: true },
-      { q: "A female horse is a mare and a male horse is a stallion.\nWhat do we call their BABY (either boy or girl)?", o: ["foal", "calf", "cub", "kid"], a: 0 },
-      { q: "Which sentence uses the female word CORRECTLY?", o: ["The lioness fed her cubs.", "The lion fed his cubs, she roared.", "The lioness is a boy.", "The king is a lioness."], a: 0, s: true },
-      { q: "Read: Nam has one brother and no sisters.\nNam's parents have ________ sons.", o: ["two", "one", "three", "no"], a: 0, s: true },
-      { q: "'Grandfather' names a MALE. Break the word: grand + father.\nSo the female match must be grand + ________.", o: ["mother", "sister", "aunt", "daughter"], a: 0 },
-      { q: "Which group has ALL female words?", o: ["queen, aunt, niece", "queen, uncle, niece", "king, aunt, niece", "queen, aunt, nephew"], a: 0, s: true },
-      { q: "'Prince' is to 'king' as 'princess' is to ________.\n(A prince grows up to be a king.)", o: ["queen", "lady", "girl", "aunt"], a: 0 },
-      { q: "Read: A tigress is playing with her cubs.\nThe word 'tigress' AND the word 'her' both tell us this tiger is ________.", img: "tiger", o: ["female", "male", "young", "asleep"], a: 0 },
-      { q: "Which pair is WRONG? (One of these is NOT a male–female pair.)", o: ["brother - uncle", "man - woman", "king - queen", "son - daughter"], a: 0, s: true },
-      { q: "A 'waitress' is a woman. Which of these is ALSO a female word?", o: ["actress", "waiter", "actor", "host"], a: 0 },
-      { q: "Your aunt is your parent's sister. Your aunt's daughter is your ________.", o: ["cousin", "sister", "niece", "aunt"], a: 0 }
+      { q: "'Actor' becomes 'actress' and 'waiter' becomes 'waitress'.\nUsing the SAME rule, 'tiger' becomes ________ for a female.", o: ["tigress", "tigeress", "tigerine", "tigra"], a: 0, s: true },
+      { q: "Read three steps.\nA duke is a man. A duchess is a woman.\nSo which pair is MALE then FEMALE in order?", o: ["duke - duchess", "duchess - duke", "duke - duke", "duchess - duchess"], a: 0, s: true },
+      { q: "Your mother's brother is your uncle.\nSo the WIFE of your uncle is your ________.", o: ["aunt", "niece", "cousin", "sister"], a: 0, s: true },
+      { q: "Which group has ALL male words?", o: ["king, uncle, nephew", "king, aunt, nephew", "queen, uncle, nephew", "king, uncle, niece"], a: 0, s: true },
+      { q: "A 'widow' is a woman whose husband has died.\nThe MALE word for a man whose wife has died is ________.", o: ["widower", "widowman", "widowor", "widowar"], a: 0 },
+      { q: "Read carefully.\nA 'bull' is a male cow and a 'cow' is female.\nSo the sentence 'The bull fed HER baby' is wrong because a bull is ________.", o: ["male", "female", "a baby", "very old"], a: 0, s: true },
+      { q: "'Prince' is to 'princess' as 'lord' is to ________.", o: ["lady", "lordess", "queen", "dame"], a: 0 },
+      { q: "Which sentence uses the correct gender word?", o: ["The waitress brought her tray.", "The waitress brought his tray.", "The waiter is a woman.", "The queen is a boy."], a: 0, s: true },
+      { q: "Read: Binh has two sisters and one brother.\nHow many GIRLS are there among Binh's brothers and sisters?", o: ["two", "one", "three", "four"], a: 0, s: true },
+      { q: "'Grandson' names a boy. Break it: grand + son.\nSo the female word must be grand + ________.", o: ["daughter", "mother", "sister", "aunt"], a: 0 },
+      { q: "Which pair is NOT a true male-female pair?", o: ["brother - cousin", "man - woman", "boy - girl", "father - mother"], a: 0, s: true },
+      { q: "A 'hero' saves the day. The female word is ________.", o: ["heroine", "heress", "herette", "heroina"], a: 0 },
+      { q: "Read: A 'gander' is a male goose and a 'goose' can be female.\nSo which is the FEMALE bird here?", img: "goose", o: ["goose", "gander", "gosling", "duck"], a: 0 },
+      { q: "'Nephew' is a boy and 'niece' is a girl.\nYour brother has one son and one daughter.\nSo you have one nephew and one ________.", o: ["niece", "cousin", "aunt", "sister"], a: 0, s: true },
+      { q: "Which group has one MALE, one FEMALE, and one word that fits BOTH?", o: ["king, queen, cousin", "king, queen, uncle", "boy, girl, brother", "man, woman, father"], a: 0 },
+      { q: "A 'stallion' is a male horse and a 'mare' is female.\nSo 'The mare and HER foal' is correct because a mare is ________.", o: ["female", "male", "a baby", "very fast"], a: 0 }
     ],
 
     "one-many": [
-      { q: "Some words don't add 's'. 'One child, two children.'\nUsing the SAME kind of change, 'one foot' becomes 'two ________'.", img: "foot", o: ["feet", "foots", "feets", "footes"], a: 0, s: true },
-      { q: "Words ending in 'fe' or 'f' often change to 'ves'.\nSo 'one leaf' + 'one knife' together become many ________ and many ________.", o: ["leaves - knives", "leafs - knifes", "leaves - knifes", "leafs - knives"], a: 0, s: true },
-      { q: "Which sentence is CORRECT? (Every option changes the word a different way.)", o: ["I see three mice.", "I see three mouses.", "I see three mices.", "I see three mouse."], a: 0 },
-      { q: "'Baby' ends in 'y' after a letter, so it becomes 'babies'.\nUsing the SAME rule, 'one city' becomes many ________.", img: "city", o: ["cities", "citys", "cityes", "citie"], a: 0 },
-      { q: "Some words stay the SAME for one or many, like 'sheep'.\nWhich word below is ALSO the same for one and many?", o: ["fish", "dog", "cat", "cow"], a: 0, s: true },
-      { q: "Read: There was ONE goose. Then two more came.\nNow how many geese are there, and is 'geese' spelled right here?", o: ["Three geese — yes", "Three gooses — no", "Three geeses — no", "Three goose — no"], a: 0 },
-      { q: "Words ending in 'x' add 'es': 'box → boxes'.\nWhich other word follows the SAME rule?", o: ["dish → dishes", "dish → dishs", "dish → dishies", "dish → dish"], a: 0 },
-      { q: "One tooth fell out, then two more.\nNow she has lost three ________ in total.", img: "tooth", o: ["teeth", "tooths", "teeths", "toothes"], a: 0, s: true },
-      { q: "Which sentence is CORRECT?", o: ["Five women were shopping.", "Five womans were shopping.", "Five womens were shopping.", "Five woman were shopping."], a: 0, s: true },
-      { q: "'Story → stories' changes 'y' to 'ies'.\n'Lady' follows the SAME rule, so 'one lady' becomes many ________.", o: ["ladies", "ladys", "ladyes", "ladi"], a: 0 },
-      { q: "Read: 'The farmer has one ox and buys two more oxen.'\nHow many oxen does the farmer have now?", img: "ox", o: ["three", "two", "one", "four"], a: 0, s: true },
-      { q: "Which word does NOT add a normal 's' to become many?", o: ["man", "book", "cup", "pen"], a: 0 },
-      { q: "One 'man' becomes 'men' — the middle letter changes.\nWhich word changes in the SAME way (letter in the middle changes)?", o: ["woman → women", "boy → boys", "girl → girls", "kid → kids"], a: 0, s: true },
-      { q: "Which sentence is CORRECT?", o: ["The two buses are late.", "The two bus are late.", "The two buss are late.", "The two busus are late."], a: 0 },
-      { q: "'Potato → potatoes' adds 'es'.\nUsing the SAME rule, 'one tomato' becomes many ________.", o: ["tomatoes", "tomatos", "tomatoies", "tomates"], a: 0, s: true },
-      { q: "One fish, or a whole school of ________. Then pick the sentence that uses it right.", o: ["Many fish swim.", "Many fishs swim.", "Many fishes swims.", "Many fish swims."], a: 0 }
+      { q: "Some words change their middle to mean 'many'.\n'Man' becomes 'men' and 'foot' becomes 'feet'.\nUsing the SAME kind of change, 'goose' becomes ________.", o: ["geese", "gooses", "geeses", "goosen"], a: 0, s: true },
+      { q: "Words ending in 'y' after a NOT-vowel change 'y' to 'ies'.\nSo 'one story' and 'one baby' become many ________ and many ________.", o: ["stories - babies", "storys - babys", "stories - babys", "storys - babies"], a: 0, s: true },
+      { q: "Which sentence is CORRECT? All four look believable.", o: ["Three loaves are on the shelf.", "Three loafs are on the shelf.", "Three loafes are on the shelf.", "Three loave are on the shelf."], a: 0, s: true },
+      { q: "Read: A shepherd had one sheep, then bought four more.\nHow many sheep does he have, and is 'sheep' still spelled the same?", o: ["Five sheep — yes", "Five sheeps — no", "Five sheepes — no", "Five ship — no"], a: 0, s: true },
+      { q: "Words ending in 'ch', 'sh', 's' or 'x' add 'es'.\nSo 'one bench' and 'one dish' become many ________ and many ________.", o: ["benches - dishes", "benchs - dishs", "benches - dishs", "benchs - dishes"], a: 0, s: true },
+      { q: "'Child' becomes 'children' — a special change.\nWhich other word ALSO does not just add 's'?", o: ["person", "table", "car", "hand"], a: 0 },
+      { q: "Read: 'A wolf howled, then two more wolves joined in.'\nHow many wolves are howling in total?", o: ["three", "two", "one", "four"], a: 0, s: true },
+      { q: "Which sentence is CORRECT?", o: ["The mice ate the cheese.", "The mouses ate the cheese.", "The mices ate the cheese.", "The mouse ate the cheeses."], a: 0 },
+      { q: "'Leaf' becomes 'leaves' (f to ves).\nUsing the SAME rule, 'one thief' becomes many ________.", o: ["thieves", "thiefs", "thiefes", "thievies"], a: 0, s: true },
+      { q: "Read: There were three geese, but one flew away.\nNow how many geese are left, and is the word right?", o: ["Two geese — yes", "Two gooses — no", "Two geeses — no", "Two goose — no"], a: 0 },
+      { q: "Which word does NOT change its spelling from one to many?", o: ["deer", "book", "cat", "cup"], a: 0, s: true },
+      { q: "'Tomato' becomes 'tomatoes' (add es).\nSo 'one hero' and 'one potato' become many ________ and many ________.", o: ["heroes - potatoes", "heros - potatos", "heroes - potatos", "heros - potatoes"], a: 0, s: true },
+      { q: "Which sentence is CORRECT? Read each ending.", o: ["The women carried the boxes.", "The womans carried the boxs.", "The womens carried the boxes.", "The woman carried the boxs."], a: 0, s: true },
+      { q: "'Half' becomes 'halves' (f to ves).\nWhich word below follows the SAME rule?", o: ["shelf → shelves", "roof → rooves", "chief → chieves", "belief → believes"], a: 0 },
+      { q: "One tooth, two ________. One foot, two ________.\nFill BOTH blanks with the correct 'many' words.", img: "tooth", o: ["teeth - feet", "tooths - foots", "teeth - foots", "teeths - feet"], a: 0 },
+      { q: "Which sentence is CORRECT?", o: ["Two families live here.", "Two familys live here.", "Two familyes live here.", "Two familes live here."], a: 0 }
     ],
 
     "pairs-odd": [
-      { q: "Three of these can fly. But be careful — one that LOOKS like it flies actually cannot.\nWhich one CANNOT fly?", o: ["penguin", "bee", "butterfly", "owl"], a: 0, s: true },
-      { q: "'Hand' is to 'glove' as 'foot' is to 'sock' (things you wear on them).\nUsing the SAME idea, 'head' is to ________.", o: ["hat", "shoe", "ring", "belt"], a: 0 },
-      { q: "Three of these belong together for the SAME reason. Which is the ODD one out — and NOT for its colour?", o: ["circle", "red", "blue", "green"], a: 0, s: true },
-      { q: "'Cow' gives 'milk' as 'bee' gives 'honey' (animal → what it makes).\nUsing the SAME idea, 'hen' gives ________.", o: ["eggs", "wool", "silk", "web"], a: 0, s: true },
-      { q: "Three of these live in water for their WHOLE life. Which starts in water but later lives on land?", o: ["frog", "fish", "turtle", "eel"], a: 0, s: true },
-      { q: "'Puppy' is to 'dog' as 'kitten' is to 'cat' (baby → grown-up).\nUsing the SAME idea, 'calf' is to ________.", o: ["cow", "kid", "goat", "hen"], a: 0 },
-      { q: "Three of these give off their OWN light. Which one only SHOWS light but does not make it?", o: ["mirror", "sun", "lamp", "candle"], a: 0, s: true },
-      { q: "'Fish' goes with 'swim' as 'bird' goes with 'fly' (animal → how it moves).\nUsing the SAME idea, 'snake' goes with ________.", o: ["slither", "hop", "gallop", "waddle"], a: 0 },
-      { q: "Three words name things you SIT on. Which one do you SLEEP on instead?", o: ["bed", "chair", "stool", "bench"], a: 0 },
-      { q: "'Teacher' works in a 'school' as 'doctor' works in a 'hospital' (person → place).\nSo 'farmer' works on a ________.", o: ["farm", "market", "office", "kitchen"], a: 0, s: true },
-      { q: "One of these is NOT a season. But it IS a real word — read carefully.", o: ["Sunday", "summer", "winter", "spring"], a: 0 },
-      { q: "'Big' is to 'small' as 'fast' is to 'slow' (opposites).\nUsing the SAME idea, 'happy' is to ________.", o: ["sad", "glad", "kind", "loud"], a: 0 },
-      { q: "Three of these are used for WRITING. Which is used for CUTTING instead?", o: ["scissors", "pen", "pencil", "chalk"], a: 0 },
-      { q: "Three of these words rhyme. Which one does NOT — even though it looks similar?", o: ["come", "home", "dome", "roam"], a: 0, s: true },
-      { q: "'Day' pairs with 'night' and 'summer' pairs with 'winter' (opposites).\nWhich pair below is ALSO opposites?", o: ["begin - end", "big - large", "quick - fast", "glad - happy"], a: 0 },
-      { q: "Three of these are things we EAT. Which one is an ANIMAL, not a food?", o: ["rabbit", "carrot", "bread", "rice"], a: 0 }
+      { q: "Three of these are BIRDS that cannot fly. Which one CAN fly and is the odd one out?", o: ["eagle", "penguin", "ostrich", "emu"], a: 0, s: true },
+      { q: "'Bee' makes 'honey' as 'silkworm' makes 'silk' (maker → what it makes).\nUsing the SAME idea, 'sheep' makes ________.", o: ["wool", "milk", "eggs", "web"], a: 0, s: true },
+      { q: "Three of these are things you can SEE THROUGH. Which one is the odd one because you CANNOT see through it?", o: ["brick", "glass", "water", "clear plastic"], a: 0, s: true },
+      { q: "'Loud' is to 'whisper' as 'huge' is to ________ (each pair is strong → weak).", o: ["tiny", "big", "wide", "heavy"], a: 0, s: true },
+      { q: "Three of these mean 'very happy'. Which word means the OPPOSITE and is the odd one out?", o: ["miserable", "delighted", "joyful", "cheerful"], a: 0, s: true },
+      { q: "'Ancient' means very old as 'enormous' means very ________ (each is the strong form).", o: ["big", "small", "fast", "loud"], a: 0 },
+      { q: "Three of these give off their OWN light. Which only reflects light and does not make it?", o: ["moon", "sun", "fire", "star"], a: 0, s: true },
+      { q: "'Doctor' works with 'patients' as 'teacher' works with ________ (person → who they help).", o: ["students", "doctors", "nurses", "farmers"], a: 0 },
+      { q: "Three of these are used to MEASURE things. Which is the odd one out?", o: ["hammer", "ruler", "scale", "clock"], a: 0 },
+      { q: "'Brave' is to 'scared' as 'gentle' is to ________ (each pair is opposites).", o: ["rough", "kind", "soft", "calm"], a: 0, s: true },
+      { q: "Three of these words RHYME. Which one does NOT rhyme, though it looks alike?", o: ["said", "bed", "red", "fed"], a: 0, s: true },
+      { q: "Three of these live in WATER for their whole life. Which starts in water then lives on land?", o: ["frog", "shark", "dolphin", "whale"], a: 0 },
+      { q: "'Winter' is to 'summer' as 'ancient' is to ________ (each pair is opposites).", o: ["modern", "old", "cold", "past"], a: 0, s: true },
+      { q: "Three of these are tools that CUT. Which is the odd one out?", o: ["spoon", "scissors", "saw", "knife"], a: 0 },
+      { q: "'Curious' goes with 'question' as 'hungry' goes with ________ (feeling → what you do).", o: ["eat", "sleep", "run", "read"], a: 0 },
+      { q: "Three of these can be TRANSPARENT (see-through). Which one is always solid and the odd one out?", o: ["wall", "window", "bottle", "lens"], a: 0, s: true }
     ],
 
     "animal-babies": [
-      { q: "'Puppy → dog' and 'kitten → cat'.\nUsing the SAME idea (baby → grown-up), 'foal' grows up to be a ________.", o: ["horse", "cow", "goat", "sheep"], a: 0, s: true },
-      { q: "Bears, lions AND tigers all use the SAME word for their babies.\nSo a baby tiger is called a ________.", o: ["cub", "kit", "pup", "calf"], a: 0 },
-      { q: "Read: A tadpole has no legs and lives in water. Later it grows legs and hops.\nA tadpole will grow up to be a ________.", o: ["frog", "fish", "snail", "duck"], a: 0, s: true },
-      { q: "A 'kid' is a baby goat and a 'lamb' is a baby sheep.\nWhich pair below is matched CORRECTLY?", o: ["goat - kid", "goat - lamb", "sheep - kid", "sheep - calf"], a: 0, s: true },
-      { q: "Cows AND elephants share the SAME baby word.\nSo BOTH a baby cow and a baby elephant are called a ________.", o: ["calf", "cub", "kid", "foal"], a: 0 },
-      { q: "Which pair is WRONG? (Three are correct baby→parent pairs; one is not.)", o: ["gosling - dog", "duckling - duck", "piglet - pig", "joey - kangaroo"], a: 0, s: true },
-      { q: "A baby duck is a 'duckling' and a baby goose is a 'gosling'.\nBoth baby names end with the SAME three letters. What are they?", o: ["-ling", "-let", "-ick", "-fawn"], a: 0 },
-      { q: "Read: A joey is safe in its mother's pouch.\nOnly ONE of these animals carries its baby in a pouch. Which mother is this?", o: ["kangaroo", "cow", "horse", "hen"], a: 0, s: true },
-      { q: "A baby pig is a 'piglet' and a baby owl is an 'owlet'.\nBoth add the SAME ending. What ending is it?", o: ["-let", "-ling", "-y", "-kin"], a: 0, s: true },
-      { q: "'Calf' can be the baby of a cow OR an elephant.\nWhich baby name below belongs to only ONE kind of animal here — the frog?", o: ["tadpole", "cub", "calf", "kid"], a: 0 },
-      { q: "Read: A fawn has spots and lives in the forest.\nA fawn is the baby of a ________.", o: ["deer", "horse", "goat", "cow"], a: 0, s: true },
-      { q: "Which group are ALL baby-animal words?", o: ["puppy, kitten, foal", "puppy, kitten, horse", "dog, kitten, foal", "puppy, cat, foal"], a: 0 },
-      { q: "'Hen → chick' (parent → baby).\nUsing the SAME idea, 'dog → ________'.", o: ["puppy", "kitten", "calf", "chick"], a: 0 },
-      { q: "A baby sheep and a baby goat are often mixed up.\nWhich sentence is CORRECT?", o: ["A lamb is a baby sheep.", "A lamb is a baby goat.", "A kid is a baby sheep.", "A calf is a baby sheep."], a: 0, s: true },
-      { q: "Which one is NOT a baby-animal word?", o: ["fence", "fawn", "foal", "joey"], a: 0 },
-      { q: "Read: Bears, lions and tigers share a baby word; horses and cows do NOT share it.\nWhich baby word do bears, lions and tigers share?", o: ["cub", "foal", "calf", "kid"], a: 0 }
+      { q: "'Foal → horse' and 'calf → cow' (baby → grown-up).\nUsing the SAME idea, 'cygnet' grows up to be a ________.", o: ["swan", "duck", "goose", "hen"], a: 0, s: true },
+      { q: "Read three steps.\nA joey lives in a pouch. Only kangaroos and koalas have pouches. This joey climbs trees.\nSo this joey belongs to a ________.", o: ["koala", "kangaroo", "cow", "deer"], a: 0, s: true },
+      { q: "A baby eagle is an 'eaglet' and a baby owl is an 'owlet'.\nBoth add the SAME ending. It is ________.", o: ["-let", "-ling", "-y", "-kin"], a: 0 },
+      { q: "Which pair is WRONG? Three are correct baby → parent pairs.", o: ["cub - horse", "leveret - hare", "gosling - goose", "kid - goat"], a: 0, s: true },
+      { q: "Read: A tadpole has a tail and no legs. It lives in the pond.\nWhen it grows legs and loses its tail, it becomes a ________.", o: ["frog", "fish", "snail", "newt"], a: 0, s: true },
+      { q: "Bears, lions, tigers AND foxes all call their babies 'cubs'.\nSo a baby fox is a ________.", o: ["cub", "kit", "pup", "calf"], a: 0 },
+      { q: "'Duckling → duck' and 'gosling → goose' both add '-ling'.\nWhich baby word below ALSO uses '-ling'?", o: ["duckling", "piglet", "owlet", "fawn"], a: 0, s: true },
+      { q: "A baby deer is a 'fawn' and a baby kangaroo is a 'joey'.\nWhich pair is matched CORRECTLY?", o: ["deer - fawn", "deer - joey", "kangaroo - fawn", "deer - cub"], a: 0, s: true },
+      { q: "Read: A calf can be the baby of a cow, an elephant OR a whale.\nSo 'calf' is used for ________ than most baby words.", o: ["more animals", "fewer animals", "only cows", "only whales"], a: 0 },
+      { q: "Which group are ALL baby-animal words?", o: ["cub, foal, cygnet", "cub, horse, cygnet", "cub, foal, swan", "dog, foal, cygnet"], a: 0, s: true },
+      { q: "'Hen → chick' as 'kangaroo → ________' (parent → baby).", o: ["joey", "cub", "foal", "calf"], a: 0 },
+      { q: "A 'piglet' is a baby pig and a 'leveret' is a baby hare.\nWhich sentence is CORRECT?", o: ["A leveret is a baby hare.", "A leveret is a baby pig.", "A piglet is a baby hare.", "A cub is a baby hare."], a: 0, s: true },
+      { q: "Read: Foxes and bears share a baby word; horses do NOT share it.\nWhich word do foxes and bears share?", o: ["cub", "foal", "kit", "calf"], a: 0 },
+      { q: "Which one is NOT a real baby-animal word?", o: ["kennel", "cygnet", "leveret", "gosling"], a: 0 },
+      { q: "A baby sheep is a lamb and a baby goat is a kid.\nA farmer has one lamb and one kid. So he has one baby ________ and one baby ________.", o: ["sheep - goat", "goat - sheep", "cow - goat", "sheep - cow"], a: 0, s: true },
+      { q: "'Swan → cygnet' shows the baby of a swan.\nSo a group with a swan, a horse and a fox has babies called cygnet, foal and ________.", o: ["cub", "chick", "kid", "joey"], a: 0 }
     ],
 
     "animals": [
-      { q: "A cow eats grass and a lion eats meat.\nSo which animal below would a LION most likely hunt?", o: ["rabbit", "grass", "leaf", "flower"], a: 0, s: true },
-      { q: "Bees live in a hive and spiders make a web.\nSo who catches food in the web?", o: ["the spider", "the bee", "the hive", "the honey"], a: 0 },
-      { q: "Read: This animal is awake at night and sleeps by day. It has big eyes and can turn its head far.\nWhich animal is it?", o: ["owl", "hen", "cow", "sheep"], a: 0, s: true },
-      { q: "A fish uses gills to breathe under water.\nSo a fish taken OUT of the water would ________.", o: ["not be able to breathe well", "run away fast", "start to fly", "make honey"], a: 0, s: true },
-      { q: "A camel can cross the desert because it can go a long time without water.\nSo the desert is a place with very little ________.", img: "camel", o: ["water", "sand", "sun", "heat"], a: 0 },
-      { q: "'As busy as a bee' and 'as slow as a snail'.\nSo if someone is 'as quiet as a ________', which animal fits?", o: ["mouse", "lion", "dog", "duck"], a: 0 },
-      { q: "A turtle carries its shell as its home.\nSo when a turtle is scared, it can hide by ________.", o: ["pulling into its shell", "flying away", "digging a nest", "spinning a web"], a: 0, s: true },
-      { q: "Read: This farm animal gives us both wool for sweaters AND says 'baa'.\nWhich animal is it?", o: ["sheep", "cow", "hen", "horse"], a: 0 },
-      { q: "Only ONE of these animals has NO wings at all.\nWhich is it?", o: ["cow", "owl", "bee", "bird"], a: 0 },
-      { q: "A hen gives eggs and a cow gives milk.\nSo if you want HONEY, which animal do you need?", o: ["bee", "hen", "cow", "sheep"], a: 0, s: true },
-      { q: "A zebra has stripes and an elephant has a trunk.\nSo which animal below would you know by its long TRUNK?", o: ["elephant", "zebra", "lion", "deer"], a: 0 },
-      { q: "Read: This animal moves so slowly that we say 'as slow as' it. It also carries its home.\nWhich animal is it?", o: ["snail", "rabbit", "horse", "duck"], a: 0, s: true },
-      { q: "A dog lives in a kennel and a horse lives in a stable.\nUsing the SAME idea (animal → home), a bird lives in a ________.", o: ["nest", "hive", "web", "den"], a: 0 },
-      { q: "Which sentence is TRUE about these animals?", o: ["A fish lives in water; a rabbit lives on land.", "A fish lives on land; a rabbit lives in water.", "Both a fish and a rabbit live in the sky.", "A bird lives under the ground."], a: 0 },
-      { q: "'Neigh' comes from a horse and 'moo' comes from a cow.\nSo the sound 'buzz' comes from a ________.", img: "bee", o: ["bee", "sheep", "duck", "cat"], a: 0, s: true },
-      { q: "Read: This animal hops, has long ears and strong back legs, and is 'as timid' (shy) as can be.\nWhich animal is it?", o: ["rabbit", "cow", "fish", "duck"], a: 0 }
+      { q: "Read three clues.\nThis animal is awake at night, has huge eyes, and can turn its head far around.\nAlso, it is NOT a mammal — it is a bird. Which is it?", o: ["owl", "bat", "fox", "cat"], a: 0, s: true },
+      { q: "A chameleon can change colour to match the leaves.\nIt does this to become almost ________ to its enemies.", o: ["invisible", "furious", "enormous", "generous"], a: 0, s: true },
+      { q: "Camels store fat in their humps so they can cross the desert.\nSo a camel is well suited to a place that is ________.", img: "camel", o: ["hot and dry", "cold and wet", "dark and icy", "deep and blue"], a: 0 },
+      { q: "'As stubborn as a mule' and 'as gentle as a lamb'.\nSo if someone will not change their mind at all, we say they are as stubborn as a ________.", o: ["mule", "lamb", "bird", "fish"], a: 0, s: true },
+      { q: "Read: A whale lives in the sea but breathes AIR, not water.\nSo a whale must come to the ________ to breathe.", o: ["surface", "seabed", "shore", "sand"], a: 0, s: true },
+      { q: "Bees, ants and termites all live and work together in large groups.\nSo we say these insects are ________.", o: ["social", "alone", "lazy", "silent"], a: 0 },
+      { q: "A tortoise moves slowly but lives a very long time.\nSo which sentence is TRUE?", o: ["It is slow but long-lived.", "It is fast and short-lived.", "It is fast but long-lived.", "It flies at night."], a: 0, s: true },
+      { q: "Read: This gigantic animal has a long trunk it uses like a hand.\nIt is the biggest land animal. Which is it?", img: "elephant", o: ["elephant", "giraffe", "hippo", "rhino"], a: 0 },
+      { q: "A spider has EIGHT legs, so it is NOT an insect (insects have six).\nSo which statement is correct?", o: ["A spider has eight legs.", "A spider has six legs.", "A spider is an insect.", "A spider has no legs."], a: 0 },
+      { q: "Penguins have wings but cannot fly; instead they use their wings to ________.", o: ["swim", "dig", "climb", "hop"], a: 0, s: true },
+      { q: "A snake has no legs, yet it can still move.\nSo a snake moves by ________ along the ground.", o: ["sliding", "hopping", "galloping", "waddling"], a: 0 },
+      { q: "Read: This curious animal is very clever and can use a rock as a tool to open shells.\nIt lives in the sea and floats on its back. Which is it?", o: ["otter", "seal", "crab", "shark"], a: 0, s: true },
+      { q: "A frog is an amphibian, so it can live BOTH in water and on land.\nWhich sentence is TRUE about a frog?", o: ["It lives in water and on land.", "It lives only in the sky.", "It lives only under sand.", "It cannot live in water."], a: 0 },
+      { q: "'Roar' comes from a lion and 'hiss' comes from a snake.\nUsing the SAME idea, which animal 'trumpets'?", o: ["elephant", "zebra", "monkey", "deer"], a: 0, s: true },
+      { q: "Bats are awake at night and sleep by day, so they are ________ animals.", o: ["nocturnal", "gentle", "ancient", "social"], a: 0 },
+      { q: "Read: This brave, loyal animal helps guard the house and lives in a kennel.\nWhich animal is it?", img: "dog", o: ["dog", "cat", "cow", "duck"], a: 0 }
     ],
 
     "nouns-verbs": [
-      { q: "A NOUN names a thing; a VERB is an action.\nIn 'Birds fly high', which word is the NOUN and which is the VERB, in that order?", o: ["birds - fly", "fly - birds", "high - fly", "birds - high"], a: 0, s: true },
-      { q: "Count carefully.\nHow many NOUNS are in: 'The cat and the dog chase the ball.'?", o: ["three", "two", "four", "one"], a: 0, s: true },
-      { q: "The word 'play' can be a noun OR a verb.\nIn which sentence is 'play' an ACTION (verb)?", o: ["The children play outside.", "The school play was long.", "We watched a play.", "That play is famous."], a: 0, s: true },
-      { q: "In 'She waters the plants every day', the word 'waters' is a ________.", img: "plant", o: ["verb", "noun", "colour", "number"], a: 0 },
-      { q: "In 'She drinks the water', the word 'water' is a ________.", img: "water", o: ["noun", "verb", "colour", "number"], a: 0 },
-      { q: "Count carefully.\nHow many VERBS (action words) are in: 'The boy runs, jumps and sings.'?", o: ["three", "two", "one", "four"], a: 0, s: true },
-      { q: "Every sentence needs a verb.\nWhich word could FINISH this sentence as its verb?\n'The happy baby ________ .'", o: ["laughs", "table", "blue", "under"], a: 0 },
-      { q: "Three of these words are nouns. Which ONE is a verb?", o: ["swim", "school", "pencil", "river"], a: 0 },
-      { q: "In 'The fast car stops at the light', which word is the ACTION?", o: ["stops", "fast", "car", "light"], a: 0, s: true },
-      { q: "Which sentence has EXACTLY one noun and one verb (nothing else counted)?", o: ["Dogs bark.", "The big dog barks.", "Dogs bark loudly.", "Two dogs bark."], a: 0, s: true },
-      { q: "A word can name a person, place, animal OR thing and still be a noun.\nWhich word below names a PLACE?", o: ["market", "jump", "loud", "happy"], a: 0 },
-      { q: "In 'Grandma bakes a cake', find the noun that is a THING (not a person).", o: ["cake", "Grandma", "bakes", "a"], a: 0 },
-      { q: "Read: 'Lan reads. Nam writes.'\nHow many verbs are there in total across BOTH sentences?", o: ["two", "one", "three", "four"], a: 0, s: true },
-      { q: "Three of these are actions. Which ONE is a naming word (noun)?", o: ["kitchen", "cook", "bake", "stir"], a: 0 },
-      { q: "In 'The bell rings loudly', the word 'loudly' tells HOW.\nIt is NOT a noun and NOT the action. The ACTION word here is ________.", img: "bell", o: ["rings", "bell", "loudly", "the"], a: 0, s: true },
-      { q: "Which word can be BOTH a noun and a verb, like 'water' or 'play'?", o: ["fish", "happy", "under", "very"], a: 0 }
+      { q: "A noun names a thing; a verb is an action; an adjective describes.\nIn 'The furious lion roared', which word is the ADJECTIVE?", o: ["furious", "lion", "roared", "the"], a: 0, s: true },
+      { q: "Count carefully.\nHow many NOUNS are in: 'The tall boy gave a gift to his sister.'?", o: ["three", "two", "four", "five"], a: 0, s: true },
+      { q: "The word 'water' can be a noun OR a verb.\nIn which sentence is 'water' an ACTION (verb)?", o: ["I water the plants daily.", "The water is cold.", "She drank the water.", "The water sparkled."], a: 0, s: true },
+      { q: "Count the VERBS.\nHow many action words are in: 'She jumped, laughed and clapped with joy.'?", o: ["three", "two", "four", "one"], a: 0, s: true },
+      { q: "Three of these are verbs. Which ONE is a noun?", o: ["whisper", "discover", "gallop", "trumpet"], a: 0 },
+      { q: "In 'The enormous ship sailed slowly', which word is the ACTION?", o: ["sailed", "enormous", "ship", "slowly"], a: 0, s: true },
+      { q: "An adjective describes a noun.\nIn 'a gentle breeze', the adjective is ________.", o: ["gentle", "breeze", "a", "blew"], a: 0 },
+      { q: "Which sentence has EXACTLY two nouns and one verb?", o: ["The cat chased the mouse.", "The big cat chased quickly.", "Cats chase.", "The cat quietly slept."], a: 0, s: true },
+      { q: "Read: 'Nam read a book. Mai painted a picture.'\nHow many VERBS are there in total across BOTH sentences?", o: ["two", "one", "three", "four"], a: 0, s: true },
+      { q: "In 'The curious child asked many questions', find the ADJECTIVE.", o: ["curious", "child", "asked", "questions"], a: 0 },
+      { q: "The word 'whisper' can be a noun or a verb.\nIn which sentence is it a VERB?", o: ["Please whisper the secret.", "I heard a whisper.", "Her whisper was soft.", "That whisper woke me."], a: 0, s: true },
+      { q: "Three of these are nouns. Which ONE is an adjective?", o: ["brave", "castle", "river", "forest"], a: 0 },
+      { q: "Count carefully.\nHow many ADJECTIVES are in: 'The tall, kind, gentle man smiled.'?", o: ["three", "two", "four", "one"], a: 0, s: true },
+      { q: "In 'Birds build strong nests in tall trees', the word 'build' is a ________.", o: ["verb", "noun", "adjective", "number"], a: 0 },
+      { q: "Which word can be a noun AND a verb, like 'water' or 'whisper'?", o: ["paint", "gentle", "slowly", "very"], a: 0 },
+      { q: "In 'The ancient tree stood by the river', which is the ADJECTIVE and which is the NOUN it describes, in order?", o: ["ancient - tree", "tree - river", "stood - tree", "ancient - stood"], a: 0, s: true }
     ],
 
     "articles": [
-      { q: "We use 'a' before a NOT-vowel sound and 'an' before a vowel sound.\nFill BOTH: 'I ate ________ egg and ________ banana.'", o: ["an - a", "a - an", "an - an", "a - a"], a: 0, s: true },
-      { q: "Every option looks possible. Which sentence is CORRECT?", o: ["He has an umbrella.", "He has a umbrella.", "He has an big umbrella.", "He has the an umbrella."], a: 0, s: true },
-      { q: "There is only ONE of it in the sky at night, so we say 'the'.\nWhich sentence is correct?", img: "moon", o: ["Look at the moon.", "Look at a moon.", "Look at an moon.", "Look at moon the."], a: 0 },
-      { q: "Both blanks come before a vowel sound. Fill BOTH:\n'There is ________ ant and ________ owl.'", o: ["an - an", "a - an", "an - a", "a - a"], a: 0, s: true },
-      { q: "'Hour' is tricky, but 'house' is easy: it starts with a NOT-vowel sound.\nSo we say ________ house.", o: ["a", "an", "the two", "no word"], a: 0 },
-      { q: "Which sentence is CORRECT? (Read the article AND the next word together.)", o: ["I want an egg.", "I want a egg.", "I want an dog.", "I want a apple."], a: 0 },
-      { q: "Fill BOTH blanks so each article matches the word after it:\n'She saw ________ elephant and ________ zebra.'", o: ["an - a", "a - an", "an - an", "a - a"], a: 0, s: true },
-      { q: "We use 'the' for something we ALREADY know about.\nWhich sentence uses 'the' correctly?", o: ["Please close the door I just opened.", "Please close a door I just opened.", "Please close an door.", "Please close door the."], a: 0 },
-      { q: "Fill BOTH blanks:\n'I have ________ pen and ________ eraser.'", o: ["a - an", "an - a", "a - a", "an - an"], a: 0, s: true },
-      { q: "Only ONE sentence is fully correct.", o: ["An owl and a cat are friends.", "A owl and an cat are friends.", "An owl and an cat are friends.", "A owl and a cat are friends."], a: 0, s: true },
-      { q: "'Orange' starts with a vowel sound, so it takes 'an'.\nWhich sentence is correct?", o: ["He ate an orange.", "He ate a orange.", "He ate the a orange.", "He ate an a orange."], a: 0 },
-      { q: "Fill the blank with the article that matches BOTH the rule and the word:\n'A dog chased ________ ant across ________ yard we know.'", o: ["an - the", "a - the", "an - a", "the - an"], a: 0, s: true },
-      { q: "Which sentence is CORRECT?", o: ["It is a big house.", "It is an big house.", "It is big a house.", "It is the an house."], a: 0 },
-      { q: "The sun is the only one, so we say 'the'. Which sentence is correct?", img: "sun", o: ["The sun is hot today.", "A sun is hot today.", "An sun is hot today.", "Sun the is hot."], a: 0 },
-      { q: "Read the word AFTER each blank. Fill BOTH:\n'We saw ________ ice cream and ________ cake.'", o: ["an - a", "a - an", "an - an", "a - a"], a: 0, s: true },
-      { q: "Which sentence uses 'a' and 'an' correctly TOGETHER?", o: ["He read a book about an ocean.", "He read an book about a ocean.", "He read an book about an ocean.", "He read a book about a ocean."], a: 0, s: true }
+      { q: "We say 'an' before a vowel SOUND and 'a' before other sounds.\nFill all three: 'I saw ________ owl, ________ eagle and ________ hawk.'", o: ["an - an - a", "a - an - an", "an - a - an", "a - a - a"], a: 0, s: true },
+      { q: "'Hour' begins with a silent 'h', so it SOUNDS like it starts with a vowel.\nSo we say ________ hour.", o: ["an", "a", "the two", "no word"], a: 0, s: true },
+      { q: "Only ONE sentence is correct. All four look plausible.", o: ["She wants an honest answer.", "She wants a honest answer.", "She wants an honestly answer.", "She wants the a honest answer."], a: 0, s: true },
+      { q: "Fill BOTH blanks so each article matches the word after it.\n'He met ________ enormous bear and ________ tiny mouse.'", o: ["an - a", "a - an", "an - an", "a - a"], a: 0, s: true },
+      { q: "'Uniform' begins with a 'yoo' sound, like 'you', not a vowel sound.\nSo we say ________ uniform.", o: ["a", "an", "the two", "no word"], a: 0 },
+      { q: "We use 'the' for something there is only ONE of.\nWhich sentence is correct?", o: ["The earth spins every day.", "A earth spins every day.", "An earth spins every day.", "Earth the spins daily."], a: 0 },
+      { q: "Fill all three blanks.\n'We ate ________ apple, ________ banana and ________ egg.'", o: ["an - a - an", "a - an - a", "an - an - an", "a - a - a"], a: 0, s: true },
+      { q: "Which sentence uses 'the' correctly for something ALREADY mentioned?", o: ["I saw a dog. The dog was brown.", "I saw a dog. A dog was brown.", "I saw the dog. An dog was brown.", "I saw an dog. The dog was brown."], a: 0, s: true },
+      { q: "Fill BOTH blanks.\n'She is ________ honest and ________ brave girl.'", o: ["an - a", "a - an", "an - an", "a - a"], a: 0, s: true },
+      { q: "Only ONE sentence is fully correct.", o: ["An hour ago, an owl flew by.", "A hour ago, a owl flew by.", "An hour ago, a owl flew by.", "A hour ago, an owl flew by."], a: 0, s: true },
+      { q: "'Umbrella' begins with a vowel sound, so it takes 'an'.\nWhich sentence is correct?", o: ["He carried an umbrella.", "He carried a umbrella.", "He carried the a umbrella.", "He carried an a umbrella."], a: 0 },
+      { q: "Read the sound after each blank. Fill BOTH.\n'It was ________ hour before ________ university opened.'", o: ["an - a", "a - an", "an - an", "a - a"], a: 0, s: true },
+      { q: "Which sentence is CORRECT?", o: ["That is a useful tool.", "That is an useful tool.", "That is the an useful tool.", "That is useful a tool."], a: 0 },
+      { q: "The moon is the only one in the night sky, so we say 'the'.\nWhich sentence is correct?", img: "moon", o: ["The moon glows at night.", "A moon glows at night.", "An moon glows at night.", "Moon the glows at night."], a: 0 },
+      { q: "Fill all three blanks by SOUND, not by first letter.\n'________ hour, ________ egg and ________ house.'", o: ["An - an - a", "A - an - a", "An - a - an", "A - a - a"], a: 0, s: true },
+      { q: "Which sentence uses 'a' and 'an' correctly TOGETHER?", o: ["I read an honest book about a hero.", "I read a honest book about an hero.", "I read an honest book about an hero.", "I read a honest book about a hero."], a: 0, s: true }
     ]
 
   },
 
   passages: [
     {
-      title: "Why the Ants Store Food",
-      text: "All summer long, the ants worked hard. They carried tiny seeds and crumbs, one by one, down into their home under the ground. Nearby, a grasshopper played his fiddle all day and laughed at the busy ants.\n\"Come and play!\" he called. \"There is food everywhere!\"\nBut the ants only worked harder. \"Winter is coming,\" said the smallest ant, \"and then no food will grow.\"\nWhen the cold winter came, snow covered the fields. The grasshopper was hungry and cold, but the ants sat warm and safe with plenty to eat.",
+      title: "The Stubborn Little Cloud",
+      text: "High in the sky lived a small cloud named Puff. All the other clouds floated east where the farmers waited for rain, but Puff refused to move. \"I like it here,\" he said, and he stayed above the dry town, doing nothing at all.\nDay after day, the town below grew brown and thirsty. The flowers drooped and the wells ran low. A gentle breeze tried to push Puff along, but he was too stubborn to budge.\nOne night Puff heard a child whisper a wish for rain. In the morning, feeling sorry, Puff finally let the wind carry him. He grew dark and heavy, then poured his rain over the thirsty town. The flowers lifted their heads, and Puff felt happier than he ever had before.",
       questions: [
-        { q: "The grasshopper said food was 'everywhere', yet the ants kept working. Who understood the FUTURE better, and why?", o: ["The ants — they knew winter would leave no food", "The grasshopper — food never runs out", "Both were right", "Neither thought about food"], a: 0, s: true },
-        { q: "Why could the ants stay 'warm and safe with plenty to eat' in winter?", o: ["They had saved food during summer", "They found new food in the snow", "The grasshopper shared with them", "Winter was short"], a: 0 },
-        { q: "The grasshopper 'laughed at the busy ants'. What does this tell us about him at first?", o: ["He thought their hard work was foolish", "He was helping them", "He was afraid of them", "He was very tired"], a: 0, s: true },
-        { q: "How was the grasshopper's winter DIFFERENT from the ants' winter?", o: ["He was hungry and cold; they were fed and warm", "He was warm; they were cold", "Both had plenty of food", "Both were asleep"], a: 0 },
-        { q: "The smallest ant said, 'Winter is coming.' This shows the ant was ________.", o: ["planning ahead", "afraid of summer", "tired of playing", "angry at the fiddle"], a: 0 },
-        { q: "What is the BEST lesson from this story?", o: ["Prepare now for what may come later", "Music is bad", "Ants dislike grasshoppers", "Summer never ends"], a: 0 }
+        { q: "The town 'grew brown and thirsty' while Puff stayed still. Put the clues together: what caused this?", o: ["No rain fell because Puff would not move", "Too much rain fell on the town", "The farmers left the town", "The wind was too strong"], a: 0, s: true },
+        { q: "The story says Puff was 'too stubborn to budge'. This means he ________.", o: ["would not move even when pushed", "moved very quickly", "was afraid of the wind", "was already gone"], a: 0, s: true },
+        { q: "What finally made Puff decide to help?", o: ["He heard a child wish for rain and felt sorry", "The other clouds forced him", "The sun told him to move", "The wells filled up"], a: 0 },
+        { q: "Why did Puff 'grow dark and heavy' before it rained?", o: ["He filled with water ready to pour down", "He was getting sleepy", "He was turning into the sun", "He was flying away"], a: 0, s: true },
+        { q: "At the end, Puff 'felt happier than he ever had'. Why?", o: ["Helping others made him feel good", "He got to stay still", "He became bigger than the sun", "It stopped raining"], a: 0 },
+        { q: "What is the BEST lesson from this story?", o: ["Helping others can bring you joy too", "Clouds should never move", "Rain is always bad", "It is good to be stubborn"], a: 0 }
       ]
     },
     {
-      title: "Linh Learns to Ride",
-      text: "Linh wanted to ride her new bike, but every time she pushed off, she wobbled and put her foot down. Her big brother Minh held the back of the seat and ran beside her.\n\"Look straight ahead, not at your feet,\" Minh said. \"And keep pedalling — a moving bike stays up!\"\nLinh tried again. She looked at the tree at the end of the path and kept her feet moving. The bike stopped wobbling. She was so happy she forgot to be scared. Only later did she notice something: Minh had let go of the seat a long time ago. She had been riding all by herself!",
+      title: "The Curious Fox and the Well",
+      text: "A curious young fox was wandering the forest when she spotted an old stone well. Peering over the edge, she saw her own face staring back and, deeper down, something that glittered like gold.\n\"Treasure!\" she gasped. Without thinking, she leaned too far and tumbled straight into the cold water below.\nThe well was deep and its walls were smooth, so she could not climb out. She was exhausted from paddling when a thirsty goat trotted up and looked down at her.\n\"Is the water good?\" asked the goat. The clever fox smiled. \"Delicious! Come down and drink your fill.\" The goat jumped in at once. Standing on the goat's tall back, the fox leapt out and dashed away, leaving the poor goat stuck below.",
       questions: [
-        { q: "Minh said 'a moving bike stays up'. Put the idea together: why did pedalling STOP the wobble?", o: ["Moving kept the bike balanced", "Pedalling made it heavier", "It made the path shorter", "It cleaned the wheels"], a: 0, s: true },
-        { q: "Minh told Linh to look at the tree, not her feet. How did this HELP her ride straight?", o: ["Looking ahead keeps you balanced and on track", "The tree pushed the bike", "Her feet were dirty", "The tree was moving"], a: 0 },
-        { q: "'She forgot to be scared.' What most likely made her fear go away?", o: ["Things were going well and the bike felt steady", "Minh shouted at her", "It began to rain", "She got off the bike"], a: 0, s: true },
-        { q: "Minh 'had let go a long time ago' but Linh kept riding. What does this show about Linh?", o: ["She could balance on her own without knowing it", "She could not ride at all", "Minh was still holding on", "The bike was broken"], a: 0, s: true },
-        { q: "Why is it a SURPRISE that Minh let go so early?", o: ["Linh thought he was still helping the whole time", "Minh was faster than the bike", "The path had no trees", "Linh never pushed off"], a: 0 },
-        { q: "Which word BEST describes how Linh solved her problem?", o: ["She kept trying and listened to good advice", "She gave up quickly", "She rode with her eyes closed", "She asked for a new bike"], a: 0 }
+        { q: "The fox 'leaned too far'. Using the whole story, why did she fall in?", o: ["She was too curious about the glitter and lost her balance", "The goat pushed her", "The wind blew her in", "The well was very shallow"], a: 0, s: true },
+        { q: "The 'something that glittered like gold' was most likely ________.", o: ["a reflection or trick of the light, not real treasure", "a pile of real gold coins", "the goat's tail", "a burning lamp"], a: 0, s: true },
+        { q: "Why did the fox tell the goat the water was 'delicious'?", o: ["To trick the goat into jumping in so she could escape", "Because she wanted the goat to be safe", "Because the water really was tasty", "To warn the goat away"], a: 0, s: true },
+        { q: "How did the fox finally get out of the well?", o: ["She climbed up on the goat's back and leapt out", "She waited for the water to rise", "A farmer pulled her up", "She dug a tunnel"], a: 0 },
+        { q: "The word 'exhausted' tells us the fox was ________.", o: ["very tired", "very angry", "very happy", "very hungry"], a: 0 },
+        { q: "What does the fox's trick tell us about her?", o: ["She was clever but not kind to the goat", "She was foolish and slow", "She always helped others", "She could not think for herself"], a: 0 }
       ]
     },
     {
-      title: "The Moon in the Well",
-      text: "One night, a little rabbit went to drink at the old stone well. When he looked down, he saw the round moon shining at the bottom of the water.\n\"Oh no!\" cried the rabbit. \"The moon has fallen into the well! I must save it!\"\nHe pulled and pulled on the rope, but the bucket came up empty. Again and again he tried, until at last he was too tired and lay back on the grass. Looking up, he gasped — the moon was safe in the sky after all! What he had seen in the water was only its reflection, like a picture in a mirror.",
+      title: "Grandpa's Ancient Clock",
+      text: "In the corner of Grandpa's house stood an ancient wooden clock, taller than Duc himself. Its tick was slow and gentle, and every hour it chimed a deep, friendly note.\nOne rainy afternoon, the clock went silent. Grandpa did not seem worried. \"It only needs winding,\" he said, and he showed Duc a small brass key hidden behind the clock face. \"This clock is older than me, but it still works if we care for it.\"\nDuc turned the key carefully, afraid he might break something so old. With a soft click, the heavy weights inside began to move, and the gentle tick returned. Grandpa smiled. \"You see? Old things are not useless. They just need a patient hand.\"\nThat night, Duc fell asleep to the friendly ticking, feeling proud of the ancient clock he had brought back to life.",
       questions: [
-        { q: "The bucket 'came up empty' every time. Using the whole story, why was that?", o: ["There was no real moon in the well to catch", "The rope kept breaking", "A bird stole the moon", "The well was too deep"], a: 0, s: true },
-        { q: "The story says the moon in the water was 'like a picture in a mirror'. This means it was ________.", o: ["only an image, not the real moon", "made of glass", "a second, smaller moon", "a lamp under the water"], a: 0, s: true },
-        { q: "How did the rabbit FINALLY learn the truth?", o: ["He lay back and saw the real moon in the sky", "A friend explained it", "The water dried up", "He climbed into the well"], a: 0 },
-        { q: "At the start the rabbit BELIEVED the moon had fallen in. Was he right or wrong, and how do we know?", o: ["Wrong — the moon was safe in the sky", "Right — he pulled it out", "Right — the well had two moons", "We cannot tell from the story"], a: 0, s: true },
-        { q: "The rabbit tried 'again and again' before resting. What does this tell us about him?", o: ["He did not give up easily", "He was lazy", "He was afraid of water", "He could not see"], a: 0 },
-        { q: "What is the BEST lesson from this story?", o: ["Things are not always what they first seem", "Never drink water at night", "Rabbits are very strong", "Wells are always empty"], a: 0 }
+        { q: "Why did the clock go silent that afternoon? Read the whole story.", o: ["It simply needed winding, not repair", "It was broken forever", "Duc had dropped it", "The rain had soaked it"], a: 0, s: true },
+        { q: "Grandpa 'did not seem worried'. What does this tell us?", o: ["He knew the clock could be fixed easily", "He did not care about the clock", "He was too tired to look", "He wanted a new clock"], a: 0, s: true },
+        { q: "The word 'ancient' tells us the clock was ________.", o: ["very old", "very new", "very small", "very loud"], a: 0 },
+        { q: "Why was Duc careful and 'afraid he might break something'?", o: ["The clock was old and precious to Grandpa", "The key was very sharp", "The clock was still ticking", "Grandpa was angry"], a: 0, s: true },
+        { q: "What did Grandpa mean by 'Old things are not useless'?", o: ["Old things can still work if cared for", "Old things should be thrown away", "New things are always better", "Clocks cannot be fixed"], a: 0 },
+        { q: "How did Duc feel by the end of the story?", o: ["Proud that he had fixed the old clock", "Angry at the clock", "Bored by the ticking", "Afraid of the dark"], a: 0 }
       ]
     }
   ]
