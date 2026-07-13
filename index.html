@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
 <title>English Fun - Grade 2</title>
 <style>
   :root{
@@ -44,6 +45,7 @@
   .btn-pink{background:linear-gradient(135deg,#ff8fb8,#ff6fa5);color:#fff;}
   .btn-purple{background:linear-gradient(135deg,#b79bff,#9b7df7);color:#fff;}
   .btn-yellow{background:linear-gradient(135deg,#ffd97a,#ffc93c);color:#6b4e00;}
+  .btn-green{background:linear-gradient(135deg,#8fe0a6,#4fc47a);color:#0d5a2e;}
   .btn-ghost{background:#fff;color:var(--text);box-shadow:0 3px 10px rgba(167,139,250,.18);}
   .btn-small{min-height:48px;font-size:16px;width:auto;padding:8px 18px;border-radius:14px;}
   .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;}
@@ -287,9 +289,116 @@
   .confetti{animation:fall linear forwards, sway ease-in-out infinite alternate;}
   @keyframes sway{ from{margin-left:-16px;} to{margin-left:16px;} }
 
-  /* Respect users who prefer less motion. */
+  /* ===== game layer: hedgehog track, items, gold, star of hope ===== */
+  .track{position:relative;height:66px;margin:4px 0 14px;border-radius:16px;
+    background:linear-gradient(180deg,#eaf6ff,#dff0e6);overflow:hidden;
+    box-shadow:inset 0 1px 4px rgba(0,0,0,.06);}
+  .track .rail{position:absolute;left:12px;right:12px;bottom:15px;height:4px;border-radius:4px;
+    background:repeating-linear-gradient(90deg,#c9d6e5 0 10px,transparent 10px 20px);}
+  /* legacy .track kept minimal; the real map is now .scene (SVG) */
+  .track{display:none}
+
+  /* ===== SVG adventure map ===== */
+  .scene{position:relative;width:100%;height:150px;margin:4px 0 14px;border-radius:18px;overflow:hidden;
+    box-shadow:0 4px 16px rgba(80,120,90,.18);}
+  .scene svg{display:block;width:100%;height:100%}
+  /* the hedgehog group is positioned along the path by JS via CSS var --t (0..1) */
+  #hogG{transition:transform .6s cubic-bezier(.34,1.4,.5,1)}
+  .hog-body{transform-box:fill-box;transform-origin:center;animation:hogBreathe 2.4s ease-in-out infinite}
+  @keyframes hogBreathe{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.05) translateY(-1px)}}
+  .hog-foot{transform-box:fill-box;transform-origin:top center;animation:hogFeet 0.9s ease-in-out infinite}
+  .hog-foot.b{animation-delay:.45s}
+  @keyframes hogFeet{0%,100%{transform:rotate(0)}50%{transform:rotate(8deg)}}
+  #hogG.hop{animation:hogHop .6s ease}
+  @keyframes hogHop{0%{transform:translateY(0)}35%{transform:translateY(-26px) scale(1.06)}70%{transform:translateY(0)}85%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+  .cloud{animation:drift linear infinite}
+  .cloud.a{animation-duration:26s} .cloud.b{animation-duration:38s}
+  @keyframes drift{from{transform:translateX(-40px)}to{transform:translateX(360px)}}
+  .grass{transform-box:fill-box;transform-origin:bottom center;animation:sway 3.2s ease-in-out infinite}
+  .grass.g2{animation-delay:.7s} .grass.g3{animation-delay:1.3s}
+  @keyframes sway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+  .item-node{transform-box:fill-box;transform-origin:center;animation:bob 1.8s ease-in-out infinite}
+  .item-node .spark{animation:twinkle 1.5s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+  @keyframes twinkle{0%,100%{opacity:.3;transform:scale(.7)}50%{opacity:1;transform:scale(1.1)}}
+  .item-node.got{animation:itemGot .6s ease forwards}
+  @keyframes itemGot{0%{transform:scale(1)}45%{transform:scale(1.8) translateY(-14px)}100%{transform:scale(0) translateY(-32px);opacity:0}}
+  .flagWave{transform-box:fill-box;transform-origin:left center;animation:wave 1.1s ease-in-out infinite}
+  @keyframes wave{0%,100%{transform:skewY(0)}50%{transform:skewY(-7deg)}}
+
+  /* ===== stars / gold counters (SVG icons, always coloured) ===== */
+  .coinrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .coin{display:inline-flex;align-items:center;gap:6px;font-weight:800;font-size:.92em;
+    border-radius:20px;padding:5px 12px;box-shadow:0 2px 8px rgba(0,0,0,.08);white-space:nowrap}
+  .coin svg{width:20px;height:20px;flex-shrink:0}
+  .coin.gold{background:linear-gradient(135deg,#fff2c2,#ffe08a);color:#8a5a06}
+  .coin.star{background:linear-gradient(135deg,#eef1ff,#dfe4ff);color:#4b47c9}
+  .coin.pulse{animation:coinPulse .5s ease}
+  @keyframes coinPulse{0%{transform:scale(1)}40%{transform:scale(1.28)}100%{transform:scale(1)}}
+
+  /* flying reward that arcs into the counter */
+  .flyer{position:fixed;z-index:120;pointer-events:none;width:26px;height:26px;
+    transition:transform .7s cubic-bezier(.4,0,.5,1),opacity .7s ease}
+
+  .rewardpop{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;font-weight:800;font-size:.92em;align-items:center}
+  .rewardpop span{display:inline-flex;align-items:center;gap:5px;background:#fff;border-radius:20px;padding:5px 12px;box-shadow:0 2px 8px rgba(0,0,0,.08);
+    animation:rewardIn .45s cubic-bezier(.34,1.56,.64,1) both}
+  .rewardpop span svg{width:18px;height:18px}
+  .rewardpop span:nth-child(2){animation-delay:.08s}
+  .rewardpop span:nth-child(3){animation-delay:.16s}
+  .rewardpop span:nth-child(4){animation-delay:.24s}
+  @keyframes rewardIn{from{opacity:0;transform:translateY(10px) scale(.7)}to{opacity:1;transform:none}}
+  .mult-badge{background:linear-gradient(90deg,#ffd16b,#ff9e6b)!important;color:#7a3d00!important}
+
+  .hope-box{margin:12px 0;padding:12px 14px;border-radius:14px;text-align:center;
+    background:linear-gradient(135deg,#fff3d1,#ffe0ec);box-shadow:0 3px 12px rgba(255,158,107,.25)}
+  .hope-box .ht{font-weight:800;margin-bottom:2px}
+  .hope-box .hs{font-size:.82em;color:#8a5a2b;margin-bottom:10px}
+  .btn-hope{background:linear-gradient(90deg,#ffb347,#ff7eb3)!important;color:#fff!important;border:none!important}
+  .hope-on{display:inline-flex;align-items:center;gap:6px;font-weight:800;color:#c2410c;
+    background:#fff2e0;border-radius:20px;padding:5px 13px;margin:8px 0}
+
+  .bag-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:10px;margin-top:10px}
+  .bag-item{background:#fff;border-radius:14px;padding:10px 6px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+  .bag-item .be{font-size:28px;line-height:1}
+  .bag-item .bn{font-size:.72em;color:var(--muted);margin-top:3px}
+  .bag-item .bc{font-weight:800;font-size:.85em}
+  .bag-empty{color:var(--muted);font-size:.9em;text-align:center;padding:14px 0}
+  .bag-item.locked{opacity:.9;background:#f3f2f7}
+  .bag-item.locked .be{filter:grayscale(1) brightness(1.15) opacity(.35)}
+  .bag-item.locked .bc{color:#b9b6c4}
+  .bag-item .be{transition:transform .15s}
+  .bag-item:not(.locked):hover .be{transform:scale(1.2) rotate(-6deg)}
+  .bag-stats{display:flex;gap:10px;justify-content:center;margin:6px 0 16px;flex-wrap:wrap}
+  .bag-stat{background:#fff;border-radius:16px;padding:10px 18px;text-align:center;box-shadow:0 3px 12px rgba(0,0,0,.07);min-width:92px}
+  .bag-stat .bs-num{font-weight:800;font-size:1.15em;display:flex;align-items:center;justify-content:center;gap:5px}
+  .bag-stat .bs-num svg{width:20px;height:20px}
+  .bag-stat .bs-lbl{font-size:.72em;color:var(--muted);margin-top:2px}
+  .shop-hint{margin-top:16px;text-align:center;font-size:.86em;color:#8a5a2b;
+    background:linear-gradient(135deg,#fff3d1,#ffe8c2);border-radius:14px;padding:12px 14px}
+  /* shop */
+  .shop-tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;-webkit-overflow-scrolling:touch}
+  .shop-tab{flex:0 0 auto;border:none;cursor:pointer;background:#fff;border-radius:20px;padding:8px 16px;font-weight:700;font-size:.9em;
+    color:#7a7590;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:.15s}
+  .shop-tab.on{background:linear-gradient(135deg,#b79bff,#9b7df7);color:#fff}
+  .shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px}
+  .shop-card{background:#fff;border-radius:16px;padding:14px 10px;text-align:center;box-shadow:0 3px 12px rgba(0,0,0,.08);
+    display:flex;flex-direction:column;align-items:center;gap:8px;border:2px solid transparent;transition:.15s}
+  .shop-card.equipped{border-color:#ffc93c;background:linear-gradient(180deg,#fffdf5,#fff8e6)}
+  .shop-art-wrap{width:88px;height:88px;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 50% 40%,#f4f0ff,#e8f2ff);border-radius:14px}
+  .shop-art{width:80px;height:80px;filter:drop-shadow(0 3px 5px rgba(0,0,0,.15))}
+  .shop-name{font-weight:700;font-size:.9em;min-height:2.2em;display:flex;align-items:center}
+  .shop-qty{font-size:.75em;color:var(--muted);margin-top:-4px}
+  .owned-tag{color:#4fae5a;font-weight:800;font-size:.9em}
+  @keyframes sparkleShine{0%,100%{opacity:.4}50%{opacity:1}}
+  .shop-art .spark,.shop-art [id^="star"]{animation:sparkleShine 1.6s ease-in-out infinite}
+
+  /* Respect users who prefer less motion — but the game map, hedgehog and reward
+     effects are functional feedback, so keep them gently animated even then. */
   @media(prefers-reduced-motion:reduce){
-    *{animation-duration:.001s !important; animation-iteration-count:1 !important;}
+    *:not(.scene *):not(.scene):not(.rewardpop span):not(.coin){
+      animation-duration:.001s !important; animation-iteration-count:1 !important;}
     body{animation:none;}
   }
 </style>
@@ -361,22 +470,486 @@ const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>
 const shuffle = arr => { const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
 const pick = arr => arr[Math.floor(Math.random()*arr.length)];
 
-/* ================= save progress (localStorage) ================= */
+/* ================= save progress =================
+   Primary storage is a REAL SQLite database (sql.js / WASM) whose binary image
+   is persisted in IndexedDB so it survives across sessions and works offline.
+   localStorage is kept as a safe fallback + mirror (e.g. when opened via file://
+   and the CDN that serves the WASM is unreachable, or IndexedDB is blocked).
+   The in-memory `store` object and all game logic stay exactly the same;
+   only the persistence layer underneath changed.                              */
 const STORE_KEY = "englishFun.v1";
-function loadStore(){
+const DB_IDB_NAME = "englishFunDB", DB_IDB_STORE = "sqlite", DB_IDB_KEY = "db.v1";
+
+let SQL = null, db = null, dbReady = false;
+
+function loadStoreLS(){
   try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }catch(e){ return {}; }
 }
-function saveStore(s){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(s)); }catch(e){} }
+function saveStoreLS(s){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(s)); }catch(e){} }
+
+/* ---- tiny IndexedDB helpers (store one Uint8Array = the SQLite file) ---- */
+function idbOpen(){
+  return new Promise((res,rej)=>{
+    if(!("indexedDB" in window)) return rej(new Error("no idb"));
+    const r = indexedDB.open(DB_IDB_NAME, 1);
+    r.onupgradeneeded = ()=>{ r.result.createObjectStore(DB_IDB_STORE); };
+    r.onsuccess = ()=>res(r.result);
+    r.onerror  = ()=>rej(r.error);
+  });
+}
+function idbGet(){
+  return idbOpen().then(idb=>new Promise((res,rej)=>{
+    const tx = idb.transaction(DB_IDB_STORE,"readonly").objectStore(DB_IDB_STORE).get(DB_IDB_KEY);
+    tx.onsuccess = ()=>res(tx.result || null); tx.onerror = ()=>rej(tx.error);
+  }));
+}
+function idbPut(bytes){
+  return idbOpen().then(idb=>new Promise((res,rej)=>{
+    const tx = idb.transaction(DB_IDB_STORE,"readwrite").objectStore(DB_IDB_STORE).put(bytes, DB_IDB_KEY);
+    tx.onsuccess = ()=>res(true); tx.onerror = ()=>rej(tx.error);
+  }));
+}
+
+/* ---- schema ---- */
+function dbCreateSchema(){
+  db.run(`
+    CREATE TABLE IF NOT EXISTS profile(id INTEGER PRIMARY KEY CHECK(id=1),
+      stars INTEGER DEFAULT 0, gold INTEGER DEFAULT 0, sound_on INTEGER DEFAULT 1);
+    CREATE TABLE IF NOT EXISTS bag(item TEXT PRIMARY KEY, qty INTEGER DEFAULT 0);
+    CREATE TABLE IF NOT EXISTS practice(topic_id TEXT PRIMARY KEY, done INTEGER DEFAULT 0, correct INTEGER DEFAULT 0);
+    CREATE TABLE IF NOT EXISTS tests(id INTEGER PRIMARY KEY AUTOINCREMENT,
+      date TEXT, mode TEXT, score INTEGER, total_marks INTEGER, correct INTEGER, total INTEGER, time_used INTEGER);
+    CREATE TABLE IF NOT EXISTS events(id INTEGER PRIMARY KEY AUTOINCREMENT,
+      ts TEXT, kind TEXT, detail TEXT);
+    CREATE TABLE IF NOT EXISTS shop(item_id TEXT PRIMARY KEY);           -- purchased items
+    CREATE TABLE IF NOT EXISTS boosters(booster_id TEXT PRIMARY KEY, qty INTEGER DEFAULT 0);
+    CREATE TABLE IF NOT EXISTS kv(k TEXT PRIMARY KEY, v TEXT);           -- misc (equipped skin/decor)
+    INSERT OR IGNORE INTO profile(id,stars,gold,sound_on) VALUES(1,0,0,1);
+  `);
+}
+
+/* ---- read the whole DB into the in-memory `store` shape used everywhere ---- */
+function dbReadIntoStore(){
+  const s = { practice:{}, tests:[], stars:0, gold:0, bag:{}, soundOn:true, shop:{}, equip:{skin:"classic",decor:null}, boosters:{} };
+  const prof = db.exec("SELECT stars,gold,sound_on FROM profile WHERE id=1");
+  if(prof.length && prof[0].values.length){
+    const [stars,gold,snd] = prof[0].values[0];
+    s.stars = stars||0; s.gold = gold||0; s.soundOn = !!snd;
+  }
+  const bag = db.exec("SELECT item,qty FROM bag");
+  if(bag.length) bag[0].values.forEach(([it,q])=>{ s.bag[it]=q; });
+  const sh = db.exec("SELECT item_id FROM shop");
+  if(sh.length) sh[0].values.forEach(([id])=>{ s.shop[id]=true; });
+  const bo = db.exec("SELECT booster_id,qty FROM boosters");
+  if(bo.length) bo[0].values.forEach(([id,q])=>{ s.boosters[id]=q; });
+  const kv = db.exec("SELECT k,v FROM kv");
+  if(kv.length) kv[0].values.forEach(([k,v])=>{ if(k==="skin") s.equip.skin=v; if(k==="decor") s.equip.decor=(v||null); });
+  const pr = db.exec("SELECT topic_id,done,correct FROM practice");
+  if(pr.length) pr[0].values.forEach(([tid,d,c])=>{ s.practice[tid]={done:d,correct:c}; });
+  const ts = db.exec("SELECT date,mode,score,total_marks,correct,total,time_used FROM tests ORDER BY id ASC");
+  if(ts.length) ts[0].values.forEach(([date,mode,score,tm,c,t,tu])=>{
+    s.tests.push({date,mode,score,totalMarks:tm,correct:c,total:t,timeUsed:tu});
+  });
+  return s;
+}
+
+/* ---- write the current in-memory `store` back into SQLite tables ---- */
+function dbWriteFromStore(s){
+  db.run("BEGIN");
+  try{
+    db.run("UPDATE profile SET stars=?,gold=?,sound_on=? WHERE id=1",
+      [s.stars|0, s.gold|0, s.soundOn?1:0]);
+    db.run("DELETE FROM bag");
+    const bi = db.prepare("INSERT INTO bag(item,qty) VALUES(?,?)");
+    Object.keys(s.bag||{}).forEach(k=>{ if(s.bag[k]>0) bi.run([k, s.bag[k]]); });
+    bi.free();
+    db.run("DELETE FROM practice");
+    const pi = db.prepare("INSERT INTO practice(topic_id,done,correct) VALUES(?,?,?)");
+    Object.keys(s.practice||{}).forEach(k=>{ pi.run([k, s.practice[k].done|0, s.practice[k].correct|0]); });
+    pi.free();
+    db.run("DELETE FROM tests");
+    const ti = db.prepare("INSERT INTO tests(date,mode,score,total_marks,correct,total,time_used) VALUES(?,?,?,?,?,?,?)");
+    (s.tests||[]).forEach(t=> ti.run([t.date, t.mode||null, t.score|0, t.totalMarks|0, t.correct|0, t.total|0, t.timeUsed|0]));
+    ti.free();
+    db.run("DELETE FROM shop");
+    const si = db.prepare("INSERT INTO shop(item_id) VALUES(?)");
+    Object.keys(s.shop||{}).forEach(k=>{ if(s.shop[k]) si.run([k]); });
+    si.free();
+    db.run("DELETE FROM boosters");
+    const boi = db.prepare("INSERT INTO boosters(booster_id,qty) VALUES(?,?)");
+    Object.keys(s.boosters||{}).forEach(k=>{ if(s.boosters[k]>0) boi.run([k, s.boosters[k]]); });
+    boi.free();
+    db.run("DELETE FROM kv");
+    const kvi = db.prepare("INSERT INTO kv(k,v) VALUES(?,?)");
+    kvi.run(["skin", (s.equip&&s.equip.skin)||"classic"]);
+    kvi.run(["decor", (s.equip&&s.equip.decor)||""]);
+    kvi.free();
+    db.run("COMMIT");
+  }catch(e){ db.run("ROLLBACK"); throw e; }
+}
+
+/* ---- public API kept identical to before ---- */
+function loadStore(){ return loadStoreLS(); }   // synchronous seed (upgraded by initDB later)
+function saveStore(s){
+  saveStoreLS(s);                               // always mirror to localStorage
+  if(dbReady && db){
+    try{ dbWriteFromStore(s); persistDB(); }catch(e){ /* keep going on localStorage */ }
+  }
+}
+let _persistT = null;
+function persistDB(){                            // debounce writes to IndexedDB
+  if(!db) return;
+  clearTimeout(_persistT);
+  _persistT = setTimeout(()=>{ try{ idbPut(db.export()); }catch(e){} }, 250);
+}
+
+/* ---- boot: load sql.js, restore or migrate, then hand back a ready store ---- */
+async function initDB(){
+  try{
+    const initSqlJs = window.initSqlJs;
+    if(typeof initSqlJs !== "function") throw new Error("sql.js not loaded");
+    SQL = await initSqlJs({ locateFile: f => "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/"+f });
+    const saved = await idbGet().catch(()=>null);
+    if(saved){ db = new SQL.Database(new Uint8Array(saved)); dbCreateSchema(); }
+    else{
+      db = new SQL.Database(); dbCreateSchema();
+      dbWriteFromStore(store);                   // migrate whatever localStorage had
+      await idbPut(db.export());
+    }
+    dbReady = true;
+    store = dbReadIntoStore();                    // DB is now the source of truth
+  }catch(e){
+    dbReady = false;                              // fall back silently to localStorage
+  }
+}
+
 let store = loadStore();
 store.practice = store.practice || {};   // {topicId:{done,correct}}
 store.tests = store.tests || [];         // [{date,score,totalMarks,correct,total,timeUsed}]
 store.stars = store.stars || 0;
+store.gold  = store.gold  || 0;          // bonus gold — spent in the shop
+store.bag   = store.bag   || {};         // collected items: {emoji: count}
+store.shop  = store.shop  || {};         // purchased shop items: {itemId:true}
+store.equip = store.equip || { skin:"classic", decor:null };  // equipped skin + map decoration
+store.boosters = store.boosters || {};   // owned consumable boosters: {boosterId:count}
 if(store.soundOn === undefined) store.soundOn = true;   // sound ON by default (has mute button)
+
+/* ---- reward economy (shared by practice & test) ---- */
+// Collectible items that can randomly drop on a correct answer.
+const ITEMS = [
+  {e:"🍎",n:"Apple"}, {e:"🌰",n:"Acorn"}, {e:"🍄",n:"Mushroom"},
+  {e:"🍓",n:"Strawberry"}, {e:"🎀",n:"Ribbon"}, {e:"🌸",n:"Blossom"},
+  {e:"🍯",n:"Honey"}, {e:"🧩",n:"Puzzle"}, {e:"💎",n:"Gem"}
+];
+// Streak multiplier: 1x, then x2 from a 3-streak, x3 from a 5-streak.
+function streakMult(streak){ return streak>=5 ? 3 : streak>=3 ? 2 : 1; }
+function addStars(n){ store.stars += n; }
+function addGold(n){ store.gold += n; }
+function collectItem(){   // returns the item dropped, or null
+  const it = pick(ITEMS);
+  store.bag[it.e] = (store.bag[it.e]||0) + 1;
+  return it;
+}
+// Central place to award a correct answer. Returns a summary for the UI.
+// hope = the "Star of Hope" was active (double or nothing).
+function awardCorrect(streak, hope){
+  const mult = streakMult(streak) * (hope ? 2 : 1);
+  const starsWon = 1 * mult;                       // base 1 star, boosted
+  let goldWon = 0;
+  if(streak>=3) goldWon += 1;                      // combo bonus gold
+  if(streak>=5) goldWon += 1;
+  if(hope) goldWon += 2;                           // brave bet bonus
+  // ~30% chance to also drop a collectible item (never on a failed hope).
+  const item = Math.random() < 0.30 ? collectItem() : null;
+  addStars(starsWon); addGold(goldWon);
+  saveStore(store);
+  return { mult, starsWon, goldWon, item };
+}
+
 function bumpPractice(topicId, correct){
   const p = store.practice[topicId] = store.practice[topicId] || {done:0,correct:0};
-  p.done++; if(correct){ p.correct++; store.stars++; }
+  p.done++; if(correct){ p.correct++; }
   saveStore(store);
 }
+
+/* ================= game visuals (hand-drawn SVG, no external art) ================= */
+// SVG icons that always keep their colour (emoji 🪙 renders grey on some systems).
+function starSVG(){
+  return `<svg viewBox="0 0 24 24" aria-hidden="true"><defs>
+    <linearGradient id="stG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe27a"/><stop offset="1" stop-color="#ffb300"/></linearGradient></defs>
+    <path d="M12 2l2.9 6.1 6.6.8-4.9 4.5 1.3 6.6L12 17.8 6.1 20.6l1.3-6.6L2.5 8.9l6.6-.8z"
+      fill="url(#stG)" stroke="#e69100" stroke-width="1" stroke-linejoin="round"/></svg>`;
+}
+function goldSVG(){
+  return `<svg viewBox="0 0 24 24" aria-hidden="true"><defs>
+    <linearGradient id="gdG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe58a"/><stop offset="1" stop-color="#f0a500"/></linearGradient></defs>
+    <circle cx="12" cy="12" r="9.5" fill="url(#gdG)" stroke="#c47d00" stroke-width="1.5"/>
+    <circle cx="12" cy="12" r="6.4" fill="none" stroke="#fff3c4" stroke-width="1.4" opacity=".8"/>
+    <text x="12" y="16.3" text-anchor="middle" font-size="9" font-weight="800" fill="#a86800">★</text></svg>`;
+}
+// Hand-drawn SVG for each collectible, drawn around origin (0,0), ~radius 11.
+// A shared sparkle sits on top so items twinkle on the map.
+const ITEM_SVG = {
+  "🍎":`<path d="M0 -3 q-9-6-9 3 q0 9 9 11 q9-2 9-11 q0-9-9-3z" fill="#e5484d"/><path d="M0 -4 q1-5 5-6" stroke="#7a4a22" stroke-width="2" fill="none" stroke-linecap="round"/><ellipse cx="4" cy="-6" rx="4" ry="2" fill="#63b34a"/>`,
+  "🌰":`<path d="M-8 2 q0-10 8-10 q8 0 8 10 q0 6-8 7 q-8-1-8-7z" fill="#a0672f"/><path d="M-8 2 q8 5 16 0 q0-4-8-4 q-8 0-8 4z" fill="#7a4a22"/>`,
+  "🍄":`<rect x="-3" y="0" width="6" height="9" rx="2" fill="#f3e6d0"/><path d="M-10 1 q0-11 10-11 q10 0 10 11z" fill="#e0413f"/><circle cx="-4" cy="-4" r="1.6" fill="#fff"/><circle cx="4" cy="-3" r="1.4" fill="#fff"/>`,
+  "🍓":`<path d="M0 -5 q-8-2-8 4 q0 8 8 10 q8-2 8-10 q0-6-8-4z" fill="#e5395a"/><path d="M-6 -5 q6-4 12 0" fill="#4fae4a"/><circle cx="-2" cy="2" r=".9" fill="#ffe0a0"/><circle cx="3" cy="4" r=".9" fill="#ffe0a0"/>`,
+  "🎀":`<path d="M0 0 L-10 -6 L-10 6 Z" fill="#ff7eb3"/><path d="M0 0 L10 -6 L10 6 Z" fill="#ff7eb3"/><circle cx="0" cy="0" r="3" fill="#e85f97"/>`,
+  "🌸":`<g fill="#ff9ecb">${[0,72,144,216,288].map(a=>`<ellipse cx="0" cy="-8" rx="4" ry="6" transform="rotate(${a})"/>`).join("")}</g><circle r="3" fill="#ffe27a"/>`,
+  "🍯":`<path d="M-7 -6 h14 l-2 14 q-5 3-10 0z" fill="#f2b100"/><rect x="-8" y="-8" width="16" height="3" rx="1.5" fill="#c98700"/><path d="M0 -5 v10" stroke="#c98700" stroke-width="1" opacity=".4"/>`,
+  "🧩":`<path d="M-8-8 h6 a2 2 0 0 1 4 0 h6 v6 a2 2 0 0 1 0 4 v6 h-16 z" fill="#5b8def"/>`,
+  "💎":`<path d="M0 -9 L9 -2 L0 10 L-9 -2 Z" fill="#38d0d8"/><path d="M-9 -2 L9 -2 M0 -9 L0 10 M-4.5 -2 L0 -9 L4.5 -2" stroke="#fff" stroke-width="1" opacity=".7" fill="none"/>`
+};
+function itemDotSVG(emoji){
+  return `<g class="item-node">${ITEM_SVG[emoji]||`<circle r="8" fill="#ffb300"/>`}
+    <circle class="spark" cx="7" cy="-7" r="2" fill="#fff"/></g>`;
+}
+const ITEM_COLOR = {"🍎":"#e5484d","🌰":"#a0672f","🍄":"#e05a6b","🍓":"#e5395a","🎀":"#ff8fb3","🌸":"#ff9ecb","🍯":"#f2b100","🧩":"#5b8def","💎":"#38d0d8"};
+
+/* ================= SHOP catalog ================= */
+// Preview SVGs are drawn inside a 64x64 viewBox for the shop card.
+function svgPreview(inner, extraDefs){
+  return `<svg viewBox="0 0 64 64" class="shop-art">${extraDefs||""}${inner}</svg>`;
+}
+// Decorations placed on the map (drawn at a spot on the trail). Each returns SVG.
+const DECOR_SVG = {
+  rainbow:`<defs><linearGradient id="rbw" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff5a6e"/><stop offset=".5" stop-color="#ffd76b"/><stop offset="1" stop-color="#7fd0ff"/></linearGradient></defs>
+    <path d="M-34 6 a34 34 0 0 1 68 0" fill="none" stroke="#ff5a6e" stroke-width="4"/>
+    <path d="M-28 6 a28 28 0 0 1 56 0" fill="none" stroke="#ffd76b" stroke-width="4"/>
+    <path d="M-22 6 a22 22 0 0 1 44 0" fill="none" stroke="#7fd0ff" stroke-width="4"/>`,
+  castle:`<g><rect x="-16" y="-14" width="32" height="20" fill="#d9c6f0"/><rect x="-16" y="-22" width="7" height="8" fill="#c3a9e8"/><rect x="9" y="-22" width="7" height="8" fill="#c3a9e8"/><rect x="-4" y="-26" width="8" height="12" fill="#b79bff"/><path d="M0 -34 L4 -26 L-4 -26 Z" fill="#8b6fe0"/><rect x="-3" y="-4" width="6" height="10" fill="#7d5fc0"/></g>`,
+  balloons:`<g><ellipse cx="-8" cy="-16" rx="6" ry="8" fill="#ff6f91"/><ellipse cx="6" cy="-20" rx="6" ry="8" fill="#6fb7ff"/><ellipse cx="0" cy="-12" rx="6" ry="8" fill="#ffd15c"/><path d="M-8 -8 l0 12 M6 -12 l-2 16 M0 -4 l0 8" stroke="#b98" stroke-width=".8" fill="none"/></g>`,
+  pine:`<g><rect x="-2" y="0" width="4" height="8" fill="#8a5a2b"/><path d="M0 -26 L10 -8 L-10 -8 Z" fill="#3f9a4c"/><path d="M0 -20 L12 0 L-12 0 Z" fill="#4fae5a"/></g>`
+};
+// Collectible badges (trophy-style, shown in bag). Drawn in 64 viewBox.
+const BADGE_SVG = {
+  medal:`<defs><linearGradient id="med" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe27a"/><stop offset="1" stop-color="#f0a500"/></linearGradient></defs><path d="M24 8 h16 l-6 18 h-4 z" fill="#ff6f91"/><circle cx="32" cy="40" r="15" fill="url(#med)" stroke="#c47d00" stroke-width="2"/><text x="32" y="46" text-anchor="middle" font-size="15" font-weight="800" fill="#a86800">★</text>`,
+  gemstone:`<defs><linearGradient id="gm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7fe6ff"/><stop offset="1" stop-color="#2aa0d8"/></linearGradient></defs><path d="M32 10 L52 26 L32 56 L12 26 Z" fill="url(#gm)"/><path d="M12 26 L52 26 M32 10 L32 56 M22 26 L32 10 L42 26" stroke="#fff" stroke-width="1.5" opacity=".7" fill="none"/>`,
+  heartgem:`<defs><radialGradient id="hg"><stop offset="0" stop-color="#ffd0e0"/><stop offset="1" stop-color="#ff5a8a"/></radialGradient></defs><path d="M32 52 C10 34 14 14 32 24 C50 14 54 34 32 52 Z" fill="url(#hg)"/><circle cx="26" cy="28" r="3" fill="#fff" opacity=".7"/>`
+};
+// Booster icons (64 viewBox).
+const BOOSTER_SVG = {
+  hint:`<circle cx="32" cy="26" r="14" fill="#ffe27a" stroke="#f0a500" stroke-width="2"/><rect x="27" y="40" width="10" height="6" rx="2" fill="#c47d00"/><text x="32" y="32" text-anchor="middle" font-size="18" font-weight="800" fill="#a86800">?</text>`,
+  skip:`<circle cx="32" cy="32" r="16" fill="#8fd0ff" stroke="#2aa0d8" stroke-width="2"/><path d="M26 24 L36 32 L26 40 Z M38 24 L38 40" fill="#1a6e9c" stroke="#1a6e9c" stroke-width="2" stroke-linejoin="round"/>`,
+  x2:`<defs><linearGradient id="x2g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd16b"/><stop offset="1" stop-color="#ff9e6b"/></linearGradient></defs><circle cx="32" cy="32" r="16" fill="url(#x2g)" stroke="#c26a1a" stroke-width="2"/><text x="32" y="39" text-anchor="middle" font-size="17" font-weight="800" fill="#7a3d00">×2</text>`
+};
+
+// The full shop catalog. type: skin | decor | badge | booster.
+const SHOP = [
+  // Skins (equip on the hedgehog)
+  {id:"skin_wizard",    type:"skin", ref:"wizard",    name:"Wizard Hog",    price:30, art:()=>svgPreview(`<g transform="translate(32,38) scale(1.15)">${hogSkinPreview("wizard")}</g>`)},
+  {id:"skin_astronaut", type:"skin", ref:"astronaut", name:"Astro Hog",     price:45, art:()=>svgPreview(`<g transform="translate(32,38) scale(1.15)">${hogSkinPreview("astronaut")}</g>`)},
+  {id:"skin_royal",     type:"skin", ref:"royal",     name:"Royal Hog",     price:60, art:()=>svgPreview(`<g transform="translate(32,38) scale(1.15)">${hogSkinPreview("royal")}</g>`)},
+  {id:"skin_ninja",     type:"skin", ref:"ninja",     name:"Ninja Hog",     price:75, art:()=>svgPreview(`<g transform="translate(32,38) scale(1.15)">${hogSkinPreview("ninja")}</g>`)},
+  {id:"skin_rainbow",   type:"skin", ref:"rainbow",   name:"Rainbow Hog",   price:120,art:()=>svgPreview(`<g transform="translate(32,38) scale(1.15)">${hogSkinPreview("rainbow")}</g>`)},
+  // Map decorations (equip one at a time on the map)
+  {id:"decor_rainbow",  type:"decor", ref:"rainbow",  name:"Rainbow Arch",  price:25, art:()=>svgPreview(`<g transform="translate(32,44)">${DECOR_SVG.rainbow}</g>`)},
+  {id:"decor_castle",   type:"decor", ref:"castle",   name:"Castle",        price:40, art:()=>svgPreview(`<g transform="translate(32,50)">${DECOR_SVG.castle}</g>`)},
+  {id:"decor_balloons", type:"decor", ref:"balloons", name:"Balloons",      price:20, art:()=>svgPreview(`<g transform="translate(32,44)">${DECOR_SVG.balloons}</g>`)},
+  {id:"decor_pine",     type:"decor", ref:"pine",     name:"Pine Tree",     price:15, art:()=>svgPreview(`<g transform="translate(32,44)">${DECOR_SVG.pine}</g>`)},
+  // Collectible badges (just to own & show off in the bag)
+  {id:"badge_medal",    type:"badge", ref:"medal",    name:"Gold Medal",    price:50, art:()=>svgPreview(BADGE_SVG.medal)},
+  {id:"badge_gem",      type:"badge", ref:"gemstone", name:"Crystal",       price:80, art:()=>svgPreview(BADGE_SVG.gemstone)},
+  {id:"badge_heart",    type:"badge", ref:"heartgem", name:"Heart Jewel",   price:90, art:()=>svgPreview(BADGE_SVG.heartgem)},
+  // Boosters (consumable, used during practice)
+  {id:"boost_hint",     type:"booster", ref:"hint",   name:"Hint (remove 1 wrong)", price:10, art:()=>svgPreview(BOOSTER_SVG.hint)},
+  {id:"boost_skip",     type:"booster", ref:"skip",   name:"Skip a question",       price:8,  art:()=>svgPreview(BOOSTER_SVG.skip)},
+  {id:"boost_x2",       type:"booster", ref:"x2",     name:"Double stars (1 round)", price:15, art:()=>svgPreview(BOOSTER_SVG.x2)}
+];
+// A mini hedgehog for the shop card preview (no ids/animation classes).
+function hogSkinPreview(skinId){
+  const c = HOG_SKINS[skinId] || HOG_SKINS.classic;
+  return `<defs>
+      <linearGradient id="rbBodyP" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff8fb3"/><stop offset=".5" stop-color="#ffd76b"/><stop offset="1" stop-color="#7fd0ff"/></linearGradient>
+      <linearGradient id="crownGP" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe58a"/><stop offset="1" stop-color="#f0a500"/></linearGradient>
+    </defs>
+    <path d="M-16 6 q-3-11 6-13 q4-8 10-2 q9-1 11 8 q3 10-4 15 q-12 5-23 0 q-4-4-6-8z" fill="${c.spike}"/>
+    <ellipse cx="4" cy="8" rx="15" ry="12" fill="${c.body==='url(#rbBody)'?'url(#rbBodyP)':c.body}"/>
+    <circle cx="13" cy="4" r="8" fill="#e9c9a6"/>
+    <circle cx="16" cy="2" r="1.6" fill="#2b2b2b"/>
+    <ellipse cx="21" cy="6" rx="2.2" ry="1.7" fill="#3a2a20"/>
+    ${skinAccessory(c.acc).replace(/url\(#crownG\)/g,'url(#crownGP)')}`;
+}
+function shopItem(id){ return SHOP.find(s=>s.id===id); }
+function owns(id){ return !!(store.shop && store.shop[id]); }
+// Buy an item. Returns {ok, reason}. Boosters can be bought repeatedly.
+function buyItem(id){
+  const it = shopItem(id); if(!it) return {ok:false,reason:"missing"};
+  if(it.type!=="booster" && owns(id)) return {ok:false,reason:"owned"};
+  if(store.gold < it.price) return {ok:false,reason:"gold"};
+  store.gold -= it.price;
+  if(it.type==="booster"){ store.boosters[it.ref] = (store.boosters[it.ref]||0)+1; }
+  else { store.shop[id] = true; }
+  saveStore(store);
+  return {ok:true};
+}
+function equipItem(id){
+  const it = shopItem(id); if(!it || !owns(id)) return false;
+  if(it.type==="skin"){ store.equip.skin = it.ref; saveStore(store); return true; }
+  if(it.type==="decor"){ store.equip.decor = (store.equip.decor===it.ref)?null:it.ref; saveStore(store); return true; }
+  return false;
+}
+
+// Hedgehog skins: colours + an optional accessory drawn on the head.
+// 'classic' is free/default; the rest are bought in the shop.
+const HOG_SKINS = {
+  classic:  { name:"Classic",     body:"#8a6b52", spike:"#5f4632", glow:null,      acc:null },
+  wizard:   { name:"Wizard",      body:"#7d6bb0", spike:"#574a86", glow:"#b79bff", acc:"wizard" },
+  astronaut:{ name:"Astronaut",   body:"#9aa7c7", spike:"#6b7797", glow:"#8fd0ff", acc:"astronaut" },
+  royal:    { name:"Royal",       body:"#c58a3d", spike:"#9a6522", glow:"#ffd76b", acc:"crown" },
+  ninja:    { name:"Ninja",       body:"#4a4f5c", spike:"#2e323c", glow:"#ff5a6e", acc:"ninja" },
+  rainbow:  { name:"Rainbow",     body:"url(#rbBody)", spike:"#c957c9", glow:"#ff8fe0", acc:"star" }
+};
+function currentSkin(){ return HOG_SKINS[(store.equip&&store.equip.skin)] || HOG_SKINS.classic; }
+function skinAccessory(acc){
+  switch(acc){
+    case "wizard":    return `<path d="M8 -12 L2 -2 L18 -2 Z" fill="#5b3fa0"/><circle cx="8" cy="-12" r="2" fill="#ffe27a"/><rect x="1" y="-3" width="18" height="2.5" rx="1" fill="#4a3287"/>`;
+    case "crown":     return `<path d="M2 -8 L4 -14 L8 -10 L12 -15 L16 -10 L20 -14 L22 -8 Z" fill="url(#crownG)" stroke="#c47d00" stroke-width=".6"/><circle cx="12" cy="-13" r="1.2" fill="#ff5a6e"/>`;
+    case "astronaut": return `<ellipse cx="13" cy="3" rx="9.5" ry="9" fill="none" stroke="#cfe4ff" stroke-width="2.2" opacity=".85"/><ellipse cx="10" cy="0" rx="3" ry="4" fill="#fff" opacity=".5"/>`;
+    case "ninja":     return `<rect x="4" y="-3" width="19" height="4.5" rx="1.5" fill="#c0293a"/><path d="M23 -3 l7 -3 v9 z" fill="#c0293a"/>`;
+    case "star":      return `<path d="M13 -13 l1.4 2.9 3.2.4-2.4 2.2.6 3.2-2.8-1.5-2.8 1.5.6-3.2-2.4-2.2 3.2-.4z" fill="#ffe27a" stroke="#ffb300" stroke-width=".5"/>`;
+    default: return "";
+  }
+}
+function hogSVG(){
+  const c = currentSkin();
+  const glow = c.glow ? `<ellipse cx="4" cy="6" rx="22" ry="18" fill="${c.glow}" opacity=".28" filter="url(#soft)"/>` : "";
+  return `<g id="hogG" style="--t:0">
+    <defs>
+      <linearGradient id="rbBody" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff8fb3"/><stop offset=".5" stop-color="#ffd76b"/><stop offset="1" stop-color="#7fd0ff"/></linearGradient>
+      <linearGradient id="crownG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe58a"/><stop offset="1" stop-color="#f0a500"/></linearGradient>
+      <filter id="soft"><feGaussianBlur stdDeviation="3"/></filter>
+    </defs>
+    ${glow}
+    <ellipse cx="0" cy="20" rx="15" ry="4" fill="rgba(0,0,0,.15)"/>
+    <g class="hog-foot"  ><ellipse cx="-6" cy="17" rx="3" ry="4" fill="${c.spike}"/></g>
+    <g class="hog-foot b"><ellipse cx="6"  cy="17" rx="3" ry="4" fill="${c.spike}"/></g>
+    <g class="hog-body">
+      <path d="M-16 6 q-3-11 6-13 q4-8 10-2 q9-1 11 8 q3 10-4 15 q-12 5-23 0 q-4-4-6-8z" fill="${c.spike}"/>
+      <ellipse cx="4" cy="8" rx="15" ry="12" fill="${c.body}"/>
+      <circle cx="13" cy="4" r="8" fill="#e9c9a6"/>
+      <circle cx="16" cy="2" r="1.6" fill="#2b2b2b"/>
+      <circle cx="16.6" cy="1.5" r=".5" fill="#fff"/>
+      <ellipse cx="21" cy="6" rx="2.2" ry="1.7" fill="#3a2a20"/>
+      <path d="M13 9 q2 2 4 0" stroke="#7a5230" stroke-width="1" fill="none" stroke-linecap="round"/>
+      <circle cx="8" cy="-4" r="2.5" fill="${c.body}"/>
+      ${skinAccessory(c.acc)}
+    </g></g>`;
+}
+
+/* Build the full adventure map. steps = correct so far; total = round length;
+   itemsAt = {stepIndex:"🍎"}. The hedgehog sits at fraction steps/total along a
+   curved trail; JS positions it with computeHogXY(). */
+const MAP_W = 640, MAP_H = 150;
+// Sample point along the trail path for a fraction t (0..1). The trail is a gentle S.
+function trailXY(t){
+  const x = 40 + t * (MAP_W - 90);
+  const y = 108 - Math.sin(t * Math.PI * 1.6) * 26;   // rolling hills
+  return { x, y };
+}
+function trailPathD(){
+  let d = "";
+  for(let i=0;i<=40;i++){ const p = trailXY(i/40); d += (i? "L":"M") + p.x.toFixed(1) + " " + p.y.toFixed(1) + " "; }
+  return d;
+}
+function sceneHtml(steps, total, itemsAt){
+  const n = Math.max(1, total);
+  const t0 = Math.min(1, steps/n);
+  const hog = trailXY(t0);
+  const end = trailXY(1);
+  const items = Object.keys(itemsAt||{}).map(k=>{
+    const p = trailXY(Math.min(1,(+k)/n));
+    return `<g class="item-slot" data-step="${k}" transform="translate(${p.x.toFixed(1)},${(p.y-18).toFixed(1)})">${itemDotSVG(itemsAt[k])}</g>`;
+  }).join("");
+  return `<div class="scene">
+   <svg viewBox="0 0 ${MAP_W} ${MAP_H}" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe8ff"/><stop offset="1" stop-color="#e8f8ec"/></linearGradient>
+      <linearGradient id="hill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fd694"/><stop offset="1" stop-color="#5cb463"/></linearGradient>
+    </defs>
+    <rect width="${MAP_W}" height="${MAP_H}" fill="url(#sky)"/>
+    <circle cx="70" cy="34" r="20" fill="#fff3a8" opacity=".9"/>
+    <g class="cloud a" opacity=".95"><ellipse cx="150" cy="34" rx="26" ry="12" fill="#fff"/><ellipse cx="172" cy="30" rx="18" ry="10" fill="#fff"/></g>
+    <g class="cloud b" opacity=".85"><ellipse cx="330" cy="24" rx="22" ry="10" fill="#fff"/><ellipse cx="350" cy="21" rx="15" ry="8" fill="#fff"/></g>
+    <path d="M0 118 q120-46 240-14 q140 38 260-6 q80-28 140 6 V${MAP_H} H0 Z" fill="url(#hill)"/>
+    <path d="M0 132 q160-28 340 0 q160 26 300-2 V${MAP_H} H0 Z" fill="#4aa054"/>
+    <path d="${trailPathD()}" fill="none" stroke="#d9b98a" stroke-width="13" stroke-linecap="round"/>
+    <path d="${trailPathD()}" fill="none" stroke="#efd9b4" stroke-width="7" stroke-linecap="round" stroke-dasharray="2 16"/>
+    <g class="grass"  transform="translate(220,120)"><path d="M0 0 q-4-14 0-20 q4 6 0 20" fill="#3f9a4c"/></g>
+    <g class="grass g2" transform="translate(400,118)"><path d="M0 0 q-4-14 0-20 q4 6 0 20" fill="#3f9a4c"/></g>
+    <g class="grass g3" transform="translate(120,124)"><path d="M0 0 q-4-14 0-20 q4 6 0 20" fill="#3f9a4c"/></g>
+    <g transform="translate(500,86)"><rect x="-3" y="0" width="6" height="30" rx="3" fill="#8a5a2b"/><ellipse cx="0" cy="-6" rx="20" ry="18" fill="#5cb463"/><ellipse cx="-10" cy="4" rx="14" ry="12" fill="#68c46f"/></g>
+    ${(store.equip&&store.equip.decor&&DECOR_SVG[store.equip.decor])?`<g transform="translate(300,70)">${DECOR_SVG[store.equip.decor]}</g>`:""}
+    ${items}
+    <g transform="translate(${end.x.toFixed(1)},${(end.y-34).toFixed(1)})">
+      <rect x="0" y="0" width="3" height="36" fill="#7a7a7a"/>
+      <path class="flagWave" d="M3 1 L26 6 L3 12 Z" fill="#ff5a6e"/></g>
+    <g id="hogWrap" transform="translate(${hog.x.toFixed(1)},${(hog.y-18).toFixed(1)})">${hogSVG()}</g>
+   </svg>
+  </div>`;
+}
+// legacy name kept so existing call sites work
+function trackHtml(steps, total, _emoji, itemsAt){ return sceneHtml(steps, total, itemsAt); }
+
+// The coin bar (stars + gold) shown on quiz screens — SVG icons, always coloured.
+function coinBar(){
+  return `<div class="coinrow">
+    <span class="coin star" id="starCoin">${starSVG()} <span id="starCount">${store.stars}</span></span>
+    <span class="coin gold" id="goldCoin">${goldSVG()} <span id="goldCount">${store.gold}</span></span>
+  </div>`;
+}
+// Move the hedgehog to its new spot on the trail, hop, and pop any item it reaches.
+function hopRunner(steps, total){
+  const wrap = document.getElementById("hogWrap");
+  const g = document.getElementById("hogG");
+  const n = Math.max(1, total);
+  const p = trailXY(Math.min(1, steps/n));
+  if(wrap) wrap.setAttribute("transform", `translate(${p.x.toFixed(1)},${(p.y-18).toFixed(1)})`);
+  if(g){ g.classList.remove("hop"); void g.getBBox && g.getBBox(); g.classList.add("hop"); setTimeout(()=>g.classList.remove("hop"),650); }
+  const slot = document.querySelector('.item-slot[data-step="'+steps+'"] .item-node');
+  if(slot){ setTimeout(()=>{ slot.classList.add("got"); flyToCounter(slot, "gold"); }, 260); }
+}
+// Fly a small icon from a source element into the stars/gold counter (arc + fade).
+function flyToCounter(srcEl, kind){
+  try{
+    const src = srcEl.getBoundingClientRect();
+    const target = document.getElementById(kind==="star"?"starCoin":"goldCoin");
+    if(!target) return;
+    const tb = target.getBoundingClientRect();
+    const f = document.createElement("div");
+    f.className = "flyer";
+    f.innerHTML = kind==="star"?starSVG():goldSVG();
+    f.style.left = src.left + src.width/2 - 13 + "px";
+    f.style.top  = src.top + src.height/2 - 13 + "px";
+    document.body.appendChild(f);
+    requestAnimationFrame(()=>{
+      const dx = (tb.left+tb.width/2) - (src.left+src.width/2);
+      const dy = (tb.top+tb.height/2) - (src.top+src.height/2);
+      f.style.transform = `translate(${dx}px,${dy}px) scale(.7)`;
+      f.style.opacity = "0.2";
+    });
+    setTimeout(()=>{ f.remove(); const c=target; c.classList.remove("pulse"); void c.offsetWidth; c.classList.add("pulse"); }, 720);
+  }catch(e){}
+}
+// Bump the on-screen counters to the current store values, with a little fly-in.
+function bumpCounters(res){
+  const sc = document.getElementById("starCount"), gc = document.getElementById("goldCount");
+  if(sc) sc.textContent = store.stars;
+  if(gc) gc.textContent = store.gold;
+  const sCoin=document.getElementById("starCoin"), gCoin=document.getElementById("goldCoin");
+  [sCoin,gCoin].forEach(c=>{ if(c){ c.classList.remove("pulse"); void c.offsetWidth; c.classList.add("pulse"); } });
+}
+// Turn an awardCorrect() result into little reward chips (with coloured SVG icons).
+function rewardChips(res){
+  const chips = [];
+  if(res.mult > 1) chips.push(`<span class="mult-badge">⚡ x${res.mult} combo!</span>`);
+  chips.push(`<span>${starSVG()} +${res.starsWon}</span>`);
+  if(res.goldWon>0) chips.push(`<span>${goldSVG()} +${res.goldWon}</span>`);
+  if(res.item) chips.push(`<span>${res.item.e} ${res.item.n}!</span>`);
+  return `<div class="rewardpop">${chips.join("")}</div>`;
+}
+// Offer the Star of Hope on questions 3,6,9 of a round.
+function hopeOffered(idx){ return (idx+1) % 3 === 0; }
 
 /* ================= sound engine (Web Audio, no external files) =================
    Diverse, non-repeating sound effects + a gentle procedural background melody.
@@ -394,7 +967,7 @@ function initAudio(){
   try{
     audioCtx = new (window.AudioContext||window.webkitAudioContext)();
     masterGain = audioCtx.createGain(); masterGain.gain.value = 1; masterGain.connect(audioCtx.destination);
-    sfxGain = audioCtx.createGain();    sfxGain.gain.value = 1.0;  sfxGain.connect(masterGain);
+    sfxGain = audioCtx.createGain();    sfxGain.gain.value = 0.8;  sfxGain.connect(masterGain);
     musicGain = audioCtx.createGain();  musicGain.gain.value = 0.0; musicGain.connect(masterGain); // fade in later
     unlockAudio();   // must happen INSIDE the user gesture that first created the context
   }catch(e){ audioCtx = null; }
@@ -587,7 +1160,7 @@ function duckMusic(mult){
    every screen tends to feel musically fresh. Everything is generated live so
    no bar ever repeats exactly. Mixed a good deal LOUDER than before, but still
    ducks under the sound-effects so answers always cut through.                 */
-const MUSIC_VOL = 0.17;                 // was 0.085 — noticeably louder now
+const MUSIC_VOL = 0.34;                 // was 0.17 — raised ~2x so background music is clearly audible vs sfx (sfx lowered to 0.8)
 // Scales used for the melodies (all pleasant, no wrong notes possible).
 const SCALE_MAJOR = [S.C,S.D,S.E,S.G,S.A,S.C5,S.D5,S.E5,S.G5,S.A5];          // bright & happy
 const SCALE_MAJ7  = [S.C,S.E,S.G,S.B,S.D5,S.E5,S.G5,S.A5,S.C6];               // dreamy / floaty
@@ -764,15 +1337,105 @@ function goHome(){
     <p class="subtitle">Grade 2 English - fun and smart!</p>
     <div class="home-stars">
       <span class="pill">${IMG("glowing-star")} ${store.stars} stars</span>
+      <span class="pill" style="background:linear-gradient(135deg,#fff2c2,#ffe08a);color:#8a5a06">${goldSVG()} ${store.gold} gold</span>
       <span class="pill">${IMG("trophy")} ${tests? "Best score: "+best+"/40" : "No tests yet"}</span>
     </div>
     <div class="bigmenu">
       <button class="btn btn-pink" onclick="goModeSelect('practice')">${IMG("target")} Practice</button>
       <button class="btn btn-purple" onclick="goModeSelect('test')">${IMG("timer")} Take a test</button>
+      <button class="btn btn-green" onclick="goBag()">🎒 My bag</button>
+      <button class="btn btn-pink" onclick="goShop()">🛒 Shop</button>
       <button class="btn btn-yellow" onclick="goHistory()">${IMG("chart")} My progress</button>
     </div>`;
   window.scrollTo(0,0);
 }
+
+/* ================= my bag (collection screen for the child) ================= */
+function goBag(){
+  ensureMusic();
+  const owned = store.bag || {};
+  const totalItems = Object.values(owned).reduce((a,b)=>a+b,0);
+  const kinds = Object.keys(owned).filter(k=>owned[k]>0).length;
+  // Show ALL 9 items; ones not collected yet appear as a faded silhouette to collect.
+  const cells = ITEMS.map(it=>{
+    const have = owned[it.e]||0;
+    if(have>0){
+      return `<div class="bag-item"><div class="be">${it.e}</div><div class="bn">${esc(it.n)}</div><div class="bc">×${have}</div></div>`;
+    }
+    return `<div class="bag-item locked"><div class="be">${it.e}</div><div class="bn">${esc(it.n)}</div><div class="bc">— locked —</div></div>`;
+  }).join("");
+  $app.innerHTML = `
+    <div class="topbar">
+      <button class="btn btn-ghost btn-small" onclick="goHome()">${IMG("back")} Home</button>
+      <div class="coinrow">
+        <span class="coin star">${starSVG()} ${store.stars}</span>
+        <span class="coin gold">${goldSVG()} ${store.gold}</span>
+      </div>
+    </div>
+    <h1>🎒 My bag</h1>
+    <p class="subtitle">Your treasure collection — answer questions to find more!</p>
+    <div class="bag-stats">
+      <div class="bag-stat"><div class="bs-num">${starSVG()} ${store.stars}</div><div class="bs-lbl">Stars</div></div>
+      <div class="bag-stat"><div class="bs-num">${goldSVG()} ${store.gold}</div><div class="bs-lbl">Gold</div></div>
+      <div class="bag-stat"><div class="bs-num">🎁 ${kinds}/${ITEMS.length}</div><div class="bs-lbl">Kinds found</div></div>
+    </div>
+    <div class="card">
+      <div class="bag-grid">${cells}</div>
+    </div>
+    <div class="navrow"><button class="btn btn-pink" onclick="goShop()">🛒 Go to shop</button></div>`;
+  window.scrollTo(0,0);
+}
+
+/* ================= SHOP screen ================= */
+let SHOP_TAB = "skin";
+function goShop(tab){
+  ensureMusic();
+  if(tab) SHOP_TAB = tab;
+  const tabs = [["skin","🦔 Skins"],["decor","🌈 Decor"],["badge","🏅 Badges"],["booster","⚡ Boosters"]];
+  const tabBar = tabs.map(([t,l])=>`<button class="shop-tab ${SHOP_TAB===t?'on':''}" onclick="goShop('${t}')">${l}</button>`).join("");
+  const items = SHOP.filter(s=>s.type===SHOP_TAB).map(it=>{
+    const bought = owns(it.id);
+    const equippedSkin = it.type==="skin" && store.equip.skin===it.ref;
+    const equippedDecor = it.type==="decor" && store.equip.decor===it.ref;
+    const isEquipped = equippedSkin || equippedDecor;
+    const boostQty = it.type==="booster" ? (store.boosters[it.ref]||0) : 0;
+    let btn;
+    if(it.type==="booster"){
+      btn = `<button class="btn btn-green btn-small" onclick="doBuy('${it.id}')">Buy · ${it.price}${goldMini()}</button>`;
+    } else if(!bought){
+      const afford = store.gold >= it.price;
+      btn = `<button class="btn ${afford?'btn-green':'btn-ghost'} btn-small" ${afford?'':'disabled style=\"opacity:.5\"'} onclick="doBuy('${it.id}')">Buy · ${it.price}${goldMini()}</button>`;
+    } else if(it.type==="skin"||it.type==="decor"){
+      btn = `<button class="btn ${isEquipped?'btn-yellow':'btn-purple'} btn-small" onclick="doEquip('${it.id}')">${isEquipped?'✓ Equipped':'Equip'}</button>`;
+    } else {
+      btn = `<span class="owned-tag">✓ Owned</span>`;
+    }
+    return `<div class="shop-card ${isEquipped?'equipped':''}">
+      <div class="shop-art-wrap">${it.art()}</div>
+      <div class="shop-name">${esc(it.name)}</div>
+      ${boostQty?`<div class="shop-qty">You have: ${boostQty}</div>`:""}
+      ${btn}
+    </div>`;
+  }).join("");
+  $app.innerHTML = `
+    <div class="topbar">
+      <button class="btn btn-ghost btn-small" onclick="goBag()">${IMG("back")} Bag</button>
+      <div class="coinrow"><span class="coin gold" id="goldCoin">${goldSVG()} <span id="goldCount">${store.gold}</span></span></div>
+    </div>
+    <h1>🛒 Shop</h1>
+    <p class="subtitle">Spend your gold on cool things!</p>
+    <div class="shop-tabs">${tabBar}</div>
+    <div class="shop-grid">${items}</div>`;
+  window.scrollTo(0,0);
+}
+function goldMini(){ return `<span style="display:inline-flex;width:15px;height:15px;vertical-align:-3px">${goldSVG()}</span>`; }
+function doBuy(id){
+  const r = buyItem(id);
+  if(r.ok){ sfxStar(); confetti(); goShop(); }
+  else if(r.reason==="gold"){ sfxWrong(); alert("Not enough gold! Answer more questions to earn gold. 🪙"); }
+  else if(r.reason==="owned"){ goShop(); }
+}
+function doEquip(id){ if(equipItem(id)){ sfxTap(); goShop(); } }
 
 /* ================= mode selection ================= */
 function goModeSelect(next){
@@ -838,37 +1501,53 @@ function goTopics(){
 /* ================= practice ================= */
 const ROUND_SIZE = 10;               // số câu hỏi mỗi lượt practice
 let P = null; // practice state
+// The hedgehog emoji that runs on the track, per mode.
+const RUNNER_EMOJI = { chill:"🦔", master:"🦔", elite:"🦔" };
+function runnerEmoji(){ return RUNNER_EMOJI[MODE] || "🦔"; }
+// Scatter a few collectible items along the track for a fresh round.
+function scatterItems(total){
+  const items = {};
+  const slots = shuffle([1,2,3,4,5,6,7,8,9].filter(s=>s<total));
+  const howMany = 2 + Math.floor(Math.random()*2);   // 2–3 items per round
+  slots.slice(0,howMany).forEach(s=>{ items[s] = pick(ITEMS).e; });
+  return items;
+}
 function startPractice(topicIdx){
   ensureMusic();
+  const base = { idx:0, correct:0, done:0, streak:0, items:scatterItems(ROUND_SIZE), hopeActive:false };
   if(topicIdx === -1){
     const passage = pick(passagePool());
-    P = { mode:"comp", topicId:practiceKey("comprehension"), topicName:"Reading: "+passage.title,
-          passage, queue: shuffle(passage.questions).slice(0, ROUND_SIZE).map(prepQuestion),
-          idx:0, correct:0, done:0, streak:0 };
+    P = { ...base, mode:"comp", topicId:practiceKey("comprehension"), topicName:"Reading: "+passage.title,
+          passage, queue: shuffle(passage.questions).slice(0, ROUND_SIZE).map(prepQuestion) };
   }else if(topicIdx === -2){
-    // Mixed: trộn 10 câu ngẫu nhiên từ mọi topic
     const all = TOPICS.flatMap(t => topicPool(t));
-    P = { mode:"mixed", topicId:practiceKey("mixed"), topicName:"Mixed",
-          queue: shuffle(all).slice(0, ROUND_SIZE).map(prepQuestion),
-          idx:0, correct:0, done:0, streak:0 };
+    P = { ...base, mode:"mixed", topicId:practiceKey("mixed"), topicName:"Mixed",
+          queue: shuffle(all).slice(0, ROUND_SIZE).map(prepQuestion) };
   }else{
     const t = TOPICS[topicIdx];
-    P = { mode:"topic", topicId:practiceKey(t.id), topicName:t.nameEn, topicIdx,
-          queue: shuffle(topicPool(t)).slice(0, ROUND_SIZE).map(prepQuestion),
-          idx:0, correct:0, done:0, streak:0 };
+    P = { ...base, mode:"topic", topicId:practiceKey(t.id), topicName:t.nameEn, topicIdx,
+          queue: shuffle(topicPool(t)).slice(0, ROUND_SIZE).map(prepQuestion) };
   }
   renderPracticeQ();
 }
 function renderPracticeQ(){
   if(P.idx >= P.queue.length){ return practiceSummary(); }
   const q = P.queue[P.idx];
+  P.hopeActive = false;                                   // reset each question
   const passageHtml = P.mode==="comp" ? `<div class="passage"><b>${esc(P.passage.title)}</b>\n${esc(P.passage.text)}</div>` : "";
+  const hopeBox = hopeOffered(P.idx) ? `
+    <div class="hope-box" id="hopeBox">
+      <div class="ht">🌠 Star of Hope?</div>
+      <div class="hs">Feeling brave? Double your reward if you're right — but win nothing if you're wrong.</div>
+      <button class="btn btn-hope btn-small" onclick="activateHope()">Yes, double it! ✨</button>
+    </div>` : "";
   $app.innerHTML = `
     <div class="topbar">
       <button class="btn btn-ghost btn-small" onclick="practiceSummary()">${IMG("back")} Stop</button>
       <div class="title">${IMG("target")}<span>${esc(P.topicName)}</span></div>
-      <span class="pill">${IMG("glowing-star")} ${P.correct}</span>
     </div>
+    ${coinBar()}
+    ${trackHtml(P.correct, P.queue.length, runnerEmoji(), P.items)}
     <div class="statrow">
       <div class="progressbar"><div style="width:${(P.idx)/P.queue.length*100}%"></div></div>
       <span class="pill">Question ${P.done+1}</span>
@@ -877,29 +1556,46 @@ function renderPracticeQ(){
       ${passageHtml}
       ${q.img && P.mode!=="comp" ? IMG(q.img,"qimg") : ""}
       <div class="qtext">${esc(q.q)}</div>
+      ${hopeBox}
+      <div id="hopeStatus"></div>
       ${renderOptions(q,"answerPractice")}
       <div id="fb"></div>
     </div>`;
   window.scrollTo(0,0);
 }
+function activateHope(){
+  P.hopeActive = true;
+  sfxStar();
+  const box = document.getElementById("hopeBox"); if(box) box.remove();
+  const st = document.getElementById("hopeStatus");
+  if(st) st.innerHTML = `<div class="hope-on">🌠 Star of Hope is ON — double or nothing!</div>`;
+}
 function answerPractice(pos){
   const q = P.queue[P.idx];
   const good = pos === q.correctPos;
+  const hope = P.hopeActive;
   lockOptions(pos, q.correctPos);
   P.done++;
   bumpPractice(P.topicId, good);
   const fb = document.getElementById("fb");
   if(good){
     P.correct++; P.streak++;
-    sfxCorrect(P.streak); sfxStar(); confetti();
+    const res = awardCorrect(P.streak, hope);           // stars/gold/item with multipliers → saved to DB
+    P.goldRound = (P.goldRound||0) + res.goldWon;
+    if(res.item){ P.itemsRound = P.itemsRound||[]; P.itemsRound.push(res.item.e); }
+    sfxCorrect(P.streak); sfxStar(); confetti(res.mult>=3);
+    hopRunner(P.correct, P.queue.length);               // hedgehog hops forward + grabs any item here
+    bumpCounters(res);                                  // update + pulse the star/gold counters
     const extra = P.streak>=3 ? `<div class="sub">${P.streak} correct in a row! Amazing!</div>` : "";
     fb.innerHTML = `<div class="feedback good">${IMG("party")} ${pick(PRAISE)}${extra}</div>
+      ${rewardChips(res)}
       <div class="navrow"><button class="btn btn-pink" onclick="nextPractice()">Next question ${IMG("glowing-star")}</button></div>`;
   }else{
     P.streak = 0;
     sfxWrong();
+    const lost = hope ? `<div class="sub">🌠 The Star of Hope faded this time — no reward. Be brave again next round!</div>` : "";
     fb.innerHTML = `<div class="feedback bad">${IMG("muscle")} ${pick(CHEER)}
-        <div class="sub">The correct answer is: <b>${esc(q.o[q.a])}</b></div></div>
+        <div class="sub">The correct answer is: <b>${esc(q.o[q.a])}</b></div>${lost}</div>
       <div class="navrow"><button class="btn btn-purple" onclick="nextPractice()">Next question</button></div>`;
   }
   fb.scrollIntoView({behavior:"smooth", block:"end"});
@@ -910,11 +1606,23 @@ function practiceSummary(){
   if(P.done) sfxFanfare(pct >= 50);
   const msg = P.done===0 ? "You didn't answer any questions. Try again!" :
     pct>=80 ? "Wonderful! You did great!" : pct>=50 ? "Nice work! Just a bit more!" : "No worries, keep practicing and you'll get there!";
+  const reached = P.correct >= P.queue.length;
+  const goldLine = P.goldRound ? `<span class="coin gold">${goldSVG()} +${P.goldRound} gold</span>` : "";
+  const itemsLine = (P.itemsRound&&P.itemsRound.length)
+    ? `<div class="rewardpop" style="justify-content:center">${P.itemsRound.map(e=>`<span>${e}</span>`).join("")}</div>
+       <p class="muted">You collected ${P.itemsRound.length} item(s) for your bag!</p>` : "";
   $app.innerHTML = `
-    <div class="card center" style="margin-top:30px">
+    <div class="card center" style="margin-top:24px">
+      <div style="font-size:44px">${reached ? "🏁🦔🎉" : "🦔"}</div>
       ${IMG(pct>=80?"trophy":(pct>=50?"glowing-star":"muscle"),"icon-xl")}
       <div class="score-big">${P.correct}/${P.done}</div>
-      <p style="font-weight:700">${msg}</p>
+      <p style="font-weight:700">${reached ? "The hedgehog reached the finish line! " : ""}${msg}</p>
+      <div class="coinrow" style="justify-content:center">
+        <span class="coin star">${IMG("glowing-star")} ${store.stars} stars</span>
+        <span class="coin gold">${goldSVG()} ${store.gold} gold</span>
+        ${goldLine}
+      </div>
+      ${itemsLine}
       <p class="muted">Topic: ${esc(P.topicName)} &middot; ${modeBadge(MODE)}</p>
       <div class="navrow">
         <button class="btn btn-pink" onclick="startPractice(${P.mode==="comp" ? -1 : P.topicIdx})">Play again</button>
@@ -991,6 +1699,7 @@ function renderTestQ(){
       <span class="pill ${T.secondsLeft<300?'timer-low':''}">${IMG("timer")} <span id="timer">${fmtTime(T.secondsLeft)}</span></span>
       <span class="pill">${answered}/${T.qs.length}</span>
     </div>
+    ${trackHtml(answered, T.qs.length, runnerEmoji(), {})}
     <div class="statrow">
       <div class="progressbar"><div style="width:${answered/T.qs.length*100}%"></div></div>
     </div>
@@ -1043,9 +1752,17 @@ function submitTest(timeout){
   });
   const timeUsed = Math.min(TEST_MINUTES*60, Math.round((Date.now()-T.startedAt)/1000));
   store.tests.push({ date: new Date().toISOString(), mode: T.mode, score, totalMarks, correct, total: T.qs.length, timeUsed });
-  store.stars += correct;
+  // Reward: 1 star per correct answer (kept), plus gold + item drops for a good test.
+  const pct = totalMarks ? score/totalMarks : 0;
+  let goldWon = correct;                              // 1 gold per correct in a test
+  if(pct >= 0.6) goldWon += 5;                        // pass bonus
+  if(pct >= 0.85) goldWon += 10;                      // top-score bonus
+  const itemsWon = [];
+  const drops = 1 + (pct>=0.6?1:0) + (pct>=0.85?1:0); // 1–3 item drops by performance
+  for(let d=0; d<drops; d++){ itemsWon.push(collectItem().e); }
+  addStars(correct); addGold(goldWon);
   saveStore(store);
-  renderTestResult({score,totalMarks,correct,total:T.qs.length,timeUsed,review,timeout,mode:T.mode});
+  renderTestResult({score,totalMarks,correct,total:T.qs.length,timeUsed,review,timeout,mode:T.mode,goldWon,itemsWon});
   T = null;
 }
 function renderTestResult(r){
@@ -1068,6 +1785,11 @@ function renderTestResult(r){
       ${r.timeout?'<p class="muted">Time is up! Your test was submitted automatically.</p>':''}
       <div class="score-big">${r.score}/${r.totalMarks} marks</div>
       <p style="font-weight:700">${msg}</p>
+      <div class="coinrow" style="justify-content:center">
+        <span class="coin star">${IMG("glowing-star")} +${r.correct} stars</span>
+        ${r.goldWon?`<span class="coin gold">${goldSVG()} +${r.goldWon} gold</span>`:""}
+      </div>
+      ${(r.itemsWon&&r.itemsWon.length)?`<div class="rewardpop" style="justify-content:center">${r.itemsWon.map(e=>`<span>${e}</span>`).join("")}</div><p class="muted">Added to your bag!</p>`:""}
       <p class="muted">${modeBadge(r.mode)} &middot; ${r.correct}/${r.total} correct - Time: ${fmtTime(r.timeUsed)}</p>
       <div class="navrow">
         <button class="btn btn-purple" onclick="goTestIntro()">Try another test</button>
@@ -1097,10 +1819,25 @@ function goHistory(){
       return `<tr><td>${esc(t.nameEn)}</td><td>${modeBadge(m)}</td><td>${p.correct}/${p.done}</td><td><b>${pct}%</b></td></tr>`;
     })
   ).join("");
+  const bagKeys = Object.keys(store.bag||{}).filter(k=>store.bag[k]>0);
+  const bagHtml = bagKeys.length
+    ? `<div class="bag-grid">${bagKeys.map(e=>{
+         const item = ITEMS.find(it=>it.e===e) || {e, n:""};
+         return `<div class="bag-item"><div class="be">${e}</div><div class="bn">${esc(item.n)}</div><div class="bc">×${store.bag[e]}</div></div>`;
+       }).join("")}</div>`
+    : `<p class="bag-empty">Your bag is empty. Answer questions correctly to collect items! 🦔</p>`;
   $app.innerHTML = `
     <div class="topbar"><button class="btn btn-ghost btn-small" onclick="goHome()">${IMG("back")} Home</button>
-      <span class="pill">${IMG("glowing-star")} ${store.stars} stars</span></div>
+      <div class="coinrow">
+        <span class="coin star">${IMG("glowing-star")} ${store.stars}</span>
+        <span class="coin gold">${goldSVG()} ${store.gold}</span>
+      </div></div>
     <h1>${IMG("chart")} My progress</h1>
+    <div class="card">
+      <h3 style="margin-top:0">🎒 My bag</h3>
+      <p class="muted" style="margin:0 0 4px">Items your hedgehog collected. Spend gold in a shop coming soon!</p>
+      ${bagHtml}
+    </div>
     <div class="card">
       <h3 style="margin-top:0">${IMG("timer")} Test attempts</h3>
       ${rows ? `<table><tr><th>Date</th><th>Mode</th><th>Score</th><th>Correct</th><th>Time</th></tr>${rows}</table>`
@@ -1118,7 +1855,7 @@ function goHistory(){
 }
 function resetProgress(){
   if(confirm("Clear all scores, stars and test history? This cannot be undone!")){
-    store = { practice:{}, tests:[], stars:0, soundOn: store.soundOn };
+    store = { practice:{}, tests:[], stars:0, gold:0, bag:{}, shop:{}, equip:{skin:"classic",decor:null}, boosters:{}, soundOn: store.soundOn };
     saveStore(store);
     goHistory();
   }
@@ -1152,7 +1889,10 @@ function mountSoundBtn(){
 
 /* ================= startup ================= */
 mountSoundBtn();
-goHome();
+goHome();                                  // render immediately from localStorage seed
+// Upgrade to the SQLite-backed store as soon as sql.js is ready, then re-render
+// so any data restored from IndexedDB (stars, gold, bag, history) shows up.
+initDB().then(()=>{ if(dbReady) goHome(); });
 </script>
 </body>
 </html>

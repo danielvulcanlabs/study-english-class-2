@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Practice · Cambridge Global English Stage 4</title>
+<style>
+  :root{
+    --bg:#f4f7fb; --card:#ffffff; --ink:#1f2a44; --muted:#6b7794;
+    --line:#e4e9f2; --brand:#3b6ef6; --brand-soft:#e8f0ff;
+    --chill:#22b07d; --chill-soft:#e3f6ee;
+    --master:#f0972b; --master-soft:#fdf0dd;
+    --tinhhoa:#9b4dff; --tinhhoa-soft:#f0e7ff;
+    --ok:#22b07d; --bad:#e5484d; --ok-soft:#e3f6ee; --bad-soft:#fdecec;
+    --radius:16px; --shadow:0 6px 24px rgba(31,42,68,.08);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:860px;margin:0 auto;padding:24px 18px 80px}
+  h1{font-size:26px;margin:0 0 4px;font-weight:800;letter-spacing:-.4px}
+  .sub{color:var(--muted);font-size:14px;margin-bottom:22px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .pad{padding:20px}
+  /* screens */
+  .screen{display:none} .screen.active{display:block}
+  /* topic grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+  .topic{cursor:pointer;transition:.15s;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);padding:16px;display:flex;flex-direction:column;gap:6px}
+  .topic:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--brand)}
+  .topic .u{font-size:12px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.5px}
+  .topic .t{font-size:18px;font-weight:700}
+  .topic .d{font-size:13px;color:var(--muted)}
+  .topic .prog{margin-top:6px;font-size:12px;color:var(--muted)}
+  /* level picker */
+  .levels{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+  @media(max-width:640px){.levels{grid-template-columns:1fr}}
+  .lvl{cursor:pointer;border-radius:var(--radius);padding:18px;color:#fff;transition:.15s;border:none;text-align:left}
+  .lvl:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+  .lvl h3{margin:0 0 4px;font-size:19px}
+  .lvl p{margin:0;font-size:13px;opacity:.92}
+  .lvl.chill{background:linear-gradient(135deg,#22b07d,#1c9c8f)}
+  .lvl.master{background:linear-gradient(135deg,#f0972b,#ef6f3c)}
+  .lvl.tinhhoa{background:linear-gradient(135deg,#9b4dff,#6a5cff)}
+  .lvl .star{font-size:13px;margin-top:8px;opacity:.9}
+  /* buttons */
+  .btn{display:inline-flex;align-items:center;gap:6px;cursor:pointer;border:1px solid var(--line);background:var(--card);
+    color:var(--ink);padding:9px 16px;border-radius:12px;font-size:14px;font-weight:600;transition:.15s}
+  .btn:hover{border-color:var(--brand);color:var(--brand)}
+  .btn.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .btn.primary:hover{opacity:.9;color:#fff}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .back{color:var(--muted);font-weight:600;cursor:pointer;font-size:14px;display:inline-flex;gap:5px;align-items:center;margin-bottom:14px}
+  .back:hover{color:var(--brand)}
+  /* quiz header */
+  .qhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px}
+  .pill{font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px}
+  .pill.chill{background:var(--chill-soft);color:var(--chill)}
+  .pill.master{background:var(--master-soft);color:var(--master)}
+  .pill.tinhhoa{background:var(--tinhhoa-soft);color:var(--tinhhoa)}
+  .bar{height:8px;background:var(--line);border-radius:20px;overflow:hidden;margin:6px 0 20px}
+  .bar > i{display:block;height:100%;background:var(--brand);width:0;transition:.3s}
+  /* question */
+  .qtext{font-size:19px;font-weight:700;margin:0 0 4px}
+  .qhint{font-size:13px;color:var(--muted);margin:0 0 16px}
+  .opts{display:flex;flex-direction:column;gap:10px}
+  .opt{cursor:pointer;border:1.5px solid var(--line);border-radius:12px;padding:13px 15px;font-size:15px;transition:.12s;background:var(--card);display:flex;align-items:center;gap:10px}
+  .opt:hover{border-color:var(--brand);background:var(--brand-soft)}
+  .opt .key{width:26px;height:26px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+  .opt.sel{border-color:var(--brand);background:var(--brand-soft)}
+  .opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+  .opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+  .opt.correct .key{background:var(--ok);color:#fff}
+  .opt.wrong .key{background:var(--bad);color:#fff}
+  input.text{width:100%;padding:13px 15px;font-size:16px;border:1.5px solid var(--line);border-radius:12px;font-family:inherit}
+  input.text:focus{outline:none;border-color:var(--brand)}
+  textarea.text{width:100%;min-height:110px;padding:13px 15px;font-size:15px;border:1.5px solid var(--line);border-radius:12px;font-family:inherit;resize:vertical}
+  textarea.text:focus{outline:none;border-color:var(--brand)}
+  .feedback{margin-top:16px;padding:14px;border-radius:12px;font-size:14px;display:none}
+  .feedback.show{display:block}
+  .feedback.good{background:var(--ok-soft);color:#137a56}
+  .feedback.bad{background:var(--bad-soft);color:#b02a2e}
+  .feedback b{display:block;margin-bottom:3px}
+  .model{background:var(--tinhhoa-soft);color:#5a2ea6;margin-top:14px;padding:14px;border-radius:12px;font-size:14px;display:none}
+  .model.show{display:block}
+  .model b{display:block;margin-bottom:4px}
+  .qfooter{display:flex;justify-content:space-between;margin-top:22px;gap:10px}
+  /* results */
+  .score{text-align:center;padding:10px 0}
+  .score .big{font-size:52px;font-weight:800;letter-spacing:-1px}
+  .score .lbl{color:var(--muted);font-size:15px}
+  .stars{font-size:30px;margin:10px 0}
+  .msg{font-size:16px;margin:10px 0 20px}
+  .self-note{background:var(--tinhhoa-soft);color:#5a2ea6;padding:14px;border-radius:12px;font-size:14px;margin-top:16px;text-align:left}
+  .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+  .reset{margin-top:26px;text-align:center}
+  .reset a{color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>English Practice 🌟</h1>
+  <div class="sub">Cambridge Global English · Stage 4 — pick a topic, pick a level, and have fun!</div>
+
+  <!-- SCREEN 1: topics -->
+  <section id="s-topics" class="screen active">
+    <div class="grid" id="topicGrid"></div>
+    <div class="reset"><a id="resetAll">Reset all progress</a></div>
+  </section>
+
+  <!-- SCREEN 2: level picker -->
+  <section id="s-levels" class="screen">
+    <div class="back" id="backToTopics">← All topics</div>
+    <div class="card pad">
+      <div class="topic-title" id="lvlTitle" style="font-size:22px;font-weight:800"></div>
+      <div class="d" id="lvlDesc" style="color:var(--muted);font-size:14px"></div>
+      <div class="levels">
+        <button class="lvl chill" data-lvl="chill">
+          <h3>😎 Chill</h3><p>Warm-up. Recognise words &amp; easy grammar. Multiple choice.</p>
+          <div class="star" id="star-chill"></div>
+        </button>
+        <button class="lvl master" data-lvl="master">
+          <h3>💪 Master</h3><p>Use what you know. Fill the gaps &amp; read short texts.</p>
+          <div class="star" id="star-master"></div>
+        </button>
+        <button class="lvl tinhhoa" data-lvl="tinhhoa">
+          <h3>👑 Tinh hoa</h3><p>Think &amp; write. Reasoning and your own sentences.</p>
+          <div class="star" id="star-tinhhoa"></div>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREEN 3: quiz -->
+  <section id="s-quiz" class="screen">
+    <div class="back" id="backToLevels">← Choose level</div>
+    <div class="card pad">
+      <div class="qhead">
+        <div id="quizTopic" style="font-weight:700"></div>
+        <div id="quizPill" class="pill"></div>
+      </div>
+      <div class="bar"><i id="barFill"></i></div>
+      <div id="qbody"></div>
+    </div>
+  </section>
+
+  <!-- SCREEN 4: results -->
+  <section id="s-results" class="screen">
+    <div class="card pad">
+      <div class="score">
+        <div class="big" id="scoreBig"></div>
+        <div class="lbl" id="scoreLbl"></div>
+        <div class="stars" id="scoreStars"></div>
+        <div class="msg" id="scoreMsg"></div>
+      </div>
+      <div class="self-note" id="selfNote" style="display:none"></div>
+      <div class="actions">
+        <button class="btn" id="retry">Try again</button>
+        <button class="btn primary" id="doneToTopics">Back to topics</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+/* ============ DATA ============ */
+/* Cambridge Global English Stage 4 — 9 units.
+   Each unit has 3 levels. Question types:
+   mc = multiple choice, fill = type the answer (accepts array of valid answers),
+   open = free writing (self-check with a model answer). */
+const DATA = [
+/* ==================== UNIT 1 — OUR COMMUNITY ==================== */
+{
+  id:"community", title:"Our Community", desc:"People, jobs & places where we live",
+  focus:"Grammar: adverbs of frequency, verb + -ing / infinitive · Skills climb: recall → apply in context → reason & justify",
+  q:{
+    /* CHILL — short recall, 1 idea, 4 options, generous hints */
+    chill:[
+      {type:"mc",q:"Who helps you when you are sick?",opts:["A doctor","A farmer","A pilot","A painter"],a:0},
+      {type:"mc",q:"Where can you borrow books?",opts:["The library","The bakery","The market","The garage"],a:0},
+      {type:"mc",q:"A person who puts out fires is a ___.",opts:["firefighter","teacher","dentist","driver"],a:0},
+      {type:"mc",q:"Where do you buy fresh bread?",opts:["The bakery","The bank","The park","The station"],a:0},
+      {type:"mc",q:"'always, usually, never' are words that tell us ___.",opts:["how often","a colour","a place","a name"],a:0,why:"These are adverbs of frequency."},
+      {type:"mc",q:"A person who teaches children is a ___.",opts:["teacher","baker","nurse","farmer"],a:0},
+      {type:"mc",q:"Which one is a PLACE in your town?",opts:["market","quickly","happy","blue"],a:0},
+      {type:"mc",q:"We keep our streets safe with the help of a ___.",opts:["police officer","singer","chef","artist"],a:0}
+    ],
+    /* MASTER — read context, apply the rule, longer sentences, light hints */
+    master:[
+      {type:"fill",q:"Read: 'Mr Lee opens his shop at 6am. He does this every single day.' Rewrite the second sentence using the adverb 'always': 'He ___ opens his shop at 6am.'",hint:"Adverb of frequency goes BEFORE the main verb.",a:["always"],why:"'always' comes before the verb: He always opens…"},
+      {type:"fill",q:"Read: 'Nadia grows vegetables, feeds the cows and works in the fields all day.' What is Nadia's job? She is a ___.",hint:"Someone who works with crops and farm animals.",a:["farmer"],why:"Growing crops + farm animals = a farmer."},
+      {type:"fill",q:"Complete with the -ing form: 'My uncle is a vet. He loves ___ (look) after sick animals every day.'",hint:"After 'love' we use verb + -ing.",a:["looking"],why:"love + verb-ing → loves looking."},
+      {type:"fill",q:"Complete with the infinitive: 'Amara studies hard because she wants ___ (become) a nurse one day.'",hint:"After 'want' we use to + verb.",a:["to become"],why:"want + to + verb → wants to become."},
+      {type:"mc",q:"Read: 'The postman comes to our street. He brings letters but only on Mondays and Thursdays.' Which sentence is TRUE?",opts:["He sometimes brings letters.","He always brings letters.","He never brings letters.","He brings letters every day."],a:0,why:"Only 2 days a week = 'sometimes', not always/never."},
+      {type:"fill",q:"Rewrite as a frequency question: You want to know how many times a week your friend visits the library. Ask: 'How ___ do you visit the library?'",hint:"One word that asks about frequency.",a:["often"],why:"'How often' asks about frequency."},
+      {type:"mc",q:"Read: 'A librarian helps people find books and keeps the library quiet and tidy.' Why is a librarian useful to the community?",opts:["They help people find and enjoy books.","They cook food for everyone.","They drive the school bus.","They put out fires."],a:0,why:"The text is about finding books and keeping the library good."}
+    ],
+    /* TINH HOA — reasoning + extended writing, Stage-5 stretch, no options, richer vocab */
+    tinhhoa:[
+      {type:"mc",q:"REASONING. A town has one doctor, one baker and one teacher. The doctor moves away and no new doctor comes. Which problem is MOST likely to grow over time?",opts:["People who get sick have nowhere to go for treatment.","Nobody will be able to buy bread.","The school will run out of books.","The streets will have no names."],a:0,why:"With no doctor, sick people lose treatment — a growing, serious problem. The others are unrelated to losing a doctor."},
+      {type:"open",q:"Choose ONE community helper (doctor, farmer, teacher, firefighter…). Explain what would happen to your town if that person disappeared. Give at least TWO consequences.",hint:"Use 'If … there were no …, …' and link ideas with 'because', 'so', 'as a result'.",model:"If there were no farmers in my town, we would have serious problems. First, the shops would have no fresh vegetables or fruit, so people might become unhealthy. As a result, families would have to travel far to buy food, which would cost more time and money. Farmers are quiet heroes who keep everyone fed."},
+      {type:"open",q:"Some people think everyone in a community should help others, even if they are not paid. Do you agree? Give your opinion with TWO reasons and one example.",hint:"State your view clearly, then justify: 'I believe … because … For example …'",model:"I believe everyone in a community should help others, even without pay. Firstly, when neighbours help each other, problems that are too big for one person become easy for a group. Secondly, helping makes a town feel safe and friendly. For example, if an elderly woman cannot carry her shopping, a young person can help her, and one day someone will help them too. Kindness spreads."}
+    ]
+  }
+},
+/* ==================== UNIT 2 — EARTH AND BEYOND ==================== */
+{
+  id:"earth", title:"Earth and Beyond", desc:"Planets, space & our world",
+  focus:"Grammar: comparative & superlative adjectives · Skills climb: recall → compare in context → reason & justify",
+  q:{
+    chill:[
+      {type:"mc",q:"Which planet do we live on?",opts:["Earth","Mars","Jupiter","Venus"],a:0},
+      {type:"mc",q:"The star at the centre of our solar system is the ___.",opts:["Sun","Moon","comet","rocket"],a:0},
+      {type:"mc",q:"A person who travels in space is an ___.",opts:["astronaut","author","artist","athlete"],a:0},
+      {type:"mc",q:"The comparative of 'big' is ___.",opts:["bigger","biggest","more big","big"],a:0,why:"Short adjectives add -er."},
+      {type:"mc",q:"What gives us light at night in the sky?",opts:["the Moon","a desert","a river","a cloud"],a:0},
+      {type:"mc",q:"The superlative of 'hot' is 'the ___'.",opts:["hottest","hoter","most hot","hotter"],a:0,why:"hot → hottest."},
+      {type:"mc",q:"What carries astronauts into space?",opts:["a rocket","a boat","a train","a bike"],a:0},
+      {type:"mc",q:"Which word is an adjective we can compare?",opts:["cold","quickly","under","and"],a:0}
+    ],
+    master:[
+      {type:"fill",q:"Read: 'The Sun's surface is about 5,500°C. The Earth is much cooler.' Complete: 'The Sun is ___ (hot) than the Earth.'",hint:"Short adjective + -er + than.",a:["hotter"],why:"hot → hotter than."},
+      {type:"fill",q:"Read: 'Mercury sits closest to the Sun, then Venus, then Earth.' Complete: 'Mercury is the ___ (near) planet to the Sun.'",hint:"the + adjective + -est.",a:["nearest"],why:"near → nearest."},
+      {type:"fill",q:"Read: 'Jupiter could hold more than 1,000 Earths inside it.' Complete: 'Jupiter is the ___ (big) planet in our solar system.'",hint:"Double the last letter, add -est.",a:["biggest"],why:"big → biggest."},
+      {type:"fill",q:"Use 'more' for a long adjective: 'Travelling to Mars is ___ (dangerous) than flying a plane.'",hint:"Long adjectives use 'more', not -er.",a:["more dangerous"],why:"dangerous → more dangerous."},
+      {type:"mc",q:"Read: 'Mars looks red because there is a lot of iron in its dusty soil.' Why does Mars look red?",opts:["Because of the iron in its soil","Because it is very hot","Because the Sun is red","Because of its water"],a:0,why:"The text says iron in the soil makes it red."},
+      {type:"mc",q:"Read: 'The Moon is smaller than Earth, and Earth is smaller than the Sun.' Which is the LARGEST?",opts:["The Sun","The Moon","The Earth","They are equal"],a:0,why:"If Moon < Earth < Sun, the Sun is largest."},
+      {type:"fill",q:"Complete the superlative sentence: 'Of the Moon, Earth and Sun, the Moon is the ___ (small).'",hint:"the + small + -est.",a:["smallest"],why:"small → smallest."}
+    ],
+    tinhhoa:[
+      {type:"mc",q:"REASONING. Scientists say a planet needs liquid water, the right temperature, and air to breathe for humans to live there. Earth has all three; Mars has none of them easily. What can we conclude?",opts:["Living on Mars would be far harder than living on Earth.","Mars is a better home than Earth.","Humans can move to Mars very easily.","Earth and Mars are exactly the same."],a:0,why:"Earth meets all three conditions and Mars meets none easily, so Mars would be far harder to live on."},
+      {type:"open",q:"Compare the Earth and the Moon. Write THREE real differences, using comparative words (bigger, brighter, colder…).",hint:"Use 'than' in each comparison and add one 'because' if you can.",model:"The Earth is much bigger than the Moon. The Earth also has air and water, so it is far more comfortable than the Moon, where nobody can breathe. Finally, the Earth is more colourful because it is full of oceans, forests and life, while the Moon is a grey, empty desert of rock and dust."},
+      {type:"open",q:"Some people want to spend a lot of money exploring space. Others say we should spend that money fixing problems on Earth first. What do you think? Give your opinion with two reasons.",hint:"Take a side clearly, then justify: 'In my opinion … because …'",model:"In my opinion, we should care for the Earth first, but still explore space a little. We should fix problems here because millions of people need clean water, food and hospitals right now. However, exploring space is also important because it teaches us amazing science and might one day save the human race. The best answer is balance: help people on Earth, but keep dreaming about the stars."}
+    ]
+  }
+},
+/* ==================== UNIT 3 — HOMES ==================== */
+{
+  id:"homes", title:"Homes", desc:"Houses, rooms & where we live",
+  focus:"Grammar: infinitive of purpose, modals of possibility (may/might/could) · Skills climb: recall → apply → reason",
+  q:{
+    chill:[
+      {type:"mc",q:"Where do you usually cook food?",opts:["the kitchen","the bedroom","the garden","the garage"],a:0},
+      {type:"mc",q:"Where do you sleep?",opts:["the bedroom","the kitchen","the hall","the roof"],a:0},
+      {type:"mc",q:"A home high up in a tall building is a ___.",opts:["flat","cottage","tent","cave"],a:0},
+      {type:"mc",q:"A home that floats on water is a ___.",opts:["houseboat","treehouse","castle","igloo"],a:0},
+      {type:"mc",q:"Where do you have a bath?",opts:["the bathroom","the kitchen","the garden","the attic"],a:0},
+      {type:"mc",q:"Where do you park a car?",opts:["the garage","the bedroom","the attic","the balcony"],a:0},
+      {type:"mc",q:"'I go to the kitchen ___ make lunch.'",opts:["to","for","because","of"],a:0,why:"'to make' tells us WHY (purpose)."},
+      {type:"mc",q:"A small house in the countryside is a ___.",opts:["cottage","skyscraper","factory","station"],a:0}
+    ],
+    master:[
+      {type:"fill",q:"Read: 'Sam keeps his desk near the window.' Why? Complete with a purpose: 'He sits near the window ___ (get) more light.'",hint:"Purpose = to + verb.",a:["to get"],why:"'to get' explains the reason."},
+      {type:"fill",q:"Read: 'The sky is grey and full of dark clouds.' Complete with a modal of possibility: 'It ___ rain this afternoon.'",hint:"Use might / may / could (something is possible).",a:["might","may","could"],why:"Dark clouds → rain is possible, so 'might/may/could'."},
+      {type:"fill",q:"Complete: 'People who live in very cold places ___ (may / mays) build homes from ice.' Write the correct modal.",hint:"Modals never add -s.",a:["may"],why:"'may build' — modals have no -s."},
+      {type:"mc",q:"Read: 'A houseboat can sail to new places, so the family wakes up somewhere different each week.' What is the BEST thing about their houseboat?",opts:["They can travel to different places.","It is the tallest home in town.","It is made of ice.","It never moves at all."],a:0,why:"The text stresses moving to new places."},
+      {type:"fill",q:"Read: 'Lena saved her pocket money for a whole year.' Complete the purpose: 'She saved money ___ (buy) a bigger bookshelf.'",hint:"to + verb = purpose.",a:["to buy"],why:"'to buy' = the reason she saved."},
+      {type:"mc",q:"Which sentence correctly shows a FUTURE possibility?",opts:["We could move to a new flat next year.","We moved house last week.","We always live here.","We are a flat."],a:0,why:"'could move' = a future possibility."},
+      {type:"fill",q:"Complete: 'We open the windows in summer ___ (keep) the house cool.'",hint:"Purpose again — to + verb.",a:["to keep"],why:"'to keep' explains why."}
+    ],
+    tinhhoa:[
+      {type:"mc",q:"REASONING. In very hot deserts, people often build homes with thick walls and small windows. Why does this design make sense?",opts:["Thick walls and small windows keep the hot sun out and the inside cool.","It makes the house look pretty only.","It helps the house float on water.","It lets in as much heat as possible."],a:0,why:"In hot places you want to keep heat OUT, so thick walls and small windows keep the inside cool."},
+      {type:"open",q:"Homes look very different around the world — igloos, houseboats, desert houses, tall flats. Explain WHY people build such different homes. Give two reasons with examples.",hint:"Think about weather and the land. Use 'because', 'so', and 'may/might'.",model:"People build different homes because the weather and the land are different everywhere. In very cold places, people may build igloos or strong wooden houses to keep the freezing wind out. In hot deserts, homes have thick walls and small windows so the inside stays cool. Near rivers, families might live on houseboats because the water is their road. The home always fits the place around it."},
+      {type:"open",q:"Would you rather live in a floating houseboat or a flat high in a city? Choose one and defend your choice with two reasons, then mention one problem with your choice.",hint:"Give a balanced answer: two strengths and one honest weakness.",model:"I would rather live in a houseboat because I could travel to new places and fall asleep to the sound of water. It would also feel peaceful and close to nature. However, one real problem is that a houseboat might be cold and shaky in winter storms, and it could be hard to get to school on time. Even so, the adventure would be worth it for me."}
+    ]
+  }
+},
+/* ==================== UNIT 4 — FOOD ==================== */
+{
+  id:"food", title:"Food", desc:"Meals, tastes & healthy eating",
+  focus:"Grammar: some/any, countable/uncountable, quantifiers (much/many/a lot of) · Skills climb: recall → apply → reason",
+  q:{
+    chill:[
+      {type:"mc",q:"Which meal do you eat in the morning?",opts:["breakfast","dinner","supper","snack"],a:0},
+      {type:"mc",q:"Which of these is a fruit?",opts:["banana","carrot","bread","rice"],a:0},
+      {type:"mc",q:"Which one is a vegetable?",opts:["carrot","orange","cake","milk"],a:0},
+      {type:"mc",q:"Which one do you drink?",opts:["water","bread","cheese","rice"],a:0},
+      {type:"mc",q:"'I have ___ apples in my bag.' (positive, plural)",opts:["some","a","an","much"],a:0,why:"'some' with plurals in positive sentences."},
+      {type:"mc",q:"'There isn't ___ milk left.' (negative)",opts:["any","some","many","a"],a:0,why:"'any' in negatives."},
+      {type:"mc",q:"We use 'many' with things we can ___.",opts:["count","drink only","cook only","see only"],a:0,why:"'many' = countable nouns."},
+      {type:"mc",q:"A meal you eat in the evening is ___.",opts:["dinner","breakfast","spoon","plate"],a:0}
+    ],
+    master:[
+      {type:"fill",q:"A guest arrives. You politely offer a drink. Complete: 'Would you like ___ juice?'",hint:"In polite offers we use 'some', not 'any'.",a:["some"],why:"Polite offers use 'some'."},
+      {type:"fill",q:"Read: 'Water cannot be counted one by one.' Complete: 'How ___ water do you drink each day?'",hint:"Uncountable → much / many?",a:["much"],why:"'much' with uncountable 'water'."},
+      {type:"fill",q:"Complete the negative: 'I looked in the bowl, but there weren't ___ bananas left.'",hint:"Negative sentence → some or any?",a:["any"],why:"'any' in negatives."},
+      {type:"mc",q:"Read: 'Breakfast is not the same everywhere. In Japan, many people eat rice, fish and soup in the morning.' What do many people in Japan eat for breakfast?",opts:["Rice, fish and soup","Cake and juice","Bread and jam","Nothing at all"],a:0,why:"The text lists rice, fish and soup."},
+      {type:"fill",q:"Complete: 'We can't bake the cake — there isn't ___ flour in the cupboard.' (flour is uncountable)",hint:"Uncountable + negative.",a:["any"],why:"'any' in a negative with uncountable 'flour'."},
+      {type:"mc",q:"Which sentence is correct?",opts:["I ate a lot of vegetables.","I ate much vegetables.","I ate many rice.","I ate a lot vegetables."],a:0,why:"'a lot of' works with countable AND uncountable nouns."},
+      {type:"fill",q:"Read: 'The recipe needs a small amount of sugar.' Complete: 'We need ___ sugar to make the cake.' (positive)",hint:"Positive sentence → some / any?",a:["some"],why:"'some' in positive sentences."}
+    ],
+    tinhhoa:[
+      {type:"mc",q:"REASONING. A doctor says: 'Eat a lot of vegetables, a little rice, and only a tiny bit of sugar.' Based on this, which lunch is the HEALTHIEST choice?",opts:["A big plate of vegetables with some rice and grilled chicken","A large chocolate cake with sweet cream","A bowl of sweets and a fizzy drink","Three biscuits and ice cream"],a:0,why:"The doctor wants lots of vegetables, little rice, very little sugar — only the first lunch matches that advice."},
+      {type:"open",q:"Should schools stop selling sweets and fizzy drinks to children? Give your opinion with two reasons and one example.",hint:"State your view, then justify with 'because' and 'for example'.",model:"I think schools should stop selling sweets and fizzy drinks because too much sugar is bad for children's teeth and health. If sweets are always available, children may eat them instead of real food and feel tired in lessons. For example, a friend of mine ate chocolate every break and often got headaches. Schools could sell fruit and water instead, which would give children energy without harming them."},
+      {type:"open",q:"People eat very different breakfasts around the world. Explain WHY breakfasts are so different from country to country. Give at least two reasons.",hint:"Think about climate, what grows there, and family traditions.",model:"Breakfasts are different around the world because each country grows different foods and follows its own traditions. In warm countries, a lot of fruit grows easily, so people may start the day with mango or papaya. In places near the sea, families might eat fish because it is fresh and cheap. On top of this, families pass recipes from grandparents to children, so old traditions live on at the breakfast table."}
+    ]
+  }
+},
+/* ==================== UNIT 5 — ADVENTURES ==================== */
+{
+  id:"adventures", title:"Adventures", desc:"Stories, journeys & the past",
+  focus:"Grammar: past simple (regular & irregular), was/were · Skills climb: recall → apply in context → create & reason",
+  q:{
+    chill:[
+      {type:"mc",q:"The past simple of 'go' is ___.",opts:["went","goed","gone","going"],a:0,why:"go → went (irregular)."},
+      {type:"mc",q:"The past simple of 'play' is ___.",opts:["played","plaied","playd","plays"],a:0,why:"play → played."},
+      {type:"mc",q:"'Yesterday I ___ a huge ship.'",opts:["saw","see","seen","sees"],a:0,why:"see → saw."},
+      {type:"mc",q:"'They ___ happy at the end.'",opts:["were","was","is","be"],a:0,why:"they → were."},
+      {type:"mc",q:"'She ___ at home last night.'",opts:["was","were","are","been"],a:0,why:"she → was."},
+      {type:"mc",q:"The past simple of 'find' is ___.",opts:["found","finded","finding","finds"],a:0,why:"find → found."},
+      {type:"mc",q:"The past simple of 'run' is ___.",opts:["ran","runned","runed","running"],a:0,why:"run → ran."},
+      {type:"mc",q:"The beginning of a story usually tells us the ___.",opts:["setting and characters","price","last page","author's phone"],a:0}
+    ],
+    master:[
+      {type:"fill",q:"Read: 'Last summer, our family made a long journey.' Complete: 'We ___ (travel) to the mountains by train.'",hint:"Regular verb → add -ed (watch the double l).",a:["travelled","traveled"],why:"travel → travelled."},
+      {type:"fill",q:"Read: 'A loud roar came from the cave.' Complete: 'The hero ___ (run) as fast as he could.'",hint:"Irregular verb.",a:["ran"],why:"run → ran."},
+      {type:"fill",q:"Make it negative: 'They searched everywhere, but they ___ (not / find) the treasure.'",hint:"didn't + base verb.",a:["didn't find","did not find"],why:"Past negative = didn't + base verb."},
+      {type:"fill",q:"Read: 'During the night, huge waves hit the boat.' Complete with was/were: 'The sea ___ very rough.'",hint:"'the sea' is singular.",a:["was"],why:"Singular subject → was."},
+      {type:"mc",q:"Read: 'The children lifted the dusty lid of the old chest. Inside, a folded map lay hidden!' What did the children find?",opts:["A map","A ship","A dog","A crown"],a:0,why:"The text says a map lay hidden inside."},
+      {type:"fill",q:"Turn it into a past question: '___ you see the dragon in the cave?'",hint:"Past questions start with 'Did'.",a:["did"],why:"Did + subject + base verb."},
+      {type:"fill",q:"Read: 'Before she left, Mia grabbed her bag.' Complete: 'She ___ (take) her bag and ran out the door.'",hint:"Irregular verb.",a:["took"],why:"take → took."}
+    ],
+    tinhhoa:[
+      {type:"mc",q:"REASONING. In a story: 'The sky turned black. The wind screamed. Waves crashed over the little boat.' How do the characters most likely FEEL at this moment?",opts:["Frightened and in danger","Bored and sleepy","Calm and relaxed","Hungry and happy"],a:0,why:"A black sky, screaming wind and crashing waves create danger and fear — the writer builds tension, so the characters feel frightened."},
+      {type:"open",q:"Write an exciting BEGINNING for an adventure story (3–4 sentences). Set the scene and end with something surprising that makes the reader want to continue. Use past simple.",hint:"Where? Who? What happened suddenly? Use 'was/were' and past verbs, and end on a cliffhanger.",model:"One misty morning, Leo and I sailed our small wooden boat far from the shore. The sea was calm and the air was cold and salty. Suddenly, a dark shadow moved under the water beside us. We held our breath — and then two green eyes rose slowly above the waves."},
+      {type:"open",q:"Think of a real trip or day out you once had. Retell it as a short adventure. What happened first, next and last? Use at least four past-simple verbs.",hint:"Order your events with first, then, after that, finally.",model:"Last year I went to the mountains with my family. First, we walked up a steep, rocky path until our legs ached. Then we found a hidden waterfall and jumped into the freezing pool below. After that, we ate our sandwiches on a warm rock in the sun. Finally, we hiked home tired but happy, with mud on our shoes and a great story to tell."}
+    ]
+  }
+},
+/* ==================== UNIT 6 — GOING PLACES ==================== */
+{
+  id:"places", title:"Going Places", desc:"Travel, transport & directions",
+  focus:"Grammar: 'be going to' (future plans), prepositions of place & directions · Skills climb: recall → apply → reason",
+  q:{
+    chill:[
+      {type:"mc",q:"Which one flies in the sky?",opts:["a plane","a boat","a bike","a train"],a:0},
+      {type:"mc",q:"Which travels on rails/tracks?",opts:["a train","a car","a boat","a plane"],a:0},
+      {type:"mc",q:"To cross the sea you can take a ___.",opts:["boat","bike","bus","train"],a:0},
+      {type:"mc",q:"The opposite of 'left' is ___.",opts:["right","up","under","near"],a:0},
+      {type:"mc",q:"You catch a train at the ___.",opts:["station","airport","harbour","garage"],a:0},
+      {type:"mc",q:"You catch a plane at the ___.",opts:["airport","harbour","bus stop","station"],a:0},
+      {type:"mc",q:"'The shop is ___ the bank and the café.' (in the middle of two)",opts:["between","under","on","off"],a:0,why:"'between' = in the middle of two things."},
+      {type:"mc",q:"'Next week we ___ visit grandma.' (a future plan)",opts:["are going to","went to","was","did"],a:0,why:"'be going to' = future plan."}
+    ],
+    master:[
+      {type:"fill",q:"Read: 'Tomorrow is Saturday and Ben has planned a swim.' Complete the full future form: 'On Saturday, Ben ___ ___ ___ (go) swimming.'",hint:"is + going + to + base verb.",a:["is going to go"],why:"be going to + base verb = a plan."},
+      {type:"fill",q:"Complete the phrase: 'They are going ___ travel by train next month.'",hint:"'going' needs a small word before the verb.",a:["to"],why:"going TO travel."},
+      {type:"fill",q:"Read: 'Walk to the corner. Do NOT turn left.' Complete: 'Turn ___ at the corner.'",hint:"The other direction.",a:["right"],why:"Not left → right."},
+      {type:"mc",q:"Read: 'The museum stands next to the library, right across from the green park.' Where is the museum?",opts:["Next to the library, opposite the park","Inside the park","Under the road","On the train"],a:0,why:"The text: next to the library, opposite the park."},
+      {type:"fill",q:"Read: 'The cat squeezed into the space below the table.' Complete: 'The cat is hiding ___ the table.'",hint:"Opposite of 'on top of'.",a:["under"],why:"below = under."},
+      {type:"mc",q:"Which sentence is a FUTURE PLAN (not the past)?",opts:["We are going to fly to Australia.","We flew to Australia last year.","We fly every single day.","We were in Australia."],a:0,why:"'are going to fly' = future plan."},
+      {type:"fill",q:"Read: 'Do not stop at the shop — keep walking by it.' Complete: 'Walk ___ the shop and stop at the bank.'",hint:"To go by something without stopping.",a:["past"],why:"'past' = to go by."}
+    ],
+    tinhhoa:[
+      {type:"mc",q:"REASONING. A family wants to travel from London to Paris. They have plenty of time, want to see the countryside, care about pollution, and get seasick on boats. Which transport suits them BEST?",opts:["The train","A ferry (boat)","They should not travel","A rocket"],a:0,why:"They have time, want scenery, dislike boats (rules out ferry), and care about pollution — the train fits every clue best."},
+      {type:"open",q:"Where are you going to travel on your next holiday, and how will you get there? Explain your choice of transport with two reasons.",hint:"Use 'I am going to…' and justify your transport with 'because'.",model:"On my next holiday, I am going to travel to the seaside with my family. We are going to take the train because it is comfortable and we can watch the countryside roll past the window. I also chose the train because it makes far less pollution than flying, so it is kinder to the planet while still being quick and safe."},
+      {type:"open",q:"A friend is coming to your house for the first time. Write clear directions from a place they know (the school, the station…) to your home.",hint:"Use direction words: turn left/right, go straight, past, next to, opposite, between.",model:"From the school gate, turn right and walk straight along the main road. Go past the bakery and the little bookshop until you reach the traffic lights. Turn left there, and my street is the second one on your right. My house is the blue one, right next to the tall tree and opposite the small park. You can't miss it!"}
+    ]
+  }
+},
+/* ==================== UNIT 7 — AUSTRALIA ==================== */
+{
+  id:"australia", title:"Australia", desc:"A faraway country, animals & culture",
+  focus:"Grammar: present-simple facts, question words, there is/are · Skills climb: recall → apply → reason",
+  q:{
+    chill:[
+      {type:"mc",q:"Which animal carries its baby in a pouch?",opts:["kangaroo","lion","penguin","camel"],a:0},
+      {type:"mc",q:"Australia is a ___.",opts:["country","city","river","mountain"],a:0},
+      {type:"mc",q:"Which animal lives in trees and eats leaves?",opts:["koala","tiger","wolf","fox"],a:0},
+      {type:"mc",q:"A large, dry, sandy area in Australia is the ___.",opts:["outback","forest","harbour","city"],a:0},
+      {type:"mc",q:"'___ many beaches in Australia.' (plural)",opts:["There are","There is","It has a","Have"],a:0,why:"'There are' + plural."},
+      {type:"mc",q:"Which question word asks about a PLACE?",opts:["Where","Who","When","Why"],a:0},
+      {type:"mc",q:"Which question word asks about a PERSON?",opts:["Who","Where","When","Which"],a:0},
+      {type:"mc",q:"'A kangaroo ___ very high.' (fact, one animal)",opts:["jumps","jump","jumping","to jump"],a:0,why:"he/she/it → verb + s."}
+    ],
+    master:[
+      {type:"fill",q:"Read: 'In the desert stands one enormous red rock called Uluru.' Complete: '___ a huge rock called Uluru in the desert.'",hint:"'a rock' is singular → there is / there are?",a:["there is"],why:"Singular → 'there is'."},
+      {type:"fill",q:"Complete the present-simple fact: 'A koala ___ (sleep) for up to 20 hours every day.'",hint:"One koala (it) → add -s.",a:["sleeps"],why:"Third-person singular adds -s."},
+      {type:"mc",q:"Read: 'The Great Barrier Reef is a giant underwater world, home to thousands of colourful fish and corals.' What lives there?",opts:["Fish and corals","Kangaroos","Camels","Bears"],a:0,why:"The text says fish and corals."},
+      {type:"fill",q:"Complete the question with the right question word: '___ is the capital of Australia? — It is Canberra.'",hint:"Asking for a name/thing.",a:["what"],why:"'What is the capital…' asks for a name."},
+      {type:"fill",q:"Complete the fact (plural subject): 'Kangaroos ___ (live) all over Australia.'",hint:"'Kangaroos' is plural → no -s on the verb.",a:["live"],why:"Plural subject → base verb."},
+      {type:"mc",q:"Which sentence is a correct fact?",opts:["Australia has many unique animals.","Australia have many animals.","Australia are a animal.","Australia having animals."],a:0,why:"Singular 'Australia' → 'has'."},
+      {type:"fill",q:"Complete with there is/are: '___ lots of kangaroos hopping across the outback.'",hint:"'kangaroos' is plural.",a:["there are"],why:"Plural → 'there are'."}
+    ],
+    tinhhoa:[
+      {type:"mc",q:"REASONING. When it is cold winter in Europe (December), it is hot summer in Australia. Why does this happen?",opts:["Australia is on the opposite side of the world, so its seasons are the reverse of Europe's.","Australia has no winter ever.","Australia is closer to the Sun than Europe.","Someone changes the seasons by hand."],a:0,why:"Australia is in the southern half of the world, so its seasons are the opposite of Europe's — summer there when it is winter here."},
+      {type:"open",q:"Australia is very far away and quite different from where you live. Explain TWO ways it is different, and say which difference surprises you most and why.",hint:"Compare with your own country; end by choosing the most surprising point.",model:"Australia is very different from my country in two big ways. First, it is summer there when it is winter here, so children can swim at the beach on Christmas Day. Second, it has amazing animals like kangaroos and koalas that we never see at home. The most surprising thing to me is the opposite seasons, because I cannot imagine a hot, sunny December — it feels upside down!"},
+      {type:"open",q:"The Great Barrier Reef is in danger from dirty and warmer water. Explain why we should protect it, and suggest one thing people could do to help.",hint:"Link the reason to the animals that live there, then give a practical action.",model:"We should protect the Great Barrier Reef because thousands of fish and corals live there, and it is one of the most beautiful places on Earth. If the water becomes too warm or too dirty, the coral turns white and dies, and the fish lose their home forever. One thing people can do is reduce pollution — for example, by using less plastic that ends up in the sea. Small actions can help save a whole underwater world."}
+    ]
+  }
+},
+/* ==================== UNIT 8 — NATURE MATTERS ==================== */
+{
+  id:"nature", title:"Nature Matters", desc:"Plants, animals & caring for the planet",
+  focus:"Grammar: should / shouldn't (advice), first conditional (if + present, will) · Skills climb: recall → apply → reason",
+  q:{
+    chill:[
+      {type:"mc",q:"What do plants need to grow?",opts:["sunlight and water","only rocks","plastic","loud music"],a:0},
+      {type:"mc",q:"Putting bottles and paper in the right bin is called ___.",opts:["recycling","shouting","sleeping","flying"],a:0},
+      {type:"mc",q:"We ___ turn off the tap to save water. (good advice)",opts:["should","shouldn't","aren't","weren't"],a:0,why:"'should' = good advice."},
+      {type:"mc",q:"We ___ throw rubbish into the sea. (bad idea)",opts:["shouldn't","should","must","like to"],a:0,why:"'shouldn't' = not a good idea."},
+      {type:"mc",q:"Bees are important because they help ___.",opts:["plants and flowers grow","cars go fast","phones work","make snow"],a:0},
+      {type:"mc",q:"'If we plant trees, we ___ have cleaner air.'",opts:["will","won't","did","were"],a:0,why:"first conditional: will + verb."},
+      {type:"mc",q:"Which action HELPS nature?",opts:["recycle rubbish","drop litter","waste water","cut all trees"],a:0},
+      {type:"mc",q:"We should ___ the lights when we leave a room.",opts:["turn off","turn up","break","paint"],a:0}
+    ],
+    master:[
+      {type:"fill",q:"Read: 'Water is precious and should not be wasted.' Give advice: 'You ___ (should + save) water while you brush your teeth.'",hint:"should + base verb.",a:["should save"],why:"should + base verb = advice."},
+      {type:"fill",q:"Complete the first conditional: 'If everyone recycles, we ___ (help) the planet.'",hint:"if + present, WILL + verb.",a:["will help"],why:"first conditional → will help."},
+      {type:"fill",q:"Read: 'Litter makes the park ugly and dangerous for animals.' Give advice: 'People ___ (shouldn't + drop) litter in the park.'",hint:"shouldn't + base verb.",a:["shouldn't drop","should not drop"],why:"shouldn't + base verb = it isn't good to."},
+      {type:"mc",q:"Read: 'If the forest is cut down, the animals that live in the trees will lose their homes.' What happens if the forest disappears?",opts:["Animals will lose their homes","Nothing changes","Animals get bigger","It rains money"],a:0,why:"The text says animals will lose their homes."},
+      {type:"fill",q:"Complete: 'If you plant a seed and water it every day, it ___ (grow) into a strong plant.'",hint:"first conditional → will + verb.",a:["will grow"],why:"→ will grow."},
+      {type:"mc",q:"Which is GOOD advice for nature?",opts:["We should use both sides of the paper.","We should waste clean water.","We should burn plastic at home.","We should never plant trees."],a:0,why:"Using both sides of paper saves trees."},
+      {type:"fill",q:"Complete with the correct modal: 'People ___ (should / shoulds) protect wild animals.'",hint:"Modals never take -s.",a:["should"],why:"'should' has no -s."}
+    ],
+    tinhhoa:[
+      {type:"mc",q:"REASONING. Bees carry pollen from flower to flower, which helps fruits and vegetables grow. If most bees disappeared, what would MOST likely happen?",opts:["Many fruits and vegetables would become harder to grow.","There would be more fruit than ever.","Nothing would change at all.","The sea would dry up."],a:0,why:"Bees help plants make fruit and vegetables. Fewer bees → fewer crops, so food would be harder to grow."},
+      {type:"open",q:"Choose ONE thing you can do at home to help the environment. Explain HOW it helps, using a first conditional (If … , … will …).",hint:"Name the action, then show the good result with 'If I …, … will …'.",model:"At home, I can recycle paper, glass and plastic instead of throwing everything away. If my family recycles, factories will use the old materials again and cut down fewer trees. This means we will make less rubbish and save energy at the same time. A small basket by the door makes it easy for everyone to remember."},
+      {type:"open",q:"Your town has a growing litter problem. Write a short message telling people what they should and shouldn't do, and explain what will happen if everyone helps.",hint:"Use 'should', 'shouldn't', and a first conditional for the result.",model:"Dear neighbours, our town has too much litter, and we can fix it together. You should always put your rubbish in the bin and recycle bottles and paper. You shouldn't drop wrappers on the ground or leave bags in the park. If we all take care of our streets, the town will become cleaner, safer and more beautiful for every family and animal that lives here. Let's start today!"}
+    ]
+  }
+},
+/* ==================== UNIT 9 — SCHOOL'S OUT! ==================== */
+{
+  id:"school", title:"School's Out!", desc:"Free time, hobbies & holidays",
+  focus:"Grammar: present continuous, like/love/enjoy + -ing (course review) · Skills climb: recall → apply → reason",
+  q:{
+    chill:[
+      {type:"mc",q:"Which is a hobby?",opts:["painting","being sick","falling over","sleeping in class"],a:0},
+      {type:"mc",q:"A time with no school is called the ___.",opts:["holidays","homework","exam","desk"],a:0},
+      {type:"mc",q:"'Look! The children ___ playing football.'",opts:["are","is","was","be"],a:0,why:"children → are + -ing."},
+      {type:"mc",q:"'She ___ swimming right now.'",opts:["is","are","were","do"],a:0,why:"she → is + -ing."},
+      {type:"mc",q:"'I love ___ books in the holidays.'",opts:["reading","read","reads","to reading"],a:0,why:"love + verb-ing."},
+      {type:"mc",q:"'They ___ riding their bikes in the park.'",opts:["are","is","am","be"],a:0,why:"they → are + -ing."},
+      {type:"mc",q:"Which sentence uses -ing correctly?",opts:["I enjoy dancing.","I enjoy dance.","I enjoy to dance.","I enjoys dancing."],a:0,why:"enjoy + verb-ing."},
+      {type:"mc",q:"'What are you ___ now?' — 'Drawing a picture.'",opts:["doing","do","did","does"],a:0,why:"are you doing (present continuous)."}
+    ],
+    master:[
+      {type:"fill",q:"Read: 'It is 4pm. My brother is on the sofa in front of the TV.' Complete: 'Right now, my brother ___ ___ (watch) a film.'",hint:"is + verb-ing.",a:["is watching"],why:"He + is + watching."},
+      {type:"fill",q:"Read: 'We are all sitting on the grass with our sandwiches.' Complete: 'We ___ ___ (have) a picnic at the moment.'",hint:"are + verb-ing.",a:["are having"],why:"We + are + having."},
+      {type:"fill",q:"Complete with -ing after 'love': 'My sister ___ (love) painting bright, colourful pictures.' Give the full form.",hint:"love/loves + verb-ing.",a:["loves painting"],why:"loves + painting."},
+      {type:"mc",q:"Read: 'It is the summer holidays. Every day, Ben puts up his tent by the lake and catches fish for dinner.' What is Ben doing on holiday?",opts:["Camping and fishing","Going to school","Doing homework","Sleeping all day"],a:0,why:"He camps (tent by the lake) and fishes."},
+      {type:"fill",q:"Read: 'Listen! A beautiful sound is coming from the trees.' Complete: 'The birds ___ ___ (sing) outside.'",hint:"are + verb-ing.",a:["are singing"],why:"The birds + are + singing."},
+      {type:"mc",q:"Which sentence is correct present continuous?",opts:["I am reading a book now.","I reading a book now.","I reads a book now.","I am read a book now."],a:0,why:"am + verb-ing."},
+      {type:"fill",q:"Complete with -ing after 'enjoy': 'He enjoys ___ (ride) his skateboard after school.'",hint:"enjoy + verb-ing.",a:["riding"],why:"enjoy + riding."}
+    ],
+    tinhhoa:[
+      {type:"mc",q:"REASONING. Maya says: 'I love being outdoors, I enjoy teamwork, and I like a bit of friendly competition.' Which hobby would suit Maya BEST?",opts:["Playing football in a team","Reading alone in her room","Collecting stamps quietly","Watching TV by herself"],a:0,why:"She wants outdoors + teamwork + competition — only team football matches all three clues."},
+      {type:"open",q:"Describe your favourite way to spend the holidays. Explain WHY you enjoy it and how it makes you feel. Use 'like/love/enjoy + -ing'.",hint:"Name the activity, give a reason, and describe the feeling.",model:"My favourite way to spend the holidays is exploring the countryside on my bike. I love riding because I feel free and the wind rushes past my face. I also enjoy stopping to watch birds and drawing what I see. By the end of the day I feel tired but happy and calm, and I sleep well because I have used all my energy on something I truly love."},
+      {type:"open",q:"Some people say long holidays are the best part of the year, but others say children get bored without school. What do you think? Give your opinion with two reasons.",hint:"Take a side, then justify: 'I think … because …' and answer the other view.",model:"I think long holidays are the best part of the year because we finally have free time to do what we love, like playing outside and visiting family. Holidays also let our minds rest after months of hard work, so we return to school full of energy. It is true that some children get bored, but that is easy to fix with hobbies, sports and new adventures. For me, freedom always beats boredom."}
+    ]
+  }
+}
+];
+
+/* ============ APP ============ */
+const S = {topic:null, level:null, idx:0, answered:false, score:0, results:[]};
+const $ = s => document.querySelector(s);
+const screens = ['s-topics','s-levels','s-quiz','s-results'];
+function show(id){screens.forEach(x=>$('#'+x).classList.toggle('active', x===id));window.scrollTo(0,0);}
+
+/* progress storage */
+function loadProg(){try{return JSON.parse(localStorage.getItem('ge4_prog')||'{}')}catch(e){return{}}}
+function saveProg(p){try{localStorage.setItem('ge4_prog',JSON.stringify(p))}catch(e){}}
+function bestKey(t,l){return t+'::'+l}
+function getBest(t,l){return loadProg()[bestKey(t,l)]}
+function setBest(t,l,pct){const p=loadProg();const k=bestKey(t,l);if(!p[k]||pct>p[k]){p[k]=pct;saveProg(p);}}
+
+const LVLNAME={chill:'😎 Chill',master:'💪 Master',tinhhoa:'👑 Tinh hoa'};
+
+function starStr(pct){
+  if(pct==null) return '';
+  if(pct>=90) return '⭐⭐⭐';
+  if(pct>=60) return '⭐⭐';
+  if(pct>0) return '⭐';
+  return '';
+}
+
+/* build topic grid */
+function renderTopics(){
+  const g=$('#topicGrid');g.innerHTML='';
+  DATA.forEach((u,i)=>{
+    const done=['chill','master','tinhhoa'].map(l=>getBest(u.id,l)).filter(x=>x!=null);
+    const avg=done.length?Math.round(done.reduce((a,b)=>a+b,0)/3):null;
+    const card=document.createElement('div');card.className='topic';
+    card.innerHTML=`<div class="u">Unit ${i+1}</div>
+      <div class="t">${u.title}</div>
+      <div class="d">${u.desc}</div>
+      <div class="prog">${done.length?('Progress: '+starStr(avg)+' '+avg+'% avg'):'Not started yet'}</div>`;
+    card.onclick=()=>openLevels(u.id);
+    g.appendChild(card);
+  });
+}
+
+function openLevels(tid){
+  S.topic=tid;
+  const u=DATA.find(x=>x.id===tid);
+  $('#lvlTitle').textContent=u.title;
+  $('#lvlDesc').textContent=u.focus;
+  ['chill','master','tinhhoa'].forEach(l=>{
+    const b=getBest(tid,l);
+    $('#star-'+l).textContent=b!=null?(starStr(b)+' best '+b+'%'):'';
+  });
+  show('s-levels');
+}
+
+function startQuiz(level){
+  S.level=level;S.idx=0;S.answered=false;S.score=0;S.results=[];
+  const u=DATA.find(x=>x.id===S.topic);
+  $('#quizTopic').textContent=u.title;
+  const pill=$('#quizPill');pill.className='pill '+level;pill.textContent=LVLNAME[level];
+  show('s-quiz');renderQ();
+}
+
+function curQ(){return DATA.find(x=>x.id===S.topic).q[S.level][S.idx];}
+function curSet(){return DATA.find(x=>x.id===S.topic).q[S.level];}
+
+function renderQ(){
+  S.answered=false;
+  const set=curSet();const q=curQ();
+  $('#barFill').style.width=((S.idx)/set.length*100)+'%';
+  const body=$('#qbody');
+  let html=`<p class="qtext">${S.idx+1}. ${q.q}</p>`;
+  if(q.hint) html+=`<p class="qhint">💡 ${q.hint}</p>`;
+  if(q.type==='mc'){
+    html+='<div class="opts">';
+    q.opts.forEach((o,i)=>{html+=`<div class="opt" data-i="${i}"><span class="key">${String.fromCharCode(65+i)}</span><span>${o}</span></div>`;});
+    html+='</div>';
+  } else if(q.type==='fill'){
+    html+=`<input class="text" id="txtIn" autocomplete="off" placeholder="Type your answer…">`;
+  } else if(q.type==='open'){
+    html+=`<textarea class="text" id="txtIn" placeholder="Write your answer here…"></textarea>`;
+  }
+  html+=`<div class="feedback" id="fb"></div>`;
+  html+=`<div class="model" id="model"></div>`;
+  html+=`<div class="qfooter">
+      <span></span>
+      <button class="btn primary" id="checkBtn">Check</button>
+    </div>`;
+  body.innerHTML=html;
+
+  if(q.type==='mc'){
+    body.querySelectorAll('.opt').forEach(el=>{
+      el.onclick=()=>{if(S.answered)return;body.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');};
+    });
+  }
+  $('#checkBtn').onclick=onCheck;
+  const ti=$('#txtIn');
+  if(ti) ti.addEventListener('keydown',e=>{if(e.key==='Enter'&&q.type==='fill'){e.preventDefault();onCheck();}});
+}
+
+function norm(s){return (s||'').trim().toLowerCase().replace(/[.!?,;:"']/g,'').replace(/\s+/g,' ');}
+
+function onCheck(){
+  const q=curQ();const btn=$('#checkBtn');const fb=$('#fb');
+  if(!S.answered){
+    let correct=false, chosen=null;
+    if(q.type==='mc'){
+      const sel=$('#qbody .opt.sel');
+      if(!sel){fb.className='feedback bad show';fb.innerHTML='<b>Pick an answer first 🙂</b>';return;}
+      chosen=parseInt(sel.dataset.i,10);correct=(chosen===q.a);
+      $('#qbody').querySelectorAll('.opt').forEach((el,i)=>{
+        el.style.pointerEvents='none';
+        if(i===q.a)el.classList.add('correct');
+        else if(i===chosen)el.classList.add('wrong');
+      });
+    } else if(q.type==='fill'){
+      const val=$('#txtIn').value;chosen=val;
+      const accepts=Array.isArray(q.a)?q.a:[q.a];
+      correct=accepts.some(a=>norm(a)===norm(val));
+      $('#txtIn').disabled=true;
+      $('#txtIn').style.borderColor=correct?'var(--ok)':'var(--bad)';
+    } else if(q.type==='open'){
+      // self-assessed: always show model, learner grades themselves
+      chosen=$('#txtIn').value;
+      $('#txtIn').disabled=true;
+    }
+
+    S.answered=true;
+    if(q.type==='open'){
+      $('#model').className='model show';
+      $('#model').innerHTML='<b>✍️ A model answer:</b>'+q.model+
+        '<div style="margin-top:10px">Did your answer show the same idea? Be honest!</div>'+
+        '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">'+
+        '<button class="btn" id="selfYes">👍 Yes, I got it</button>'+
+        '<button class="btn" id="selfClose">🤏 Close</button>'+
+        '<button class="btn" id="selfNo">🔁 Not yet</button></div>';
+      btn.style.display='none';
+      $('#selfYes').onclick=()=>{S.score++;S.results.push({q:q.q,ok:true,self:'got it'});next();};
+      $('#selfClose').onclick=()=>{S.score+=0.5;S.results.push({q:q.q,ok:'half',self:'close'});next();};
+      $('#selfNo').onclick=()=>{S.results.push({q:q.q,ok:false,self:'not yet'});next();};
+      return;
+    }
+
+    if(correct){S.score++;fb.className='feedback good show';fb.innerHTML='<b>Correct! 🎉</b>'+(q.why?q.why:'');}
+    else{fb.className='feedback bad show';
+      const ans=Array.isArray(q.a)?q.a[0]:(q.type==='mc'?q.opts[q.a]:q.a);
+      fb.innerHTML='<b>Not quite.</b>The answer is: <b style="display:inline">'+ans+'</b>. '+(q.why?q.why:'');}
+    S.results.push({q:q.q,ok:correct});
+    btn.textContent=(S.idx===curSet().length-1)?'See results':'Next →';
+  } else {
+    next();
+  }
+}
+
+function next(){
+  if(S.idx<curSet().length-1){S.idx++;renderQ();}
+  else finish();
+}
+
+function finish(){
+  const total=curSet().length;
+  const pct=Math.round(S.score/total*100);
+  setBest(S.topic,S.level,pct);
+  $('#scoreBig').textContent=pct+'%';
+  $('#scoreLbl').textContent='You got '+(Math.round(S.score*10)/10)+' out of '+total;
+  $('#scoreStars').textContent=starStr(pct)||'Keep going!';
+  let m='';
+  if(pct>=90)m='Amazing work! You really know this topic. 🌟';
+  else if(pct>=60)m='Great job! A little more practice and you\'ll master it. 💪';
+  else m='Good try! Practice makes perfect — give it another go. 🌱';
+  $('#scoreMsg').textContent=m;
+  const sn=$('#selfNote');
+  if(S.level==='tinhhoa'){sn.style.display='block';sn.innerHTML='👑 <b>Tinh hoa</b> answers are graded by you. The most important thing is that you tried to explain your own ideas in English — that\'s how you grow!';}
+  else sn.style.display='none';
+  show('s-results');
+}
+
+/* nav */
+$('#backToTopics').onclick=()=>{renderTopics();show('s-topics');};
+$('#backToLevels').onclick=()=>openLevels(S.topic);
+$('#doneToTopics').onclick=()=>{renderTopics();show('s-topics');};
+$('#retry').onclick=()=>startQuiz(S.level);
+document.querySelectorAll('.lvl').forEach(b=>b.onclick=()=>startQuiz(b.dataset.lvl));
+$('#resetAll').onclick=()=>{if(confirm('Reset all saved progress?')){localStorage.removeItem('ge4_prog');renderTopics();}};
+
+renderTopics();
+</script>
+</body>
+</html>
