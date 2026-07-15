@@ -54,7 +54,7 @@ window.APP_DATA.topics.push({
     { q: "Choose the correct option:\nMy ________ cooked dinner for her children.", img: "woman", o: ["mother", "father", "uncle", "brother"], a: 0 },
     { q: "Choose the feminine of \"waiter\":", img: "plate", o: ["waitress", "server", "cook", "lady"], a: 0 },
     { q: "Choose the masculine of \"actress\":", img: "theater", o: ["actor", "singer", "dancer", "artist"], a: 0 },
-    { q: "Choose the masculine of \"prince\":", img: "prince", o: ["prince", "king", "man", "boy"], a: 1, s: true },
+    { q: "Choose the masculine of \"princess\":", img: "prince", o: ["prince", "king", "man", "boy"], a: 0, s: true },
     { q: "Choose the masculine of \"lioness\":", img: "lion", o: ["lion", "tiger", "cub", "cat"], a: 0 },
     { q: "Choose the masculine of \"sister\":", img: "boy", o: ["brother", "father", "uncle", "nephew"], a: 0 },
     { q: "Choose the correct option:\nThe ________ served us our food with a smile.", img: "plate", o: ["waiter", "actress", "queen", "aunt"], a: 0 },

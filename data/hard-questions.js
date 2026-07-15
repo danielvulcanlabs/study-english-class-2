@@ -127,7 +127,7 @@ window.APP_DATA.hard = {
       { q: "One of these is NOT a day of the week. But it IS a real word — read carefully.", o: ["April", "Monday", "Friday", "Sunday"], a: 0 },
       { q: "'Big' is to 'small' as 'up' is to ________ (opposites).", o: ["down", "high", "over", "top"], a: 0 },
       { q: "Three of these are used for CUTTING. Which is used for WRITING instead?", o: ["pen", "knife", "scissors", "saw"], a: 0 },
-      { q: "Three of these words rhyme. Which one does NOT — even though it looks similar?", o: ["tree", "free", "bee", "them"], a: 0, s: true },
+      { q: "Three of these words rhyme. Which one does NOT — even though it looks similar?", o: ["them", "tree", "free", "bee"], a: 0, s: true },
       { q: "'Hot' pairs with 'cold' and 'day' pairs with 'night' (opposites).\nWhich pair below is ALSO opposites?", o: ["open - shut", "big - large", "quick - fast", "glad - happy"], a: 0 },
       { q: "Three of these fly in the sky. Which one stays on the ground?", o: ["cow", "bird", "plane", "kite"], a: 0 }
     ],
